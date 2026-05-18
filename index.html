@@ -5189,6 +5189,7 @@ function maybeShowOnboarding(){
     hasPlayHistory = (s.totalGames || 0) > 0;
   } catch(e){}
   if(!seen && !hasPlayHistory){
+    try { localStorage.setItem('noonchi_onboarded', '1'); } catch(e){}
     showScreen('screenOnboarding');
     onboardGoTo(0);
   } else if(!seen && hasPlayHistory){
