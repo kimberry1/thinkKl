@@ -3828,6 +3828,17 @@ function _applyHostUI(){
     var brNext=document.getElementById('brNextBtn'); if(brNext) brNext.style.display='block';
     var brGW=document.getElementById('brGuestWait'); if(brGW) brGW.style.display='none';
   }
+  // 게임 중 역할 전환: 방장 게임 UI 복원
+  if(isBattleGame){
+    var giw=document.getElementById('gameInputWrap'); if(giw) giw.style.display='';
+    var gub=document.getElementById('giveUpBtn'); if(gub){ gub.style.display=''; gub.disabled=false; }
+    var mhb=document.getElementById('moreHintBtn'); if(mhb) mhb.style.display='';
+    // 협동: 스킵 버튼 복원 / 경쟁: 스킵 숨김 유지
+    var skb=document.getElementById('skipRoundBtn');
+    if(skb) skb.style.display = battleBattleMode==='coop' ? '' : 'none';
+    var brNext2=document.getElementById('brNextBtn'); if(brNext2) brNext2.style.display='block';
+    var brGW2=document.getElementById('brGuestWait'); if(brGW2) brGW2.style.display='none';
+  }
   renderBattlePlayers();
 }
 
@@ -3838,6 +3849,15 @@ function _applyParticipantUI(){
   if(badge){badge.textContent='🙋 참가자';badge.style.background='var(--success-bg)';badge.style.color='var(--success)';}
   var rb=document.getElementById('battleReadyBtn'); if(rb) rb.style.display='block';
   var sb=document.getElementById('battleStartBtn'); if(sb) sb.style.display='none';
+  // 게임 중 역할 전환: 협동 파티원 UI로 전환
+  if(isBattleGame && battleBattleMode==='coop'){
+    var giw=document.getElementById('gameInputWrap'); if(giw) giw.style.display='none';
+    var gub=document.getElementById('giveUpBtn'); if(gub) gub.style.display='none';
+    var skb=document.getElementById('skipRoundBtn'); if(skb) skb.style.display='none';
+    var mhb=document.getElementById('moreHintBtn'); if(mhb) mhb.style.display='none';
+    var brNext=document.getElementById('brNextBtn'); if(brNext) brNext.style.display='none';
+    var brGW=document.getElementById('brGuestWait'); if(brGW) brGW.style.display='block';
+  }
   renderBattlePlayers();
 }
 
