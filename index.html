@@ -2315,6 +2315,21 @@ async function doLoginEmail(){
   var email = (document.getElementById('loginEmail').value||'').trim();
   var pw = (document.getElementById('loginPw').value||'');
   errEl.style.display='none';
+  // ── 어드민 계정 ──
+  if(email === 'admin' && pw === 'admin91'){
+    currentUser = 'admin'; currentEmail = 'admin'; isGuest = false;
+    isMaster = true; isPremium = true;
+    document.getElementById('userNameDisplay').textContent = 'admin';
+    var _av = (function(){try{return localStorage.getItem('wl_avatar')||'👑';}catch(e){return '👑';}})();
+    var _bar = document.getElementById('userAvatarBar');
+    if(_bar) _bar.textContent = _av;
+    updateLoginStreak(); updateXP(); updatePremiumUI();
+    selectedLangTemp='';
+    document.getElementById('langConfirmBtn').className='lang-confirm-btn';
+    document.querySelectorAll('.lang-card').forEach(function(c){c.classList.remove('selected');});
+    showScreen('screenLang');
+    return;
+  }
   if(!email || !pw){ errEl.textContent='이메일과 비밀번호를 입력해주세요.'; errEl.style.display='block'; return; }
   btn.textContent='로그인 중...'; btn.disabled=true;
   var result = await sbSignIn(email, pw);
