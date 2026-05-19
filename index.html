@@ -2290,6 +2290,12 @@ function showScreen(id) {
   if(window._dcPollInterval){ clearInterval(window._dcPollInterval); window._dcPollInterval = null; }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  // 홈화면 진입 시 오늘의 문제 통계 즉시 + 5초 주기 갱신
+  if(id === 'screenMode'){
+    var _td = getKSTDate();
+    loadDailyChallengeStats(_td);
+    window._dcPollInterval = setInterval(function(){ loadDailyChallengeStats(getKSTDate()); }, 5000);
+  }
 }
 
 function closeLevelup(){
