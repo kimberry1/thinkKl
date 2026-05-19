@@ -3570,7 +3570,7 @@ function sbRealtimeConnect(battleIdVal, onUpdate){
 async function sbCreateBattle(code, diff, mode, wordIdx){
   const data = await sbFetch('battles', {
     method: 'POST',
-    body: { code, host_username: currentUser, diff, battle_mode: mode, word_idx: wordIdx, status: 'waiting' }
+    body: { code, host_username: currentUser, diff, battle_mode: mode, word_idx: wordIdx, word_pool: diff, status: 'waiting' }
   });
   if(data && data[0] && isPremium){
     sbFetch('battles?id=eq.'+data[0].id, { method:'PATCH', body:{ host_premium: true } }).catch(function(){});
