@@ -1493,6 +1493,20 @@ async function sbLoadAndMergeXP(email){
   } catch(e) {}
 }
 
+async function sbLoadAndMergeXPByUsername(username){
+  if(!username || isGuest) return;
+  try {
+    var rows = await sbFetch('users?username=eq.'+encodeURIComponent(username)+'&select=xp&limit=1');
+    if(!rows || !rows.length) return;
+    var remoteXp = rows[0].xp || 0;
+    var localXp  = loadXP();
+    if(remoteXp > localXp){ saveXP(remoteXp); updateXP(); }
+    else if(localXp > remoteXp && localXp > 0){
+      sbFetch('users?username=eq.'+encodeURIComponent(username), { method:'PATCH', body:{ xp: localXp } }).catch(function(){});
+    }
+  } catch(e) {}
+}
+
 // ── 프리미엄 상태 로드/저장 ──
 async function loadPremiumStatus(email){
   const rows = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=is_premium,premium_until&limit=1');
@@ -1628,7 +1642,7 @@ async function sbGetOrCreateUser(username, email){
     return created && created[0] ? created[0] : null;
   }
   // 레거시: username만으로 조회 (소셜 로그인)
-  const found = await sbFetch('users?username=eq.'+encodeURIComponent(username)+'&select=id,username,xp&limit=1');
+  const found = await sbFetch('users?username=eq.'+encodeURIComponent(username)+'&select=id,username&limit=1');
   if(found && found.length > 0) return found[0];
   const created = await sbFetch('users', { method:'POST', body:{ username } });
   return created && created[0] ? created[0] : null;
@@ -2397,13 +2411,8 @@ function doLogin(name, provider){
   sbGetOrCreateUser(currentUser).then(function(user){
     if(user){
       window._sbUserId = user.id;
-      // 소셜 로그인 XP 동기화 (로컬 vs Supabase 중 큰 값 사용)
-      var remoteXp = user.xp || 0;
-      var localXp = loadXP();
-      if(remoteXp > localXp){ saveXP(remoteXp); updateXP(); }
-      else if(localXp > remoteXp && localXp > 0){
-        sbFetch('users?username=eq.'+encodeURIComponent(currentUser), { method:'PATCH', body:{ xp: localXp } }).catch(function(){});
-      }
+      // 소셜 로그인 XP 동기화 (username 기반)
+      sbLoadAndMergeXPByUsername(currentUser);
     }
   }).catch(function(e){ console.warn('SB 유저 등록 실패:', e); });
   showScreen('screenLang');
