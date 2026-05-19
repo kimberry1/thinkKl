@@ -2287,6 +2287,7 @@ let usedIndices = loadUsedIndices();
 let adCallback=null, adTimer=null;
 
 function showScreen(id) {
+  if(window._dcPollInterval){ clearInterval(window._dcPollInterval); window._dcPollInterval = null; }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
@@ -3310,6 +3311,8 @@ async function goOnePct(){
   }
 
   loadDailyChallengeStats(today);
+  // 2초마다 통계 자동 갱신 (다른 유저 시도 반영)
+  window._dcPollInterval = setInterval(function(){ if(window._dcDate) loadDailyChallengeStats(window._dcDate); }, 2000);
 }
 
 async function checkOnePct(){
@@ -3339,9 +3342,13 @@ async function checkOnePct(){
     loadDailyChallengeStats(window._dcDate);
   } else {
     document.getElementById('opInput').className = 'answer-input wrong';
-    setTimeout(function(){ document.getElementById('opInput').className='answer-input'; }, 500);
+    setTimeout(function(){
+      document.getElementById('opInput').className='answer-input';
+      document.getElementById('opInput').disabled = true;
+    }, 500);
     document.getElementById('opInput').value = '';
-    showFeedbackEl('opFeedback','❌ 틀렸어요! 다시 도전해보세요.','wrong-fb');
+    window._onePctTried = true;
+    showFeedbackEl('opFeedback','❌ 틀렸어요! 내일 다시 도전해보세요.','wrong-fb');
     if(!window._dcWrongRecorded){
       window._dcWrongRecorded = true;
       try{ localStorage.setItem('wl_dc_state', JSON.stringify({date:window._dcDate, solved:false})); }catch(e){}
