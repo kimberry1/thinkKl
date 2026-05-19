@@ -1297,13 +1297,38 @@ input,button,textarea,select { font-family:inherit; }
           <button onclick="battlePrevStep()" style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:0.8rem;cursor:pointer">← 이전</button>
           <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em">② 난이도 선택</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
-          <div onclick="selectBattleDiff('easy')"   id="bDiff_easy"    style="padding:14px 16px;border-radius:13px;border:2px solid transparent;background:var(--card);cursor:pointer;display:flex;justify-content:space-between;align-items:center"><span>🟢 쉬움</span><span style="font-size:0.72rem;color:var(--muted)">힌트 6개</span></div>
-          <div onclick="selectBattleDiff('normal')" id="bDiff_normal"  style="padding:14px 16px;border-radius:13px;border:2px solid transparent;background:var(--card);cursor:pointer;display:flex;justify-content:space-between;align-items:center"><span>🔵 보통</span><span style="font-size:0.72rem;color:var(--muted)">힌트 6개</span></div>
-          <div onclick="selectBattleDiff('hard')"   id="bDiff_hard"    style="padding:14px 16px;border-radius:13px;border:2px solid transparent;background:var(--card);cursor:pointer;display:flex;justify-content:space-between;align-items:center"><span>🟡 어려움</span><span style="font-size:0.72rem;color:var(--muted)">힌트 6개</span></div>
-          <div id="bDiff_extreme" style="padding:14px 16px;border-radius:13px;border:2px solid transparent;background:var(--card);display:flex;justify-content:space-between;align-items:center">
-            <span id="bDiffExtremeLabel">🔴 극한</span>
-            <span id="bDiffExtremeRight" style="font-size:0.72rem;color:var(--muted)">힌트 6개</span>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+          <div class="diff-card easy" id="bDiff_easy" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;cursor:pointer" onclick="selectBattleDiff('easy')">
+            <div class="diff-icon" style="margin:0;font-size:1.6rem">🟢</div>
+            <div style="flex:1">
+              <div class="diff-name" style="margin:0 0 2px">쉬움</div>
+              <div class="diff-rate">쉬운힌트 5개 하드힌트 1개 제공 · 정답률 ~90%</div>
+            </div>
+            <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:90%"></div></div>
+          </div>
+          <div id="bDiff_normal" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;background:linear-gradient(135deg,rgba(100,200,255,0.1),rgba(100,200,255,0.03));border:1px solid rgba(100,200,255,0.25);cursor:pointer" onclick="selectBattleDiff('normal')">
+            <div style="font-size:1.6rem;margin:0">🔵</div>
+            <div style="flex:1">
+              <div style="font-family:var(--font-display);font-size:1rem;color:var(--info);margin:0 0 2px">보통</div>
+              <div class="diff-rate">쉬운힌트 4개 하드힌트 2개 제공 · 정답률 ~50%</div>
+            </div>
+            <div class="diff-bar" style="width:80px;margin:0"><div style="height:100%;border-radius:4px;background:var(--info);width:50%"></div></div>
+          </div>
+          <div class="diff-card hard" id="bDiff_hard" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;cursor:pointer" onclick="selectBattleDiff('hard')">
+            <div class="diff-icon" style="margin:0;font-size:1.6rem">🟡</div>
+            <div style="flex:1">
+              <div class="diff-name" style="margin:0 0 2px">어려움</div>
+              <div class="diff-rate">쉬운힌트 3개 하드힌트 3개 제공 · 정답률 ~30%</div>
+            </div>
+            <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:30%"></div></div>
+          </div>
+          <div class="diff-card extreme" id="bDiff_extreme" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box">
+            <div class="diff-icon" style="margin:0;font-size:1.6rem">🔒</div>
+            <div style="flex:1">
+              <div class="diff-name" style="margin:0 0 2px"><span id="bDiffExtremeLabel">극한 🔒</span></div>
+              <div class="diff-rate" id="bDiffExtremeRight">레벨 10 도달 시 해금</div>
+            </div>
+            <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:10%"></div></div>
           </div>
         </div>
         <button onclick="createBattle()" style="width:100%;padding:15px;border-radius:15px;border:none;background:var(--primary);color:#fff;font-family:var(--font-display);font-size:1rem;cursor:pointer">대결 코드 생성 →</button>
@@ -4143,23 +4168,23 @@ function _syncHints(targetCount){
   if(window._partyHintRunning) return;
   var area = document.getElementById('hintsArea');
   var existing = area ? area.children.length : 0;
-  if(targetCount <= existing) return; // 이미 충분히 있음
-  // 실제 힌트 소스: currentHintsAll(전체) 우선 사용
-  var allH = window.currentHintsAll || currentHints;
-  // 실제 힌트 범위 내로만 제한 (fallback 글자수 힌트 방지)
-  var safeTarget = Math.min(targetCount, allH.length);
+  if(targetCount <= existing) return;
+  // 1~6번: seeded currentHints(방장과 동일 순서), 7번 이후: currentHintsAll(광고 추가 힌트)
+  var seeded = currentHints || [];
+  var full = window.currentHintsAll || seeded;
+  function getHint(i){ return i < seeded.length ? seeded[i] : full[i]; }
+  var safeTarget = Math.min(targetCount, full.length);
   if(safeTarget <= existing) return;
   window._partyHintRunning = true;
   var idx = existing;
   (function addOne(){
     var curExisting = area ? area.children.length : 0;
     if(idx >= safeTarget || idx !== curExisting){
-      // idx와 현재 DOM 수가 다르면 중복 → 중단
       window._partyHintRunning = false;
       shownHintCount = area ? area.children.length : idx;
       return;
     }
-    var hintText = allH[idx];
+    var hintText = getHint(idx);
     if(!hintText){ window._partyHintRunning=false; shownHintCount=idx; return; }
     renderHintCard(idx+1, hintText);
     idx++;
@@ -4915,8 +4940,8 @@ function selectBattleDiff(diff){
   ['easy','normal','hard','extreme'].forEach(function(d){
     var el=document.getElementById('bDiff_'+d);
     if(!el)return;
-    el.style.border = d===diff ? '2px solid var(--accent)' : '2px solid transparent';
-    el.style.background = d===diff ? 'var(--primary-soft)' : 'var(--card)';
+    el.style.outline = d===diff ? '2.5px solid var(--accent)' : 'none';
+    el.style.boxShadow = d===diff ? '0 0 0 3px var(--primary-soft)' : 'none';
   });
 }
 
