@@ -1330,6 +1330,22 @@ input,button,textarea,select { font-family:inherit; }
             </div>
             <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:10%"></div></div>
           </div>
+          <div id="bDiff_insane" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;background:linear-gradient(135deg,#FDE0D6,rgba(180,0,255,0.03));border:1px solid #FFCEB5">
+            <div style="font-size:1.6rem;margin:0">🔒</div>
+            <div style="flex:1">
+              <div style="font-family:var(--font-display);font-size:1rem;color:#C5410B;margin:0 0 2px"><span id="bDiffInsaneLabel">지옥 🔒</span></div>
+              <div class="diff-rate" id="bDiffInsaneRight">레벨 20 도달 시 해금</div>
+            </div>
+            <div class="diff-bar" style="width:80px;margin:0"><div style="height:100%;border-radius:4px;background:#C5410B;width:5%"></div></div>
+          </div>
+          <div class="diff-card random" id="bDiff_random" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;cursor:pointer" onclick="selectBattleDiff('random')">
+            <div class="diff-icon" style="margin:0;font-size:1.6rem">🎲</div>
+            <div style="flex:1">
+              <div class="diff-name" style="margin:0 0 2px">랜덤</div>
+              <div class="diff-rate">쉬움 ~ 어려움 혼합 출제</div>
+            </div>
+            <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:60%"></div></div>
+          </div>
         </div>
         <button onclick="createBattle()" style="width:100%;padding:15px;border-radius:15px;border:none;background:var(--primary);color:#fff;font-family:var(--font-display);font-size:1rem;cursor:pointer">대결 코드 생성 →</button>
       </div>
@@ -2826,6 +2842,14 @@ function pickDiff() {
   if(r<0.8) return 'hard';
   return 'extreme';
 }
+// 파티모드 랜덤: 방장 레벨에 따라 해금된 난이도 내에서 랜덤 선택
+function pickLevelAwareDiff(){
+  var curLv = getLevelInfo(loadXP()).cur.level;
+  var pool = ['easy','normal','hard'];
+  if(curLv >= 10) pool.push('extreme');
+  if(curLv >= 20) pool.push('insane');
+  return pool[Math.floor(Math.random()*pool.length)];
+}
 
 function getRandomItem(diff) {
   const poolKey = diff; // easy/normal/hard/extreme 각자 독립 풀
@@ -4018,9 +4042,10 @@ function onBattleChange(battle){
   if(battle.next_request && !battleIsCreator){
     var incomingRound = battle.current_round || 0;
     if(battle.word_idx !== undefined && battle.word_idx >= 0) battleWordIdx = battle.word_idx;
+    if(battle.diff) battleDiff = battle.diff; // 방장이 해소한 난이도(random→실제)를 참가자에 반영
     if(incomingRound > window._lastProcessedRound){
       round = incomingRound;
-      console.log('[참가자 next] round:', round, 'wordIdx:', battleWordIdx);
+      console.log('[참가자 next] round:', round, 'wordIdx:', battleWordIdx, 'diff:', battleDiff);
       gameOver = false;
       isBattleGame = true;
       document.getElementById('battleResultOverlay').className='confirm-overlay';
@@ -4545,8 +4570,9 @@ function executeConsentAction(type){
     adCallback = function(){
       if(battleIsCreator){
         shownHintCount++;
-        var hintText = shownHintCount-1<currentHints.length
-          ? currentHints[shownHintCount-1]
+        var _allH = window.currentHintsAll || currentHints;
+        var hintText = shownHintCount-1 < _allH.length
+          ? _allH[shownHintCount-1]
           : generateFallbackHint(shownHintCount);
         renderHintCard(shownHintCount, hintText);
         document.getElementById('moreHintBtn').className='more-hint-btn show';
@@ -4564,13 +4590,17 @@ function executeConsentAction(type){
     showAd('answer');
   } else if(type==='next'){
     if(battleIsCreator){
-      var pool2=wordDB[battleDiff]||wordDB.easy;
+      // random이면 레벨에 맞는 실제 난이도로 해소
+      var origDiff = window._battleOrigDiff || battleDiff;
+      var effDiff = origDiff === 'random' ? pickLevelAwareDiff() : battleDiff;
+      battleDiff = effDiff; // 이번 라운드에 적용
+      var pool2=wordDB.easy;
       var newWordIdx=Math.floor(Math.random()*pool2.length);
       battleWordIdx=newWordIdx;
       round++;
-      // 단 한 번 저장 → WebSocket으로 게스트에게 전달
       sbUpdateBattle(battleId,{
         word_idx: newWordIdx,
+        diff: effDiff,          // 해소된 난이도 참가자에게 전달
         current_round: round,
         next_request: true,
         current_hint_count: 0,
@@ -4912,32 +4942,47 @@ function switchBattleTab(tab){
 
 function updateBattleExtremeLock(){
   var curLv = getLevelInfo(loadXP()).cur.level;
+  // 극한 잠금
   var extEl   = document.getElementById('bDiff_extreme');
   var extLabel = document.getElementById('bDiffExtremeLabel');
   var extRight = document.getElementById('bDiffExtremeRight');
-  if(!extEl) return;
-  if(curLv >= 10){
-    // 해금: 클릭 가능
-    extEl.style.cursor = 'pointer';
-    extEl.style.opacity = '1';
-    extEl.onclick = function(){ selectBattleDiff('extreme'); };
-    if(extLabel) extLabel.textContent = '🔴 극한';
-    if(extRight) extRight.innerHTML = '힌트 6개';
-  } else {
-    // 잠김: 방장 레벨 10 미만
-    extEl.style.cursor = 'not-allowed';
-    extEl.style.opacity = '0.45';
-    extEl.onclick = function(){ showShareToast('🔒 레벨 10 도달 시 방장이 개설할 수 있어요!'); };
-    if(extLabel) extLabel.textContent = '🔴 극한 🔒';
-    if(extRight) extRight.innerHTML = 'Lv.10 해금 <span style="color:var(--muted)">('+curLv+'/10)</span>';
-    // 잠긴 상태에서 extreme이 선택돼 있으면 easy로 리셋
-    if(battleDiff === 'extreme'){ battleDiff='easy'; selectBattleDiff('easy'); }
+  if(extEl){
+    if(curLv >= 10){
+      extEl.style.cursor='pointer'; extEl.style.opacity='1';
+      extEl.onclick=function(){ selectBattleDiff('extreme'); };
+      if(extLabel) extLabel.textContent='🔴 극한';
+      if(extRight) extRight.innerHTML='쉬운힌트 2개 하드힌트 4개';
+    } else {
+      extEl.style.cursor='not-allowed'; extEl.style.opacity='0.45';
+      extEl.onclick=function(){ showShareToast('🔒 레벨 10 도달 시 방장이 개설할 수 있어요!'); };
+      if(extLabel) extLabel.textContent='🔴 극한 🔒';
+      if(extRight) extRight.innerHTML='Lv.10 해금 <span style="color:var(--muted)">('+curLv+'/10)</span>';
+      if(battleDiff==='extreme'){ battleDiff='easy'; selectBattleDiff('easy'); }
+    }
+  }
+  // 지옥 잠금
+  var insEl   = document.getElementById('bDiff_insane');
+  var insLabel = document.getElementById('bDiffInsaneLabel');
+  var insRight = document.getElementById('bDiffInsaneRight');
+  if(insEl){
+    if(curLv >= 20){
+      insEl.style.cursor='pointer'; insEl.style.opacity='1';
+      insEl.onclick=function(){ selectBattleDiff('insane'); };
+      if(insLabel) insLabel.textContent='💀 지옥';
+      if(insRight) insRight.innerHTML='최고 난이도';
+    } else {
+      insEl.style.cursor='not-allowed'; insEl.style.opacity='0.45';
+      insEl.onclick=function(){ showShareToast('🔒 레벨 20 도달 시 방장이 개설할 수 있어요!'); };
+      if(insLabel) insLabel.textContent='💀 지옥 🔒';
+      if(insRight) insRight.innerHTML='Lv.20 해금 <span style="color:var(--muted)">('+curLv+'/20)</span>';
+      if(battleDiff==='insane'){ battleDiff='easy'; selectBattleDiff('easy'); }
+    }
   }
 }
 
 function selectBattleDiff(diff){
   battleDiff=diff;
-  ['easy','normal','hard','extreme'].forEach(function(d){
+  ['easy','normal','hard','extreme','insane','random'].forEach(function(d){
     var el=document.getElementById('bDiff_'+d);
     if(!el)return;
     el.style.outline = d===diff ? '2.5px solid var(--accent)' : 'none';
@@ -4969,14 +5014,15 @@ async function createBattle(){
     battleId=null; myPlayerId=null; isBattleGame=false; gameOver=false;
     battlePlayers={};
   }
-  var diffIdx=['easy','normal','hard','extreme'].indexOf(battleDiff);
+  var diffIdx=['easy','normal','hard','extreme','insane','random'].indexOf(battleDiff);
   if(diffIdx<0){ alert('난이도를 선택해주세요.'); return; }
-  var pool=wordDB[battleDiff]||wordDB.easy;
+  window._battleOrigDiff = battleDiff; // random 여부 기억
+  var pool=wordDB.easy; // 모든 난이도 동일 풀
   var wIdx=Math.floor(Math.random()*pool.length);
   battleWordIdx=wIdx; battleIsCreator=true; battleHostPremium=isPremium;
   var modeIdx=battleBattleMode==='coop'?1:0;
   _updateBattleCode(diffIdx, modeIdx, wIdx);
-  var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한'};
+  var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한',insane:'💀 지옥',random:'🎲 랜덤'};
   document.getElementById('battleDiffDisplay').textContent=diffLabel[battleDiff]+' · 힌트 6개';
   var modeEmoji=battleBattleMode==='coop'?'🤝':'⚔️';
   var bce=document.getElementById('bCodeModeEmoji');
