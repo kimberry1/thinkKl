@@ -902,7 +902,7 @@ input,button,textarea,select { font-family:inherit; }
   <div class="premium-card free" id="premiumCard">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div style="font-family:var(--font-body);font-weight:800;font-size:1rem;color:var(--text)">✨ noonchi 프리미엄</div>
-      <span class="premium-badge free" id="premiumBadge">무료</span>
+      <span class="premium-badge free" id="premiumBadge" style="display:none"></span>
     </div>
     <!-- 미구독 상태 -->
     <div id="premiumFreeArea">
@@ -1547,7 +1547,7 @@ function updatePremiumUI(){
     untilText.textContent = d.toLocaleDateString('ko-KR') + ' 까지 이용 가능';
   } else {
     card.className = 'premium-card free';
-    badge.className = 'premium-badge free'; badge.textContent = '무료';
+    badge.style.display = 'none';
     freeArea.style.display = 'block';
     activeArea.style.display = 'none';
   }
@@ -1989,9 +1989,13 @@ function goProfile(){
     {c:true,                         t:'단어 새싹 🌱',e:'🌱'},
   ];
   var best=tiers.find(function(t){return t.c;})||tiers[tiers.length-1];
-  document.getElementById('profileTitle').textContent=best.t;
-  document.getElementById('profileEmoji').textContent=
-    (function(){try{return localStorage.getItem('wl_avatar')||best.e;}catch(e){return best.e;}})();
+  var _lvInfo=getLevelInfo(loadXP());
+  document.getElementById('profileTitle').textContent='Lv.'+_lvInfo.cur.level+' · '+_lvInfo.cur.title;
+  var _savedAv=(function(){try{return localStorage.getItem('wl_avatar')||best.e;}catch(e){return best.e;}})();
+  document.getElementById('profileEmoji').textContent=_savedAv;
+  document.querySelectorAll('.avatar-opt').forEach(function(el){
+    el.classList.toggle('selected', el.textContent.trim()===_savedAv.trim());
+  });
 
   var progMap={play10:10,play50:50,play100:100,correct20:20,correct100:100,hard50:50,streak3:3,streak5:5,streak10:10,extreme10:10,extreme50:50,rank10:10};
   var valMap={play10:'totalGames',play50:'totalGames',play100:'totalGames',correct20:'totalCorrect',correct100:'totalCorrect',hard50:'correctHard',streak3:'maxStreak',streak5:'maxStreak',streak10:'maxStreak',extreme10:'correctExtreme',extreme50:'correctExtreme',rank10:'rankCorrect'};
