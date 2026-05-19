@@ -5245,7 +5245,7 @@ function _launchBattleGame(){
   window._activeDiff = battleDiff;
   currentWord=item.word;
   window.currentHintsAll=[];
-  currentHints=pickHints(item, battleDiff);
+  currentHints=seededPickHints(item, battleDiff, getBattleSeed());
   gameOver=false; shownHintCount=0;
   round=1; // 파티모드 시작은 항상 1
   // ── 파티 신규 세션: 점수/연속/플레이 초기화 (이전 세션 누적값 승계 방지) ──
@@ -5274,7 +5274,7 @@ function _launchBattleGame(){
   if(_swbP){ _swbP.style.background='var(--primary-soft)'; _swbP.style.borderColor='var(--primary)'; _swbP.style.color='var(--accent)'; _swbP.textContent='📝 다시풀기'; }
   var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
   document.getElementById('roundLabel').textContent=modeLabel;
-  var dl={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME'};
+  var dl={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME',insane:'INSANE',random:'RANDOM'};
   document.getElementById('roundDiff').className='round-diff '+battleDiff;
   document.getElementById('roundDiff').textContent=dl[battleDiff]||battleDiff.toUpperCase();
   var modePill=document.getElementById('modePill');
@@ -5317,6 +5317,18 @@ function _launchBattleGame(){
       document.getElementById('moreHintBtn').style.display='';
       document.getElementById('answerInput').focus();
     }
+    // 참가자 캐치업: WS 이벤트가 카운트다운 중 도착해서 isBattleGame=false로 무시됐을 경우 대비
+    var _catchupBid = battleId;
+    setTimeout(function(){
+      if(!_catchupBid || battleId !== _catchupBid || !isBattleGame || battleIsCreator) return;
+      var domCount = document.getElementById('hintsArea') ? document.getElementById('hintsArea').children.length : 0;
+      if(domCount > 0) return; // 이미 힌트 있으면 불필요
+      sbFetch('battles?id=eq.'+_catchupBid+'&select=current_hint_count&limit=1').then(function(rows){
+        if(rows && rows[0] && rows[0].current_hint_count > 0 && isBattleGame && battleId===_catchupBid){
+          _syncHints(rows[0].current_hint_count);
+        }
+      });
+    }, 800);
   }
 }
 
