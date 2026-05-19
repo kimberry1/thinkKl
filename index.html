@@ -2016,7 +2016,7 @@ var battleHostPremium = false;// 파티 방장이 프리미엄인지
 var isMaster = false;         // 마스터 계정 여부
 
 // ── 마스터 계정 이메일 목록 (모든 제한 해제 + 광고 없음) ──
-var MASTER_EMAILS = ['kimberry1@naver.com'];
+var MASTER_EMAILS = [];
 
 // ── PortOne(아임포트) 가맹점 코드 ── 포트원 콘솔에서 발급받은 가맹점 식별코드 입력
 var PORTONE_IMP_CODE = 'imp_YOUR_CODE'; // 예: imp_1234567890
@@ -2815,9 +2815,36 @@ function pickHints(item, diff){
   var h1 = item.hints_1st ? [...item.hints_1st] : (item.hints ? [...item.hints] : []);
   var h2 = item.hints_2nd ? [...item.hints_2nd] : [];
   function shuffle(arr){ for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;} return arr; }
-  // 전체 힌트 저장 (광고 더보기용, 최대 21개)
   window.currentHintsAll = h1.concat(h2);
-  // 난이도별 6개 선택: easy:1차5+2차1 / normal:1차4+2차2 / hard:1차3+2차3 / extreme:1차2+2차4
+  if(diff === 'easy'){
+    shuffle(h2);
+    return h1.slice(0,5).concat(h2.slice(0,1));
+  } else if(diff === 'normal'){
+    shuffle(h1); shuffle(h2);
+    return h1.slice(0,4).concat(h2.slice(0,2));
+  } else if(diff === 'hard'){
+    shuffle(h1); shuffle(h2);
+    var m = h1.slice(0,3).concat(h2.slice(0,3)); shuffle(m); return m;
+  } else {
+    shuffle(h1); shuffle(h2);
+    var m2 = h1.slice(0,2).concat(h2.slice(0,4)); shuffle(m2); return m2;
+  }
+}
+
+// 파티모드 전용: battleId+wordIdx 시드로 결정론적 셔플 → 모든 참가자 동일 힌트 순서
+function getBattleSeed(){
+  var str = (window.battleId||'') + '|' + (window.battleWordIdx||0);
+  var s = 0;
+  for(var i=0;i<str.length;i++) s = (s * 31 + str.charCodeAt(i)) >>> 0;
+  return s || 1;
+}
+function seededPickHints(item, diff, seed){
+  var h1 = item.hints_1st ? [...item.hints_1st] : (item.hints ? [...item.hints] : []);
+  var h2 = item.hints_2nd ? [...item.hints_2nd] : [];
+  var s = seed >>> 0;
+  function rand(){ s = (s ^ (s << 13)) >>> 0; s = (s ^ (s >>> 17)) >>> 0; s = (s ^ (s << 5)) >>> 0; return s / 4294967296; }
+  function shuffle(arr){ for(var i=arr.length-1;i>0;i--){var j=Math.floor(rand()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;} return arr; }
+  window.currentHintsAll = h1.concat(h2);
   if(diff === 'easy'){
     shuffle(h2);
     return h1.slice(0,5).concat(h2.slice(0,1));
@@ -2897,6 +2924,7 @@ function startRound() {
   if(_sb) _sb.style.display = (isBattleGame && battleBattleMode==='compete') ? 'none' : '';
   var _cbSR = document.getElementById('competeboard');
   if(_cbSR) _cbSR.style.display = (isBattleGame && battleBattleMode==='compete') ? 'block' : 'none';
+  if(isBattleGame && battleBattleMode==='compete') renderScoreboard(Object.values(battlePlayers));
   document.getElementById('roundLabel').textContent=isBattleGame?`${round}라운드`:`${round}라운드`;
 
   // 파티모드: battleWordIdx 사용
@@ -2905,7 +2933,7 @@ function startRound() {
     var pool=wordDB[battleDiff]||wordDB.easy;
     var item=pool[battleWordIdx]||pool[0];
     currentWord=item.word;
-    currentHints=pickHints(item, battleDiff);
+    currentHints=seededPickHints(item, battleDiff, getBattleSeed());
     var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
     document.getElementById('roundLabel').textContent=modeLabel;
     var dl2={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME'};
