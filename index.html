@@ -23,9 +23,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
-<!-- 애드센스 활성화 시 아래 주석 해제
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXX" crossorigin="anonymous"></script>
--->
 <style>
 /* ═══════════════════════════════════════════════════════
    noonchi Design System · Wine + Peach (Light)
@@ -339,6 +336,17 @@ input,button,textarea,select { font-family:inherit; }
 .ad-skip-btn { padding:7px 13px; border-radius:8px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:0.82rem; font-weight:700; cursor:pointer; display:none; }
 .ad-skip-btn.show { display:block; }
 
+/* 프리미엄 카드 */
+.premium-card { width:100%; max-width:400px; border-radius:18px; padding:20px; margin-bottom:14px; }
+.premium-card.free  { background:var(--card); border:1px solid var(--border); box-shadow:var(--shadow-sm); }
+.premium-card.active { background:linear-gradient(135deg,#FFF6E8 0%,#FFF9F4 100%); border:2px solid #F0DCB2; box-shadow:var(--shadow-md); }
+.premium-badge { font-size:0.68rem; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:0.04em; }
+.premium-badge.free   { background:var(--surface); color:var(--muted); }
+.premium-badge.active { background:var(--gold-bg); color:var(--gold); }
+.premium-subscribe-btn { width:100%; padding:14px; border-radius:13px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:0.95rem; font-weight:700; cursor:pointer; margin-top:12px; transition:all 0.18s; }
+.premium-subscribe-btn:hover { background:var(--primary-deep); transform:translateY(-1px); }
+.premium-manage-btn { width:100%; padding:12px; border-radius:13px; border:1px solid #F0DCB2; background:var(--gold-bg); color:var(--gold); font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer; margin-top:10px; }
+
 /* 확인 모달 */
 .confirm-overlay { display:none; position:fixed; inset:0; background:rgba(43,26,18,0.55); z-index:150; justify-content:center; align-items:center; backdrop-filter:blur(6px); padding:20px; }
 .confirm-overlay.show { display:flex; }
@@ -591,16 +599,6 @@ input,button,textarea,select { font-family:inherit; }
 .auth-tab.active { background:var(--primary); color:#fff; border-color:var(--primary); }
 .auth-error { font-size:0.76rem; color:var(--accent2); margin-bottom:8px; display:none; min-height:18px; }
 
-/* 프리미엄 카드 */
-.premium-card { width:100%; max-width:400px; border-radius:18px; padding:20px; margin-bottom:14px; }
-.premium-card.free  { background:var(--card); border:1px solid var(--border); box-shadow:var(--shadow-sm); }
-.premium-card.active { background:linear-gradient(135deg,#FFF6E8 0%,#FFF9F4 100%); border:2px solid #F0DCB2; box-shadow:var(--shadow-md); }
-.premium-badge { font-size:0.68rem; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:0.04em; }
-.premium-badge.free   { background:var(--surface); color:var(--muted); }
-.premium-badge.active { background:var(--gold-bg); color:var(--gold); }
-.premium-subscribe-btn { width:100%; padding:14px; border-radius:13px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:0.95rem; font-weight:700; cursor:pointer; margin-top:12px; transition:all 0.18s; }
-.premium-subscribe-btn:hover { background:var(--primary-deep); transform:translateY(-1px); }
-.premium-manage-btn { width:100%; padding:12px; border-radius:13px; border:1px solid #F0DCB2; background:var(--gold-bg); color:var(--gold); font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer; margin-top:10px; }
 </style>
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
@@ -935,13 +933,15 @@ input,button,textarea,select { font-family:inherit; }
       <div class="stat-box"><div class="sv" id="pSRank" style="color:var(--gold)">0</div><div class="sl">🏆 랭크</div></div>
     </div>
   </div>
-  <!-- 구독 카드 -->
+
+
+  <!-- 구독 카드 (숨김) -->
+  <div style="display:none">
   <div class="premium-card free" id="premiumCard">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div style="font-family:var(--font-body);font-weight:800;font-size:1rem;color:var(--text)">✨ noonchi 프리미엄</div>
       <span class="premium-badge free" id="premiumBadge" style="display:none"></span>
     </div>
-    <!-- 미구독 상태 -->
     <div id="premiumFreeArea">
       <div style="font-size:0.8rem;color:var(--muted);line-height:1.75;margin-bottom:4px">
         · 모든 광고 완전 제거<br>
@@ -950,7 +950,6 @@ input,button,textarea,select { font-family:inherit; }
       </div>
       <button class="premium-subscribe-btn" onclick="startPortonePayment()">구독하기 · 월 1,000원</button>
     </div>
-    <!-- 구독 중 상태 -->
     <div id="premiumActiveArea" style="display:none">
       <div style="font-size:0.82rem;color:var(--text-soft);line-height:1.7">
         <b style="color:var(--gold)">✨ 프리미엄 이용 중</b><br>
@@ -958,6 +957,7 @@ input,button,textarea,select { font-family:inherit; }
       </div>
       <button class="premium-manage-btn" onclick="showPremiumManage()">구독 관리 →</button>
     </div>
+  </div>
   </div>
 
   <div class="avatar-picker" style="width:100%;max-width:400px;margin-bottom:14px">
@@ -1171,7 +1171,7 @@ input,button,textarea,select { font-family:inherit; }
     <div class="pills">
       <button id="inlineSubBtn" onclick="goToPremiumFromGame()" style="display:none;font-size:0.65rem;color:#fff;background:var(--primary);border:none;border-radius:20px;padding:4px 11px;font-family:inherit;font-weight:700;cursor:pointer;letter-spacing:0;white-space:nowrap">✨ 구독하기</button>
       <span id="inlineProBadge" style="display:none;font-size:0.6rem;color:var(--gold);background:var(--gold-bg);border:1px solid #F0DCB2;border-radius:20px;padding:3px 10px;font-weight:700;white-space:nowrap">✨ PRO</span>
-      <span class="mode-pill" id="modePill">🎮 연습</span>
+<span class="mode-pill" id="modePill">🎮 연습</span>
       <button id="saveWrongNoteBtn" onclick="saveCurrentWordToWrongNote()" style="font-size:0.7rem;padding:5px 10px;border-radius:20px;border:none;background:var(--primary-soft);color:var(--primary);cursor:pointer;font-family:inherit;font-weight:600;transition:all 0.15s;white-space:nowrap">📝 다시풀기</button>
       <span class="diff-pill" id="diffPill">쉬움</span>
     </div>
@@ -1195,19 +1195,13 @@ input,button,textarea,select { font-family:inherit; }
       </div>
     </div>
     <div class="hints-area" id="hintsArea"></div>
-    <button class="more-hint-btn" id="moreHintBtn" onclick="isBattleGame?requestPartyHint():requestMoreHint()">📺 광고 보고 힌트 추가 공개</button>
+    <button class="more-hint-btn" id="moreHintBtn" onclick="isBattleGame?requestPartyHint():requestMoreHint()">💡 힌트 추가 공개</button>
     <div class="input-wrap" id="gameInputWrap">
       <input type="text" class="answer-input" id="answerInput" placeholder="단어를 입력하세요..." maxlength="20"/>
       <button class="submit-btn" id="submitBtn" onclick="checkAnswer()" aria-label="정답 제출">→</button>
     </div>
-    <!-- 입력창 하단 배너 광고 -->
-    <div id="gameBottomAdSlot" style="width:100%;min-height:100px;background:var(--surface);border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-top:10px;display:flex;align-items:center;justify-content:center">
-      <!-- 실제 서비스: 아래 주석 해제 후 ca-pub-XXXXXXXXX 교체 -->
-      <!-- <ins class="adsbygoogle" style="display:block;width:100%;height:100px" data-ad-client="ca-pub-XXXXXXXXX" data-ad-slot="XXXXXXXXX" data-ad-format="fixed"></ins><script>(adsbygoogle=window.adsbygoogle||[]).push({});</script> -->
-      <div style="color:var(--muted);font-size:0.72rem;letter-spacing:0.08em;display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5">
-        <span style="font-size:1.1rem">📢</span><span>광고 영역</span>
-      </div>
-    </div>
+    <!-- 하단 배너 광고 (숨김) -->
+    <div id="gameBottomAdSlot" style="display:none"></div>
     <div class="feedback" id="feedbackMsg"></div>
     <div class="answer-reveal" id="answerReveal">
       <div class="answer-label">정답은</div>
@@ -1215,7 +1209,7 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
   <div class="w400 bottom-row" id="bottomRow">
-    <button class="action-btn" id="giveUpBtn" onclick="isBattleGame?requestPartyAnswer():requestGiveUp()">🏳 모르겠어요<br><span style="font-size:0.65rem;opacity:0.7">광고 보고 정답 공개</span></button>
+    <button class="action-btn" id="giveUpBtn" onclick="isBattleGame?requestPartyAnswer():requestGiveUp()">🏳 모르겠어요<br><span style="font-size:0.65rem;opacity:0.7">정답 공개</span></button>
     <button class="action-btn skip-style" id="skipRoundBtn" onclick="confirmSkip()">➡️ 그냥 넘어가기<br><span style="font-size:0.65rem;opacity:0.7">정답은 안 알려줌</span></button>
   </div>
   <button class="w400 next-btn" id="nextBtn" onclick="nextRound()">다음 단어 →</button>
@@ -1298,14 +1292,13 @@ input,button,textarea,select { font-family:inherit; }
   <button class="aib-close" onclick="document.getElementById('appInstallBanner').className='app-install-banner'">✕</button>
 </div>
 
-<!-- 광고 A: 힌트 3초 -->
+
+<!-- 광고 오버레이 (숨김 상태 유지 - showAd가 즉시 콜백 실행하므로 표시 안 됨) -->
 <div class="ad-overlay" id="adHint">
   <div class="ad-box">
     <div class="ad-badge">AD · 광고</div>
     <div class="ad-placeholder" id="adHintSlot">
-      <!-- 실제 서비스: 아래 주석 해제 후 ca-pub-XXXXXXXXX 교체 -->
-      <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXX" data-ad-slot="XXXXXXXXX" data-ad-format="auto"></ins> -->
-      <div class="ad-ico">📱</div><div class="ad-title">광고 영역</div><div class="ad-desc">힌트 광고 (준비중)</div>
+      <div class="ad-ico">📱</div><div class="ad-title">광고 영역</div><div class="ad-desc">힌트 광고</div>
     </div>
     <div class="ad-reward-text">광고 후 <b>추가 힌트</b>가 공개됩니다</div>
     <div class="ad-bottom">
@@ -1315,15 +1308,11 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
 </div>
-
-<!-- 광고 B: 정답 5초 -->
 <div class="ad-overlay" id="adAnswer">
   <div class="ad-box">
     <div class="ad-badge">AD · 광고</div>
     <div class="ad-placeholder" id="adAnswerSlot">
-      <!-- 실제 서비스: 아래 주석 해제 후 ca-pub-XXXXXXXXX 교체 -->
-      <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXX" data-ad-slot="XXXXXXXXX" data-ad-format="auto"></ins> -->
-      <div class="ad-ico">📺</div><div class="ad-title">광고 영역</div><div class="ad-desc">정답 광고 (준비중)</div>
+      <div class="ad-ico">📺</div><div class="ad-title">광고 영역</div><div class="ad-desc">정답 광고</div>
     </div>
     <div class="ad-reward-text">광고 후 <b>정답</b>이 공개됩니다</div>
     <div class="ad-bottom">
@@ -3260,29 +3249,11 @@ function doSkip(){
 }
 
 function showAd(type){
-  // 프리미엄 유저 또는 방장이 프리미엄인 파티 → 광고 없이 바로 실행
-  if(isPremium || battleHostPremium){
-    if(adCallback){ adCallback(); adCallback=null; }
-    return;
-  }
-  clearInterval(adTimer);
-  const sec=type==='hint'?3:5;
-  const oid=type==='hint'?'adHint':'adAnswer';
-  const cid=type==='hint'?'hintAdCount':'answerAdCount';
-  const sid=type==='hint'?'hintAdSkip':'answerAdSkip';
-  document.getElementById(oid).className='ad-overlay show';
-  document.getElementById(sid).className='ad-skip-btn';
-  document.getElementById(cid).textContent=sec;
-  let t=sec;
-  adTimer=setInterval(()=>{
-    t--;
-    if(t>0){document.getElementById(cid).textContent=t;}
-    else{clearInterval(adTimer);document.getElementById(cid).textContent='';document.getElementById(sid).className='ad-skip-btn show';}
-  },1000);
+  // 광고 비활성화 상태: 즉시 콜백 실행
+  if(adCallback){ adCallback(); adCallback=null; }
 }
 function finishAd(type){
   clearInterval(adTimer);
-  document.getElementById(type==='hint'?'adHint':'adAnswer').className='ad-overlay';
   if(adCallback){adCallback();adCallback=null;}
 }
 
