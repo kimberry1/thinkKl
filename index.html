@@ -133,6 +133,31 @@ input,button,textarea,select { font-family:inherit; }
 .achievement-popup { position:fixed; top:80px; left:50%; transform:translateX(-50%); z-index:300; background:var(--card); border:1px solid var(--success); border-radius:16px; padding:14px 20px; display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-lg); min-width:260px; opacity:0; pointer-events:none; transition:opacity 0.4s; }
 .achievement-popup.show { opacity:1; animation:slideDown 0.4s ease; }
 @keyframes slideDown { from{transform:translateX(-50%) translateY(-20px);opacity:0} to{transform:translateX(-50%) translateY(0);opacity:1} }
+/* 파티 온보딩 툴팁 */
+.party-tip-overlay { display:none; position:fixed; inset:0; z-index:500; }
+.party-tip-overlay.show { display:block; }
+.party-tip-backdrop { position:absolute; inset:0; background:rgba(43,26,18,0.45); backdrop-filter:blur(2px); }
+.party-tip-box { position:absolute; background:var(--card); border-radius:16px; padding:16px 18px 14px; width:270px; box-shadow:0 8px 32px rgba(0,0,0,0.22); animation:tipPop 0.25s ease; }
+@keyframes tipPop { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+.party-tip-arrow { position:absolute; width:14px; height:14px; background:var(--card); transform:rotate(45deg); }
+.party-tip-step { font-size:0.65rem; color:var(--muted); font-weight:700; letter-spacing:0.1em; margin-bottom:6px; }
+.party-tip-title { font-family:var(--font-body); font-weight:800; font-size:1rem; color:var(--text); margin-bottom:5px; }
+.party-tip-body { font-size:0.8rem; color:var(--text-soft); line-height:1.6; margin-bottom:14px; }
+.party-tip-flow { display:flex; align-items:center; gap:4px; flex-wrap:wrap; margin-bottom:14px; }
+.party-tip-flow-item { font-size:0.7rem; font-weight:700; color:var(--primary); background:var(--primary-soft); padding:3px 8px; border-radius:20px; }
+.party-tip-flow-arrow { font-size:0.65rem; color:var(--muted); }
+.party-tip-btns { display:flex; gap:8px; }
+.party-tip-next { flex:1; padding:10px; border-radius:10px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:0.85rem; font-weight:700; cursor:pointer; }
+.party-tip-skip { padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:inherit; font-size:0.82rem; cursor:pointer; }
+
+/* 앱 설치 유도 배너 */
+.app-install-banner { display:none; position:fixed; bottom:0; left:0; right:0; z-index:400; background:var(--primary); color:#fff; padding:12px 16px; align-items:center; gap:10px; box-shadow:0 -2px 12px rgba(0,0,0,0.18); }
+.app-install-banner.show { display:flex; animation:slideUp 0.35s ease; }
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.aib-text { flex:1; font-size:0.8rem; line-height:1.4; }
+.aib-text b { font-size:0.85rem; }
+.aib-get { padding:8px 14px; border-radius:10px; border:none; background:#fff; color:var(--primary); font-family:inherit; font-size:0.8rem; font-weight:700; cursor:pointer; white-space:nowrap; }
+.aib-close { background:none; border:none; color:rgba(255,255,255,0.7); font-size:1.2rem; cursor:pointer; padding:0 4px; line-height:1; }
 .ach-icon { font-size:2rem; }
 .ach-label { font-size:0.66rem; color:var(--success); font-weight:700; letter-spacing:0.08em; margin-bottom:2px; }
 .ach-name { font-family:var(--font-body); font-weight:800; font-size:1rem; color:var(--text); }
@@ -325,6 +350,18 @@ input,button,textarea,select { font-family:inherit; }
 .confirm-yes { flex:1; padding:12px; border-radius:11px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:0.9rem; font-weight:700; cursor:pointer; }
 .confirm-yes:hover { background:var(--primary-deep); }
 .confirm-no { flex:1; padding:12px; border-radius:11px; border:1px solid var(--border); background:var(--surface); color:var(--text-soft); font-family:inherit; font-size:0.88rem; font-weight:600; cursor:pointer; }
+
+/* 오늘의 문제 결과 모달 */
+.op-result-overlay { display:none; position:fixed; inset:0; background:rgba(43,26,18,0.6); z-index:250; justify-content:center; align-items:center; backdrop-filter:blur(6px); padding:20px; }
+.op-result-overlay.show { display:flex; animation:fadeIn 0.25s ease; }
+.op-result-box { background:var(--card); border-radius:22px; padding:30px 22px 22px; width:300px; max-width:100%; text-align:center; box-shadow:var(--shadow-lg); }
+.op-result-emoji { font-size:2.8rem; margin-bottom:10px; }
+.op-result-title { font-family:var(--font-display); font-size:1.35rem; font-weight:700; color:var(--text); margin-bottom:6px; }
+.op-result-sub { font-size:0.8rem; color:var(--muted); margin-bottom:20px; line-height:1.6; white-space:pre-line; }
+.op-result-btns { display:flex; flex-direction:column; gap:8px; }
+.op-result-share { width:100%; padding:13px; border-radius:12px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:0.9rem; font-weight:700; cursor:pointer; }
+.op-result-kakao { width:100%; padding:13px; border-radius:12px; border:none; background:#FEE500; color:#3A1D1D; font-family:inherit; font-size:0.9rem; font-weight:700; cursor:pointer; }
+.op-result-close { width:100%; padding:11px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--muted); font-family:inherit; font-size:0.85rem; font-weight:600; cursor:pointer; }
 
 /* 정답 팝업 */
 .correct-popup { position:fixed; top:35%; left:50%; transform:translateX(-50%); pointer-events:none; z-index:200; text-align:center; display:none; }
@@ -717,8 +754,8 @@ input,button,textarea,select { font-family:inherit; }
     <div class="divider"><div class="divider-line"></div><span class="divider-text">소셜 로그인</span><div class="divider-line"></div></div>
     <div class="social-login-row">
       <button class="social-btn kakao" onclick="loginKakao()">💬 카카오</button>
-      <button class="social-btn naver" onclick="loginNaver()">N 네이버</button>
-      <button class="social-btn google" onclick="loginGoogle()">G 구글</button>
+      <button class="social-btn" disabled style="opacity:0.4;cursor:default;flex:1;padding:11px 4px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:0.75rem;font-weight:600">N 준비중</button>
+      <button class="social-btn" disabled style="opacity:0.4;cursor:default;flex:1;padding:11px 4px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:0.75rem;font-weight:600">G 준비중</button>
     </div>
     <div class="divider"><div class="divider-line"></div><span class="divider-text">또는</span><div class="divider-line"></div></div>
     <button class="guest-btn" onclick="doGuest()">👤 게스트로 플레이</button>
@@ -1212,6 +1249,55 @@ input,button,textarea,select { font-family:inherit; }
   </div>
 </div>
 
+<!-- 오늘의 문제 정답 팝업 -->
+<div class="op-result-overlay" id="opCorrectModal">
+  <div class="op-result-box">
+    <div class="op-result-emoji">🎉</div>
+    <div class="op-result-title">정답입니다!</div>
+    <div class="op-result-sub" id="opCorrectSub">오늘의 문제를 맞혔어요</div>
+    <div class="op-result-btns">
+      <button class="op-result-share" onclick="shareOnePct();closeOpModal('opCorrectModal')">📤 결과 공유하기</button>
+      <button class="op-result-close" onclick="closeOpModal('opCorrectModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 오늘의 문제 오답 팝업 -->
+<div class="op-result-overlay" id="opWrongModal">
+  <div class="op-result-box">
+    <div class="op-result-emoji">😢</div>
+    <div class="op-result-title">틀렸습니다</div>
+    <div class="op-result-sub">내일 다시 도전해보세요!친구는 맞힐 수 있을까요?</div>
+    <div class="op-result-btns">
+      <button class="op-result-kakao" onclick="shareKakaoDailyChallenge()">💬 친구에게 도전 보내기</button>
+      <button class="op-result-close" onclick="closeOpModal('opWrongModal')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 파티모드 온보딩 툴팁 -->
+<div class="party-tip-overlay" id="partyTipOverlay">
+  <div class="party-tip-backdrop" onclick="closePartyTip()"></div>
+  <div class="party-tip-box" id="partyTipBox">
+    <div class="party-tip-arrow" id="partyTipArrow"></div>
+    <div class="party-tip-step" id="partyTipStep">1 / 2</div>
+    <div class="party-tip-title" id="partyTipTitle"></div>
+    <div class="party-tip-body" id="partyTipBody"></div>
+    <div class="party-tip-flow" id="partyTipFlow" style="display:none"></div>
+    <div class="party-tip-btns">
+      <button class="party-tip-skip" onclick="closePartyTip()">건너뛰기</button>
+      <button class="party-tip-next" id="partyTipNextBtn" onclick="partyTipNext()">다음 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 앱 설치 유도 배너 (딥링크 접근 시) -->
+<div class="app-install-banner" id="appInstallBanner">
+  <div class="aib-text"><b>📱 noonchi 앱으로 즐기기</b><br>앱에서 더 빠르게 파티에 참여하세요</div>
+  <button class="aib-get" onclick="window.open('https://play.google.com/store/apps/details?id=io.github.kimberry1.noonchi','_blank')">앱 받기</button>
+  <button class="aib-close" onclick="document.getElementById('appInstallBanner').className='app-install-banner'">✕</button>
+</div>
+
 <!-- 광고 A: 힌트 3초 -->
 <div class="ad-overlay" id="adHint">
   <div class="ad-box">
@@ -1267,8 +1353,8 @@ input,button,textarea,select { font-family:inherit; }
   <!-- 패널 1: 만들기 / 참여 탭 -->
   <div class="w400" id="battleLobby">
     <div style="display:flex;gap:8px;margin-bottom:18px">
-      <button id="battleTabCreate" onclick="switchBattleTab('create')" style="flex:1;padding:11px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:var(--font-display);font-size:0.85rem;cursor:pointer">대결 만들기</button>
-      <button id="battleTabJoin" onclick="switchBattleTab('join')" style="flex:1;padding:11px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-display);font-size:0.85rem;cursor:pointer">코드로 참여</button>
+      <button id="battleTabCreate" onclick="switchBattleTab('create')" style="flex:1;padding:11px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:var(--font-display);font-size:0.85rem;cursor:pointer">방 만들기</button>
+      <button id="battleTabJoin" onclick="switchBattleTab('join')" style="flex:1;padding:11px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-display);font-size:0.85rem;cursor:pointer">코드 입장</button>
     </div>
 
     <!-- 만들기: ①모드 → ②난이도 -->
@@ -1371,6 +1457,7 @@ input,button,textarea,select { font-family:inherit; }
     </div>
     <!-- 초대 공유 (모두 가능) -->
     <button onclick="copyBattleCode()" style="width:100%;padding:11px;border-radius:12px;border:1px solid var(--warn);background:#FFF6E8;color:var(--warn);font-family:var(--font-body);font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:6px">📋 코드 복사</button>
+    <button id="battleInviteBtn" onclick="shareKakaoInvite()" style="width:100%;padding:11px;border-radius:12px;border:none;background:#FEE500;color:#3A1D1D;font-family:var(--font-body);font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:6px">💬 카카오로 초대하기</button>
     <!-- 참가자 현황 -->
     <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px">참가자 현황</div>
     <div id="battlePlayersPanel" style="margin-bottom:12px">
@@ -1670,10 +1757,10 @@ function switchAuthTab(tab){
 async function sbGetOrCreateUser(username, email){
   // email로 우선 조회 (신규 방식)
   if(email){
-    const byEmail = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=id,username,email,is_premium,premium_until,xp&limit=1');
+    const byEmail = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=id,username,email,is_premium,premium_until,xp,avatar&limit=1');
     if(byEmail && byEmail.length > 0) return byEmail[0];
     // email 없으면 username으로 fallback 후 email 추가
-    const byName = await sbFetch('users?username=eq.'+encodeURIComponent(username)+'&select=id,username,email,xp&limit=1');
+    const byName = await sbFetch('users?username=eq.'+encodeURIComponent(username)+'&select=id,username,email,xp,avatar&limit=1');
     if(byName && byName.length > 0){
       await sbFetch('users?id=eq.'+byName[0].id, { method:'PATCH', body:{ email } });
       return byName[0];
@@ -2017,22 +2104,9 @@ function goProfile(){
   document.getElementById('pSExtreme').textContent=stats.correctExtreme;
   document.getElementById('pSInsane').textContent=stats.correctInsane||0;
   document.getElementById('pSRank').textContent=stats.rankCorrect;
-  var tiers=[
-    {c:(stats.correctInsane||0)>=10, t:'인세인 정복자 💜',e:'💜'},
-    {c:stats.correctExtreme>=50,     t:'단어의 신 👑',e:'👑'},
-    {c:stats.correctExtreme>=10,     t:'극한 정복자 💀',e:'💀'},
-    {c:stats.rankCorrect>=10,        t:'TOP 랭커 🏆',e:'🏆'},
-    {c:stats.maxStreak>=10,          t:'10연속 전설 ⚡',e:'⚡'},
-    {c:stats.correctHard>=50,        t:'하드사냥꾼 🗡️',e:'🗡️'},
-    {c:stats.totalCorrect>=100,      t:'단어 전사 🎖️',e:'🎖️'},
-    {c:stats.maxStreak>=5,           t:'콤보마스터 🔥',e:'🔥'},
-    {c:stats.correctHard>=1,         t:'하드 도전자 ⚔️',e:'⚔️'},
-    {c:true,                         t:'단어 새싹 🌱',e:'🌱'},
-  ];
-  var best=tiers.find(function(t){return t.c;})||tiers[tiers.length-1];
   var _lvInfo=getLevelInfo(loadXP());
   document.getElementById('profileTitle').textContent='Lv.'+_lvInfo.cur.level+' · '+_lvInfo.cur.title;
-  var _savedAv=(function(){try{return localStorage.getItem('wl_avatar')||best.e;}catch(e){return best.e;}})();
+  var _savedAv=(function(){try{return localStorage.getItem('wl_avatar')||'🎮';}catch(e){return '🎮';}})();
   document.getElementById('profileEmoji').textContent=_savedAv;
   document.querySelectorAll('.avatar-opt').forEach(function(el){
     el.classList.toggle('selected', el.textContent.trim()===_savedAv.trim());
@@ -2068,26 +2142,26 @@ var PORTONE_IMP_CODE = 'imp_YOUR_CODE'; // 예: imp_1234567890
 
 // ── XP / 레벨 시스템 ──
 var XP_LEVELS = [
-  {level:1,  xpNeeded:0,    title:'단어 씨앗'},
-  {level:2,  xpNeeded:10,   title:'단어 새싹'},
-  {level:3,  xpNeeded:30,   title:'단어 탐험가'},
-  {level:4,  xpNeeded:70,   title:'단어 사냥꾼'},
-  {level:5,  xpNeeded:150,  title:'단어 전사'},
-  {level:6,  xpNeeded:300,  title:'단어 마스터'},
-  {level:7,  xpNeeded:500,  title:'단어 현자'},
-  {level:8,  xpNeeded:800,  title:'단어의 신'},
-  {level:9,  xpNeeded:1200, title:'noonchi 전설'},
-  {level:10, xpNeeded:2000, title:'noonchi GOAT'},
-  {level:11, xpNeeded:3000, title:'단어 정복자'},
-  {level:12, xpNeeded:4500, title:'단어 지배자'},
-  {level:13, xpNeeded:6500, title:'단어 군주'},
-  {level:14, xpNeeded:9000, title:'단어 황제'},
-  {level:15, xpNeeded:12000,title:'단어 신화'},
-  {level:16, xpNeeded:16000,title:'noonchi 마스터'},
-  {level:17, xpNeeded:21000,title:'noonchi 챔피언'},
-  {level:18, xpNeeded:27000,title:'noonchi 레전드'},
-  {level:19, xpNeeded:35000,title:'noonchi 불멸'},
-  {level:20, xpNeeded:45000,title:'noonchi 지옥'},
+  {level:1,  xpNeeded:0,    title:'눈치 꽝'},
+  {level:2,  xpNeeded:10,   title:'눈치 꽝'},
+  {level:3,  xpNeeded:30,   title:'눈치 초보'},
+  {level:4,  xpNeeded:70,   title:'눈치 초보'},
+  {level:5,  xpNeeded:150,  title:'눈치 있음'},
+  {level:6,  xpNeeded:300,  title:'눈치 있음'},
+  {level:7,  xpNeeded:500,  title:'눈치 빠름'},
+  {level:8,  xpNeeded:800,  title:'눈치 빠름'},
+  {level:9,  xpNeeded:1200, title:'눈치 고수'},
+  {level:10, xpNeeded:2000, title:'눈치 고수'},
+  {level:11, xpNeeded:2600, title:'눈치 달인'},
+  {level:12, xpNeeded:3200, title:'눈치 달인'},
+  {level:13, xpNeeded:3900, title:'눈치 달인'},
+  {level:14, xpNeeded:4500, title:'눈치 천재'},
+  {level:15, xpNeeded:5200, title:'눈치 천재'},
+  {level:16, xpNeeded:5800, title:'눈치 천재'},
+  {level:17, xpNeeded:6400, title:'눈치 만렙'},
+  {level:18, xpNeeded:6900, title:'눈치 만렙'},
+  {level:19, xpNeeded:7400, title:'눈치 만렙'},
+  {level:20, xpNeeded:7900, title:'눈치왕 👑'},
 ];
 // 연습/랭크 모드별 XP (정답 시)
 var XP_PRACTICE = {easy:1, normal:2, hard:3, extreme:4, insane:5, random:1};
@@ -2357,6 +2431,13 @@ function selectAvatar(emoji){
   var bar = document.getElementById('userAvatarBar');
   if(bar) bar.textContent = emoji;
   try{ localStorage.setItem('wl_avatar', emoji); }catch(e){}
+  // Supabase에도 저장 (기기 변경 / 재설치 후에도 유지)
+  if(!isGuest){
+    var q = currentEmail
+      ? 'users?email=eq.'+encodeURIComponent(currentEmail)
+      : 'users?username=eq.'+encodeURIComponent(currentUser);
+    sbFetch(q, {method:'PATCH', body:{avatar: emoji}}).catch(function(){});
+  }
 }
 
 // 로그인
@@ -2452,7 +2533,15 @@ function _afterAuthLogin(username, email){
   checkMaster(email);
   // Supabase 유저 등록 + 프리미엄 + XP 동기화
   sbGetOrCreateUser(currentUser, email).then(function(user){
-    if(user){ window._sbUserId = user.id; }
+    if(user){
+      window._sbUserId = user.id;
+      // 아바타 동기화: Supabase 값이 있으면 우선 적용
+      if(user.avatar){
+        try{ localStorage.setItem('wl_avatar', user.avatar); }catch(e){}
+        var _bar2 = document.getElementById('userAvatarBar');
+        if(_bar2) _bar2.textContent = user.avatar;
+      }
+    }
     if(email){
       loadPremiumStatus(email);
       sbLoadAndMergeXP(email);
@@ -3393,12 +3482,12 @@ async function checkOnePct(){
     addXP(50);
     try{ localStorage.setItem('wl_dc_state', JSON.stringify({date:window._dcDate, solved:true})); }catch(e){}
     if(window._dcWrongRecorded){
-      // 이미 오답 기록됨 → 정답으로 업데이트
       await sbFetch('daily_challenge_plays?date=eq.'+window._dcDate+'&anon_id=eq.'+anonId, {method:'PATCH', body:{is_correct:true}});
     } else {
       await sbFetch('daily_challenge_plays', {method:'POST', body:{date:window._dcDate, is_correct:true, anon_id:anonId}});
     }
     loadDailyChallengeStats(window._dcDate);
+    setTimeout(function(){ showOpCorrectModal(); }, 600);
   } else {
     document.getElementById('opInput').className = 'answer-input wrong';
     setTimeout(function(){
@@ -3414,7 +3503,56 @@ async function checkOnePct(){
       await sbFetch('daily_challenge_plays', {method:'POST', body:{date:window._dcDate, is_correct:false, anon_id:anonId}});
       loadDailyChallengeStats(window._dcDate);
     }
+    setTimeout(function(){ showOpWrongModal(); }, 700);
   }
+}
+
+function showOpCorrectModal(){
+  var rate = (document.getElementById('opLiveRate').textContent || '?%');
+  document.getElementById('opCorrectSub').textContent = '오늘의 문제를 맞혔어요\n전체 정답률 ' + rate + ' 중 한 명!';
+  document.getElementById('opCorrectModal').className = 'op-result-overlay show';
+  spawnSparkleBurst();
+}
+
+function showOpWrongModal(){
+  document.getElementById('opWrongModal').className = 'op-result-overlay show';
+}
+
+function closeOpModal(id){
+  document.getElementById(id).className = 'op-result-overlay';
+}
+
+function shareKakaoDailyChallenge(){
+  var gameUrl = 'https://kimberry1.github.io/noonchi/';
+  if(typeof Kakao === 'undefined' || !Kakao.isInitialized() || !Kakao.Share){
+    fallbackCopy(gameUrl);
+    showShareToast('✅ 링크가 복사됐어요!');
+    closeOpModal('opWrongModal');
+    return;
+  }
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: '👀 오늘의 noonchi 문제, 너도 도전해봐!',
+      description: '나는 틀렸는데 너는 맞힐 수 있어? 힌트 읽고 단어 맞히기',
+      imageUrl: 'https://kimberry1.github.io/noonchi/icon-512.png',
+      link: { mobileWebUrl: gameUrl, webUrl: gameUrl },
+    },
+    buttons: [
+      {
+        title: '도전하기',
+        link: { mobileWebUrl: gameUrl, webUrl: gameUrl },
+      },
+      {
+        title: '앱 받기',
+        link: {
+          mobileWebUrl: 'https://play.google.com/store/apps/details?id=io.github.kimberry1.noonchi',
+          webUrl: 'https://play.google.com/store/apps/details?id=io.github.kimberry1.noonchi',
+        },
+      }
+    ],
+  });
+  closeOpModal('opWrongModal');
 }
 
 
@@ -3733,9 +3871,10 @@ async function sbJoinBattle(battleIdVal, username){
   return data && data[0] ? data[0] : null;
 }
 
-// ── 코드로 방 찾기 ──
+// ── 코드로 방 찾기 (2시간 이내 방만) ──
 async function sbFindBattle(code){
-  const data = await sbFetch('battles?code=eq.'+encodeURIComponent(code)+'&select=*&order=created_at.desc&limit=1');
+  var cutoff = new Date(Date.now() - 2*60*60*1000).toISOString();
+  const data = await sbFetch('battles?code=eq.'+encodeURIComponent(code)+'&created_at=gte.'+encodeURIComponent(cutoff)+'&select=*&order=created_at.desc&limit=1');
   return data && data[0] ? data[0] : null;
 }
 
@@ -4761,6 +4900,14 @@ function checkURLBattleCode(){
   var code = params.get('battle');
   if(!code || code.length !== 4) return;
   window._pendingBattleCode = code.toUpperCase();
+  // 모바일 브라우저(TWA 아님)에서 접근 시 앱 설치 배너 표시
+  var isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+  var isTWA = document.referrer.includes('android-app://');
+  if(isMobile && !isTWA){
+    setTimeout(function(){
+      document.getElementById('appInstallBanner').className = 'app-install-banner show';
+    }, 1000);
+  }
 }
 
 function applyPendingBattleCode(){
@@ -4844,9 +4991,11 @@ async function battleReset(){
   if(rbc){rbc.style.display='none';}
   var sb=document.getElementById('battleStartBtn');
   if(sb){sb.style.display='none';sb.disabled=true;sb.style.opacity='0.4';sb.textContent='친구를 기다리는 중...';}
-  // 게임 시작 시 숨긴 코드 복사 버튼 복구
+  // 게임 시작 시 숨긴 코드 복사/초대 버튼 복구
   var codeBtn=document.querySelector('[onclick*="copyBattleCode"]');
   if(codeBtn) codeBtn.style.display='';
+  var invBtn=document.getElementById('battleInviteBtn');
+  if(invBtn) invBtn.style.display='';
   var pp=document.getElementById('battlePlayersPanel');
   if(pp) pp.innerHTML='<div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:12px">대기 중...</div>';
   document.getElementById('battleCodeInput').value='';
@@ -4923,6 +5072,7 @@ async function enterBattleScreen(){
     if(lobby) lobby.style.display='block';
     battleShowStep('mode');
     battleShowPanel('lobby');
+    setTimeout(showPartyTip, 400);
   }
   showScreen('screenBattle');
 }
@@ -5043,7 +5193,7 @@ async function createBattle(){
   var modeIdx=battleBattleMode==='coop'?1:0;
   _updateBattleCode(diffIdx, modeIdx, wIdx);
   var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한',insane:'💀 지옥',random:'🎲 랜덤'};
-  document.getElementById('battleDiffDisplay').textContent=diffLabel[battleDiff]+' · 힌트 6개';
+  document.getElementById('battleDiffDisplay').textContent=diffLabel[battleDiff];
   var modeEmoji=battleBattleMode==='coop'?'🤝':'⚔️';
   var bce=document.getElementById('bCodeModeEmoji');
   if(bce) bce.textContent=modeEmoji+(battleBattleMode==='coop'?' 협동':'  경쟁');
@@ -5099,6 +5249,127 @@ function copyBattleCode(){
   showShareToast('✅ 코드 '+battleCode+' 복사됐어요!');
 }
 
+// ── 파티모드 온보딩 툴팁 ──
+var _partyTipStep = 0;
+var _partyTips = [
+  {
+    title: '방 만들기 vs 코드 입장',
+    body: '내가 방을 열면 방 만들기,\n친구 방에 들어갈 땐 코드 입장을 눌러요.',
+    flow: null,
+    anchor: 'battleTabCreate',
+    arrowDir: 'top'
+  },
+  {
+    title: '파티 진행 순서',
+    body: '이 흐름대로 진행하면 바로 시작할 수 있어요!',
+    flow: ['방 만들기', '코드 공유', '친구 입장', '준비', '시작 🎮'],
+    anchor: null,
+    arrowDir: null
+  }
+];
+
+function showPartyTip(){
+  try { if(localStorage.getItem('noonchi_party_tip_seen')) return; } catch(e){}
+  _partyTipStep = 0;
+  _renderPartyTip();
+  document.getElementById('partyTipOverlay').className = 'party-tip-overlay show';
+}
+
+function _renderPartyTip(){
+  var tip = _partyTips[_partyTipStep];
+  var total = _partyTips.length;
+  document.getElementById('partyTipStep').textContent = (_partyTipStep+1) + ' / ' + total;
+  document.getElementById('partyTipTitle').textContent = tip.title;
+  document.getElementById('partyTipBody').textContent = tip.body;
+  document.getElementById('partyTipNextBtn').textContent = (_partyTipStep === total-1) ? '완료 ✓' : '다음 →';
+
+  var flowEl = document.getElementById('partyTipFlow');
+  if(tip.flow){
+    flowEl.style.display = 'flex';
+    flowEl.innerHTML = tip.flow.map(function(f, i){
+      return '<span class="party-tip-flow-item">'+f+'</span>' +
+        (i < tip.flow.length-1 ? '<span class="party-tip-flow-arrow">→</span>' : '');
+    }).join('');
+  } else {
+    flowEl.style.display = 'none';
+  }
+
+  var box = document.getElementById('partyTipBox');
+  var arrow = document.getElementById('partyTipArrow');
+
+  if(tip.anchor){
+    var el = document.getElementById(tip.anchor);
+    if(el){
+      var rect = el.getBoundingClientRect();
+      var boxW = 270;
+      var left = Math.min(Math.max(rect.left, 12), window.innerWidth - boxW - 12);
+      box.style.top = (rect.bottom + 14) + 'px';
+      box.style.left = left + 'px';
+      box.style.bottom = '';
+      arrow.style.display = 'block';
+      arrow.style.top = '-7px';
+      arrow.style.left = (rect.left + rect.width/2 - left - 7) + 'px';
+    }
+  } else {
+    box.style.top = '50%';
+    box.style.left = '50%';
+    box.style.transform = 'translate(-50%, -50%)';
+    box.style.bottom = '';
+    arrow.style.display = 'none';
+  }
+}
+
+function partyTipNext(){
+  if(_partyTipStep < _partyTips.length - 1){
+    _partyTipStep++;
+    _renderPartyTip();
+  } else {
+    closePartyTip();
+  }
+}
+
+function closePartyTip(){
+  document.getElementById('partyTipOverlay').className = 'party-tip-overlay';
+  try { localStorage.setItem('noonchi_party_tip_seen', '1'); } catch(e){}
+}
+
+function shareKakaoInvite(){
+  var inviteUrl = getBattleShareURL();
+  if(typeof Kakao === 'undefined' || !Kakao.isInitialized() || !Kakao.Share){
+    fallbackCopy(inviteUrl);
+    showShareToast('✅ 초대 링크가 복사됐어요!');
+    return;
+  }
+  Kakao.Share.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: '👀 noonchi 파티 대결!',
+      description: '코드 ' + battleCode + ' 로 입장하세요 · 힌트 읽고 단어 맞히기',
+      imageUrl: 'https://kimberry1.github.io/noonchi/icon-512.png',
+      link: {
+        mobileWebUrl: inviteUrl,
+        webUrl: inviteUrl,
+      },
+    },
+    buttons: [
+      {
+        title: '참여하기',
+        link: {
+          mobileWebUrl: inviteUrl,
+          webUrl: inviteUrl,
+        },
+      },
+      {
+        title: '앱 받기',
+        link: {
+          mobileWebUrl: 'https://play.google.com/store/apps/details?id=io.github.kimberry1.noonchi',
+          webUrl: 'https://play.google.com/store/apps/details?id=io.github.kimberry1.noonchi',
+        },
+      }
+    ],
+  });
+}
+
 async function readyBattleGame(){
   if(!myPlayerId){ startCountdown(function(){ _launchBattleGame(); }); return; }
   await sbUpdatePlayer(myPlayerId,{status:'ready'});
@@ -5136,9 +5407,11 @@ async function hostStartBattle(){
   var allReady=nonHost.every(function(p){return p.status==='ready';});
   if(!allReady){alert('아직 준비 안 된 친구가 있어요.');return;}
   await sbUpdateBattle(battleId,{status:'playing'});
-  // 게임 시작 → 코드 복사 버튼 숨김 (중간 입장 차단)
+  // 게임 시작 → 코드 복사/초대 버튼 숨김 (중간 입장 차단)
   var codeBtn=document.querySelector('[onclick*="copyBattleCode"]');
   if(codeBtn) codeBtn.style.display='none';
+  var invBtn=document.getElementById('battleInviteBtn');
+  if(invBtn) invBtn.style.display='none';
   startCountdown(function(){ _launchBattleGame(); });
 }
 
@@ -5165,7 +5438,7 @@ function joinBattle(){
   var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한'};
   document.getElementById('bjcModeEmoji').textContent=modeEmoji;
   document.getElementById('bjcModeLabel').textContent=modeLabel;
-  document.getElementById('bjcDiff').textContent=diffLabel[battleDiff]+' · 힌트 '+{easy:6,normal:5,hard:4,extreme:3}[battleDiff]+'개';
+  document.getElementById('bjcDiff').textContent=diffLabel[battleDiff]||battleDiff.toUpperCase();
   battleShowPanel('joinConfirm');
 }
 
@@ -5215,7 +5488,7 @@ async function joinBattleWithSB(){
   }
   // UI 세팅
   var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한'};
-  document.getElementById('battleDiffDisplay').textContent=(diffLabel[battleDiff]||battleDiff.toUpperCase())+' · 힌트 6개';
+  document.getElementById('battleDiffDisplay').textContent=diffLabel[battleDiff]||battleDiff.toUpperCase();
   var modeEmoji=battleBattleMode==='coop'?'🤝':'⚔️';
   var bce=document.getElementById('bCodeModeEmoji');
   if(bce) bce.textContent=modeEmoji+(battleBattleMode==='coop'?' 협동':' 경쟁');
@@ -5278,8 +5551,12 @@ function _launchBattleGame(){
   var _sbLaunch=document.getElementById('scoreBar');
   if(_sbLaunch) _sbLaunch.style.display = (battleBattleMode==='compete') ? 'none' : '';
   var cb=document.getElementById('competeboard');
-  // 게임 시작 시 전광판 숨김 → 라운드 종료 후 결과와 함께 표시
-  if(cb){ cb.style.display='none'; }
+  if(battleBattleMode==='compete'){
+    if(cb) cb.style.display='block';
+    renderScoreboard(Object.values(battlePlayers));
+  } else {
+    if(cb) cb.style.display='none';
+  }
   document.getElementById('hintsArea').innerHTML='';
   document.getElementById('feedbackMsg').className='feedback';
   document.getElementById('answerReveal').className='answer-reveal';
@@ -5424,6 +5701,27 @@ function closeBattleResultAndLeave(){
   document.getElementById('battleResultOverlay').className='confirm-overlay';
   leaveParty();
 }
+
+// ── 파티방 안전 이탈: 페이지 닫힘/새로고침 ──
+window.addEventListener('beforeunload', function(){
+  if(!myPlayerId) return;
+  // keepalive: true → 페이지 언로드 후에도 요청 완료 보장
+  fetch(SB_URL+'/rest/v1/battle_players?id=eq.'+myPlayerId, {
+    method:'DELETE',
+    headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON},
+    keepalive: true
+  }).catch(function(){});
+});
+
+// ── 탭 숨김/복귀 처리 ──
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible' && battleId){
+    // 복귀 시 WS가 끊겼으면 재연결
+    if(!battleWs || battleWs.readyState !== WebSocket.OPEN){
+      startBattlePolling(battleId);
+    }
+  }
+});
 
 // 랭킹 초기 렌더 + URL 배틀 코드 체크
 document.addEventListener('DOMContentLoaded', function(){
