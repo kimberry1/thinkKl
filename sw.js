@@ -1,6 +1,6 @@
-// ThinkKl Service Worker v1.1
-const CACHE_NAME = 'thinkKl-v2';
-const BASE = '/thinkKl';
+// noonchi Service Worker v2.0
+const CACHE_NAME = 'noonchi-v2';
+const BASE = '/noonchi';
 const OFFLINE_ASSETS = [
   BASE + '/',
   BASE + '/index.html',
@@ -9,7 +9,6 @@ const OFFLINE_ASSETS = [
   BASE + '/icon-512.png'
 ];
 
-// 설치: 핵심 파일 캐시
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
@@ -21,7 +20,6 @@ self.addEventListener('install', function(event) {
   self.skipWaiting();
 });
 
-// 활성화: 구버전 캐시 삭제
 self.addEventListener('activate', function(event) {
   event.waitUntil(
     caches.keys().then(function(keys) {
@@ -34,17 +32,14 @@ self.addEventListener('activate', function(event) {
   self.clients.claim();
 });
 
-// 요청 처리: Network First (온라인 우선, 실패 시 캐시)
 self.addEventListener('fetch', function(event) {
   var url = event.request.url;
-
-  // Supabase API / 외부 요청은 캐시 안 함
   if (url.includes('supabase.co') ||
       url.includes('googleapis.com') ||
-      url.includes('kakao.com')) {
+      url.includes('kakao.com') ||
+      url.includes('iamport.kr')) {
     return;
   }
-
   event.respondWith(
     fetch(event.request)
       .then(function(response) {
@@ -61,5 +56,39 @@ self.addEventListener('fetch', function(event) {
           return cached || caches.match(BASE + '/index.html');
         });
       })
+  );
+});
+
+// ── 푸시 알림 수신 ──
+self.addEventListener('push', function(event) {
+  var data = {};
+  try { data = event.data ? event.data.json() : {}; } catch(e) {}
+  var title = data.title || 'noonchi';
+  var options = {
+    body: data.body || '',
+    icon: BASE + '/icon-192.png',
+    badge: BASE + '/icon-192.png',
+    data: { url: data.url || (BASE + '/') },
+    vibrate: [200, 100, 200],
+    requireInteraction: false
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+// ── 알림 클릭 시 앱 열기 ──
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  var targetUrl = (event.notification.data && event.notification.data.url)
+    ? event.notification.data.url
+    : (BASE + '/');
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(clientList) {
+      for (var i = 0; i < clientList.length; i++) {
+        if (clientList[i].url === targetUrl && 'focus' in clientList[i]) {
+          return clientList[i].focus();
+        }
+      }
+      if (clients.openWindow) return clients.openWindow(targetUrl);
+    })
   );
 });
