@@ -3666,7 +3666,7 @@ function startRound() {
     currentAltWords=item.alt_words||[];
     currentHints=seededPickHints(item, battleDiff, getBattleSeed());
     var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
-    document.getElementById('roundLabel').textContent=modeLabel+' '+round+'/'+battleMaxRounds;
+    document.getElementById('roundLabel').textContent=modeLabel+' '+battleMaxRounds+'문제';
     var dl2={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME'};
     document.getElementById('roundDiff').className='round-diff '+battleDiff;
     document.getElementById('roundDiff').textContent=dl2[battleDiff]||battleDiff.toUpperCase();
@@ -4473,8 +4473,11 @@ async function sbCreateBattle(code, diff, mode, wordIdx){
     method: 'POST',
     body: { code, host_username: currentUser, diff, battle_mode: mode, word_idx: wordIdx, word_pool: diff, status: 'waiting' }
   });
-  if(data && data[0] && isPremium){
-    sbFetch('battles?id=eq.'+data[0].id, { method:'PATCH', body:{ host_premium: true } }).catch(function(){});
+  if(data && data[0]){
+    sbFetch('battles?id=eq.'+data[0].id, { method:'PATCH', body:{ max_rounds: battleMaxRounds } }).catch(function(){});
+    if(isPremium){
+      sbFetch('battles?id=eq.'+data[0].id, { method:'PATCH', body:{ host_premium: true } }).catch(function(){});
+    }
   }
   return data && data[0] ? data[0] : null;
 }
@@ -5548,7 +5551,8 @@ async function battleReset(){
   battleId=null; myPlayerId=null; battleIsCreator=false;
   isBattleGame=false; gameOver=false;
   battlePlayers={}; battleCode=''; battleWordIdx=-1;
-  battleDiff='easy'; battleBattleMode='compete';
+  battleDiff='easy'; battleBattleMode='compete'; battleMaxRounds=5;
+  battleRoundsPlayed=0; battleCompeteWins=0; battleCoopSolved=0;
   window._partyHintRunning=false; window._partyAnswerRunning=false;
   window._nextRoundRunning=false; window._lastProcessedRound=0; window._solvedProcessedRound=-1;
   window._countdownRunning=false; window._roundScores={}; window._myVoteDone=false;
@@ -6107,7 +6111,8 @@ async function joinBattleWithSB(){
     battleWordIdx=battle.word_idx;
     battleIsCreator=false;
     battleCode=code;
-    battleHostPremium = !!(battle.host_premium); // 방장 프리미엄 여부 로드
+    battleHostPremium = !!(battle.host_premium);
+    battleMaxRounds = battle.max_rounds || 5; // 방장이 설정한 문제 수 동기화
     // 이미 입장한 유저면 기존 플레이어 찾기
     var existingPlayers=await sbGetPlayers(battleId);
     var existing=existingPlayers.find(function(p){return p.username===currentUser;});
@@ -6215,12 +6220,12 @@ function _launchBattleGame(){
   var _swbP=document.getElementById('saveWrongNoteBtn');
   if(_swbP){ _swbP.style.background='var(--primary-soft)'; _swbP.style.borderColor='var(--primary)'; _swbP.style.color='var(--accent)'; _swbP.textContent='📝 다시풀기'; }
   var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
-  document.getElementById('roundLabel').textContent=modeLabel+' '+round+'/'+battleMaxRounds;
+  document.getElementById('roundLabel').textContent=modeLabel+' '+battleMaxRounds+'문제';
   var dl={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME',insane:'INSANE',random:'RANDOM'};
   document.getElementById('roundDiff').className='round-diff '+battleDiff;
   document.getElementById('roundDiff').textContent=dl[battleDiff]||battleDiff.toUpperCase();
   var modePill=document.getElementById('modePill');
-  modePill.textContent = (battleBattleMode==='coop' ? '🤝 협동' : '⚔️ 경쟁')+' '+round+'/'+battleMaxRounds;
+  modePill.textContent = (battleBattleMode==='coop' ? '🤝 협동' : '⚔️ 경쟁')+' '+battleMaxRounds+'문제';
   modePill.className='mode-pill practice';
   var diffPill=document.getElementById('diffPill');
   diffPill.textContent=battleDiff.toUpperCase(); diffPill.className='diff-pill '+battleDiff;
