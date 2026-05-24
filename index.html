@@ -4319,18 +4319,39 @@ async function shareScoreCard(opts) {
 }
 
 function shareOnePct(){
-  var word = window._onePctWord || '???';
-  var rateText = (document.getElementById('opLiveRate').textContent || '0%').replace('%','');
-  var tries = parseInt(document.getElementById('opTries').textContent) || 0;
-  var corrects = parseInt(document.getElementById('opCorrects').textContent) || 0;
-  shareScoreCard({
-    type: '1pct',
-    word: word,
-    solved: !!window._onePctSolved,
-    rate: rateText,
-    tries: tries,
-    corrects: corrects
-  });
+  var gameUrl = 'https://kimberry1.github.io/noonchi/';
+  var rateText = document.getElementById('opLiveRate').textContent || '?%';
+  var solved = !!window._onePctSolved;
+
+  if(typeof Kakao === 'undefined' || !Kakao.isInitialized() || !Kakao.Share){
+    fallbackCopy(gameUrl);
+    showShareToast('✅ 링크가 복사됐어요!');
+    return;
+  }
+
+  if(solved){
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: 'noonchi 오늘의 문제 맞혔어요! 🎉',
+        description: '전체 정답률 ' + rateText + ' 중 한 명!\n6개 힌트 보고 단어 맞히기, 너도 도전해봐',
+        imageUrl: 'https://kimberry1.github.io/noonchi/icon-512.png',
+        link: { mobileWebUrl: gameUrl, webUrl: gameUrl },
+      },
+      buttons: [{ title: '나도 도전하기', link: { mobileWebUrl: gameUrl, webUrl: gameUrl } }],
+    });
+  } else {
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '오늘의 noonchi 문제, 너는 맞힐 수 있어? 👀',
+        description: '6개 힌트 보고 단어 맞히기 — 오늘 하루 딱 한 번 기회!',
+        imageUrl: 'https://kimberry1.github.io/noonchi/icon-512.png',
+        link: { mobileWebUrl: gameUrl, webUrl: gameUrl },
+      },
+      buttons: [{ title: '도전하기', link: { mobileWebUrl: gameUrl, webUrl: gameUrl } }],
+    });
+  }
 }
 
 function showFeedbackEl(id, msg, cls){
