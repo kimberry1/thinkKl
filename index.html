@@ -6,10 +6,10 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236B2418'/><circle cx='34' cy='50' r='15' fill='%23FFF9F4'/><circle cx='66' cy='50' r='15' fill='%23FFF9F4'/><circle cx='38' cy='50' r='5.5' fill='%232B1A12'/><circle cx='62' cy='50' r='5.5' fill='%232B1A12'/></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#6B2418">
-<meta name="description" content="noonchi는 힌트를 보고 단어를 맞히는 한국어 단어 연상 게임입니다. 로그인 없이 바로 플레이하거나, 계정을 만들어 랭킹과 파티 대결을 즐겨보세요.">
+<meta name="description" content="noonchi는 힌트를 보고 단어를 맞히는 한국어 단어 연상 게임입니다. 로그인 없이 바로 플레이하거나, 계정을 만들어 랭킹과 멀티 대결을 즐겨보세요.">
 <meta name="application-name" content="noonchi">
 <meta property="og:title" content="noonchi · 힌트 읽고 단어 맞히기">
-<meta property="og:description" content="눈치껏 힌트 읽고 단어 맞히기. 매일의 1% 도전과 친구와의 파티 대결.">
+<meta property="og:description" content="눈치껏 힌트 읽고 단어 맞히기. 매일의 1% 도전과 친구와의 멀티 대결.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 630'><rect width='1200' height='630' fill='%23FFF9F4'/><g transform='translate(600,250)'><circle cx='-80' cy='0' r='70' fill='%23FFFFFF' stroke='%236B2418' stroke-width='12'/><circle cx='80' cy='0' r='70' fill='%23FFFFFF' stroke='%236B2418' stroke-width='12'/><circle cx='-60' cy='8' r='26' fill='%232B1A12'/><circle cx='60' cy='8' r='26' fill='%232B1A12'/></g><text x='600' y='450' font-family='sans-serif' font-weight='800' font-size='80' fill='%236B2418' text-anchor='middle'>noonchi</text><text x='600' y='510' font-family='sans-serif' font-size='32' fill='%238B6A5C' text-anchor='middle'>힌트 읽고 단어 맞히기</text></svg>">
 <meta name="twitter:card" content="summary_large_image">
@@ -1140,8 +1140,8 @@ input,button,textarea,select { font-family:inherit; }
       <div class="top-sub">연습 · 랭크</div>
     </div>
     <div class="mode-card-top party-top" id="partyModeCard" onclick="enterBattleScreen()">
-      <div class="top-icon">👥</div>
-      <div class="top-title">파티 모드</div>
+      <div class="top-icon">🎮</div>
+      <div class="top-title">멀티 모드</div>
       <div class="top-sub" id="partyModeDesc">협동 · 경쟁</div>
     </div>
   </div>
@@ -1446,14 +1446,14 @@ input,button,textarea,select { font-family:inherit; }
   <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
   <div class="w400 nav-bar">
     <button class="back-btn" id="battleBackBtn" onclick="battleNavBack()">← 뒤로</button>
-    <span style="font-family:var(--font-display);font-size:1rem">🎉 파티모드</span>
+    <span style="font-family:var(--font-display);font-size:1rem">🎮 멀티모드</span>
   </div>
 
   <!-- 게스트 차단 배너 -->
   <div class="w400" id="battleGuestBlock" style="display:none;text-align:center;padding:32px 0">
     <div style="font-size:3rem;margin-bottom:12px">🔒</div>
     <div style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:8px;color:var(--warn)">로그인이 필요해요</div>
-    <div style="font-size:0.78rem;color:var(--muted);line-height:1.7;margin-bottom:20px">파티모드는 로그인 후 이용할 수 있어요.</div>
+    <div style="font-size:0.78rem;color:var(--muted);line-height:1.7;margin-bottom:20px">멀티모드는 로그인 후 이용할 수 있어요.</div>
     <button onclick="doLogout()" style="padding:13px 28px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-family:var(--font-display);font-size:0.95rem;cursor:pointer">로그인하러 가기</button>
   </div>
 
@@ -1479,6 +1479,16 @@ input,button,textarea,select { font-family:inherit; }
             <div style="font-size:1.4rem;margin-bottom:6px">🤝</div>
             <div style="font-family:var(--font-display);font-size:0.9rem;margin-bottom:4px">협동</div>
             <div style="font-size:0.65rem;color:var(--muted)">같이 힌트 의논하며 풀기</div>
+          </div>
+        </div>
+        <!-- 문제 수 선택 -->
+        <div style="margin-bottom:18px">
+          <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px">문제 수</div>
+          <div style="display:flex;gap:6px">
+            <button onclick="setBattleRounds(3)" id="bRounds3" style="flex:1;padding:10px 0;border-radius:10px;border:2px solid var(--border);background:var(--surface);font-family:var(--font-display);font-size:0.9rem;cursor:pointer;color:var(--muted)">3</button>
+            <button onclick="setBattleRounds(5)" id="bRounds5" style="flex:1;padding:10px 0;border-radius:10px;border:2px solid var(--accent);background:var(--primary-soft);font-family:var(--font-display);font-size:0.9rem;cursor:pointer;color:var(--accent)">5</button>
+            <button onclick="setBattleRounds(7)" id="bRounds7" style="flex:1;padding:10px 0;border-radius:10px;border:2px solid var(--border);background:var(--surface);font-family:var(--font-display);font-size:0.9rem;cursor:pointer;color:var(--muted)">7</button>
+            <button onclick="setBattleRounds(9)" id="bRounds9" style="flex:1;padding:10px 0;border-radius:10px;border:2px solid var(--border);background:var(--surface);font-family:var(--font-display);font-size:0.9rem;cursor:pointer;color:var(--muted)">9</button>
           </div>
         </div>
         <button onclick="battleNextStep()" style="width:100%;padding:15px;border-radius:15px;border:none;background:var(--primary);color:#fff;font-family:var(--font-display);font-size:1rem;cursor:pointer">다음 →</button>
@@ -1618,7 +1628,7 @@ input,button,textarea,select { font-family:inherit; }
       <button id="brShowAnswer" onclick="brRevealAnswer()" style="padding:12px;border-radius:12px;border:1px solid rgba(247,202,111,0.4);background:rgba(247,202,111,0.08);color:var(--warn);font-family:var(--font-body);font-size:0.85rem;font-weight:700;cursor:pointer">🔍 정답 보기</button>
       <button id="brNextBtn" onclick="closeBattleResultAndNext()" style="padding:12px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:var(--font-display);font-size:0.88rem;letter-spacing:0.05em;cursor:pointer;display:none">➡️ 다음 문제 (방장)</button>
       <div id="brGuestWait" style="display:none;padding:10px;border-radius:12px;background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:0.78rem;text-align:center">방장이 다음 문제를 선택하면 함께 이동돼요</div>
-      <button onclick="closeBattleResultAndLeave()" style="padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-size:0.82rem;cursor:pointer">파티 나가기</button>
+      <button onclick="closeBattleResultAndLeave()" style="padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-size:0.82rem;cursor:pointer">멀티 나가기</button>
     </div>
   </div>
 </div>
@@ -3656,7 +3666,7 @@ function startRound() {
     currentAltWords=item.alt_words||[];
     currentHints=seededPickHints(item, battleDiff, getBattleSeed());
     var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
-    document.getElementById('roundLabel').textContent=modeLabel;
+    document.getElementById('roundLabel').textContent=modeLabel+' '+round+'/'+battleMaxRounds;
     var dl2={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME'};
     document.getElementById('roundDiff').className='round-diff '+battleDiff;
     document.getElementById('roundDiff').textContent=dl2[battleDiff]||battleDiff.toUpperCase();
@@ -4415,8 +4425,10 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('screenGame').classList.contains('active'))checkAnswer();
 });
 
-// ── 파티모드 모드 ──
+// ── 멀티모드 ──
 var battleDiff='easy', battleCode='', battleWordIdx=-1, battleBattleMode='compete';
+var battleMaxRounds=5;
+var battleRoundsPlayed=0, battleCompeteWins=0, battleCoopSolved=0;
 var isBattleGame=false, battleStartTime=0, battleIsCreator=false;
 var roundStartTime=0; // 각 라운드 시작 시각 (ms)
 var battleId=null, battleChannel=null, myPlayerId=null;
@@ -5790,6 +5802,19 @@ function selectBattleMode(mode){
   }
 }
 
+function setBattleRounds(n){
+  battleMaxRounds=n;
+  [3,5,7,9].forEach(function(v){
+    var btn=document.getElementById('bRounds'+v);
+    if(!btn) return;
+    if(v===n){
+      btn.style.border='2px solid var(--accent)'; btn.style.background='var(--primary-soft)'; btn.style.color='var(--accent)';
+    } else {
+      btn.style.border='2px solid var(--border)'; btn.style.background='var(--surface)'; btn.style.color='var(--muted)';
+    }
+  });
+}
+
 async function createBattle(){
   // 이전 방이 남아있으면 정리 후 재생성
   if(battleId || myPlayerId){
@@ -6159,8 +6184,9 @@ function _launchBattleGame(){
   window.currentHintsAll=[];
   currentHints=seededPickHints(item, battleDiff, getBattleSeed());
   gameOver=false; shownHintCount=0;
-  round=1; // 파티모드 시작은 항상 1
-  // ── 파티 신규 세션: 점수/연속/플레이 초기화 (이전 세션 누적값 승계 방지) ──
+  round=1; // 멀티모드 시작은 항상 1
+  battleRoundsPlayed=0; battleCompeteWins=0; battleCoopSolved=0;
+  // ── 멀티 신규 세션: 점수/연속/플레이 초기화 (이전 세션 누적값 승계 방지) ──
   scoreCorrect=0; scoreStreak=0; scoreTotal=0; currentStreak=0;
   updateScoreUI();
   window._partyHintRunning=false; window._partyAnswerRunning=false; window._nextRoundRunning=false; window._lastProcessedRound=0; window._resultShowing=false; window._solvedProcessedRound=-1;
@@ -6189,12 +6215,12 @@ function _launchBattleGame(){
   var _swbP=document.getElementById('saveWrongNoteBtn');
   if(_swbP){ _swbP.style.background='var(--primary-soft)'; _swbP.style.borderColor='var(--primary)'; _swbP.style.color='var(--accent)'; _swbP.textContent='📝 다시풀기'; }
   var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
-  document.getElementById('roundLabel').textContent=modeLabel;
+  document.getElementById('roundLabel').textContent=modeLabel+' '+round+'/'+battleMaxRounds;
   var dl={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME',insane:'INSANE',random:'RANDOM'};
   document.getElementById('roundDiff').className='round-diff '+battleDiff;
   document.getElementById('roundDiff').textContent=dl[battleDiff]||battleDiff.toUpperCase();
   var modePill=document.getElementById('modePill');
-  modePill.textContent = battleBattleMode==='coop' ? '🤝 협동' : '⚔️ 경쟁';
+  modePill.textContent = (battleBattleMode==='coop' ? '🤝 협동' : '⚔️ 경쟁')+' '+round+'/'+battleMaxRounds;
   modePill.className='mode-pill practice';
   var diffPill=document.getElementById('diffPill');
   diffPill.textContent=battleDiff.toUpperCase(); diffPill.className='diff-pill '+battleDiff;
@@ -6250,45 +6276,75 @@ function _launchBattleGame(){
 
 function showBattleResult(solved, isWin){
   if(!isBattleGame) return;
-  // 파티모드: isBattleGame은 false로 만들지 않음 (방에 계속 남아있어야 함)
+  // 멀티모드: isBattleGame은 false로 만들지 않음 (방에 계속 남아있어야 함)
   // gameOver=true는 checkAnswer/onBattleChange에서 이미 세팅됨
   var isCoop=battleBattleMode==='coop';
+
+  // 라운드 통계 누적
+  battleRoundsPlayed++;
+  if(!isCoop && solved && isWin) battleCompeteWins++;
+  if(isCoop && solved) battleCoopSolved++;
+
+  var isFinal = (battleRoundsPlayed >= battleMaxRounds);
 
   // 결과 오버레이 대신 게임 화면 상단에 배너로 표시
   var msg='';
   if(isCoop){
     msg = solved ? '🤝 함께 맞혔어요!' : '😅 아쉽지만 다음에!';
   } else {
-    // 경쟁: isWin이 true면 내가 먼저 맞춘 것
     if(solved && isWin)      msg = '🏆 축하해요, 이겼어요!';
     else if(solved && !isWin) msg = '😅 아쉬워요, 졌네요';
     else                      msg = '😅 못 맞혔어요';
   }
   showFeedback(msg, solved&&(!isWin||isCoop) ? 'wrong-fb' : 'correct-fb');
 
-  // 파티 결과 오버레이 표시
   var brEmoji = document.getElementById('brEmoji');
   var brTitle = document.getElementById('brTitle');
   var brSub   = document.getElementById('brSub');
   var brDetail= document.getElementById('brDetail');
   var brNext  = document.getElementById('brNextBtn');
-  if(brEmoji) brEmoji.textContent = (solved&&isWin)||(solved&&isCoop) ? '🏆' : '😅';
-  if(brTitle) brTitle.textContent = msg;
-  if(brSub)   brSub.textContent   = isCoop ? '협동모드 결과' : '경쟁모드 결과';
-  // 라운드별 시간 (roundStartTime 기준, ms 단위)
-  if(brDetail){ brDetail.innerHTML=''; brDetail.style.display='none'; }
-  // 다음 문제 버튼: 방장만 표시
-  if(brNext) brNext.style.display = battleIsCreator ? 'block' : 'none';
-  // 정답 보기 버튼: 못 맞춘 경우에만 표시
-  var brAns = document.getElementById('brShowAnswer');
-  if(brAns) brAns.style.display = (!solved || !isWin) ? 'block' : 'none';
-  var brGW = document.getElementById('brGuestWait');
-  if(brGW) brGW.style.display = !battleIsCreator ? 'block' : 'none';
+  var brAns   = document.getElementById('brShowAnswer');
+  var brGW    = document.getElementById('brGuestWait');
+
+  if(isFinal){
+    // ── 최종 결과 ──
+    if(isCoop){
+      var pct = Math.round(battleCoopSolved/battleMaxRounds*100);
+      var rating = pct===100 ? '환상의 호흡 👑' : pct>=80 ? '호흡 척척 🎉' : pct>=60 ? '그래도 해냈어 👍' : '다음엔 더 잘할 수 있어 💪';
+      if(brEmoji) brEmoji.textContent = pct===100 ? '👑' : pct>=80 ? '🎉' : pct>=60 ? '👍' : '💪';
+      if(brTitle) brTitle.textContent = battleCoopSolved+'/'+battleMaxRounds+' 성공!';
+      if(brSub)   brSub.textContent   = rating;
+    } else {
+      var losses = battleMaxRounds - battleCompeteWins;
+      var isOverallWin = battleCompeteWins > losses;
+      if(brEmoji) brEmoji.textContent = isOverallWin ? '🏆' : '😢';
+      if(brTitle) brTitle.textContent = isOverallWin ? '승리!' : '패배!';
+      if(brSub)   brSub.textContent   = battleCompeteWins+'승 '+losses+'패';
+    }
+    if(brDetail){ brDetail.innerHTML=''; brDetail.style.display='none'; }
+    if(brNext) brNext.style.display='none';
+    if(brAns)  brAns.style.display = (!solved||!isWin) ? 'block' : 'none';
+    if(brGW)   brGW.style.display='none';
+  } else {
+    // ── 라운드 결과 ──
+    if(brEmoji) brEmoji.textContent = (solved&&isWin)||(solved&&isCoop) ? '🏆' : '😅';
+    if(brTitle) brTitle.textContent = msg;
+    if(isCoop){
+      if(brSub) brSub.textContent = battleCoopSolved+'/'+battleRoundsPlayed+' 성공 · '+(battleMaxRounds-battleRoundsPlayed)+'문제 남음';
+    } else {
+      var rLoss = battleRoundsPlayed - battleCompeteWins;
+      if(brSub) brSub.textContent = battleCompeteWins+'승 '+rLoss+'패 · '+(battleMaxRounds-battleRoundsPlayed)+'문제 남음';
+    }
+    if(brDetail){ brDetail.innerHTML=''; brDetail.style.display='none'; }
+    if(brNext) brNext.style.display = battleIsCreator ? 'block' : 'none';
+    if(brAns)  brAns.style.display = (!solved||!isWin) ? 'block' : 'none';
+    if(brGW)   brGW.style.display = !battleIsCreator ? 'block' : 'none';
+  }
+
   document.getElementById('battleResultOverlay').className='confirm-overlay show';
 
   // 라운드 종료 시 경쟁 전광판 표시
   if(!isCoop){ renderScoreboard(Object.values(battlePlayers)); }
-
 }
 
 
@@ -6310,6 +6366,10 @@ function brRevealAnswer(){
 
 // 방장: 결과 팝업 닫고 다음 문제 요청
 function closeBattleResultAndNext(){
+  if(battleRoundsPlayed >= battleMaxRounds){
+    closeBattleResultAndLeave();
+    return;
+  }
   document.getElementById('battleResultOverlay').className='confirm-overlay';
   gameOver = false;
   isBattleGame=true;
