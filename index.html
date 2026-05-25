@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -6,6 +6,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236B2418'/><circle cx='34' cy='50' r='15' fill='%23FFF9F4'/><circle cx='66' cy='50' r='15' fill='%23FFF9F4'/><circle cx='38' cy='50' r='5.5' fill='%232B1A12'/><circle cx='62' cy='50' r='5.5' fill='%232B1A12'/></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#6B2418">
+<meta name="color-scheme" content="light">
 <meta name="description" content="noonchi는 힌트를 보고 단어를 맞히는 한국어 단어 연상 게임입니다. 로그인 없이 바로 플레이하거나, 계정을 만들어 랭킹과 멀티 대결을 즐겨보세요.">
 <meta name="application-name" content="noonchi">
 <meta property="og:title" content="noonchi · 힌트 읽고 단어 맞히기">
@@ -31,6 +32,7 @@
    ═══════════════════════════════════════════════════════ */
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 :root {
+  color-scheme: light;
   --bg:#FFF9F4;
   --surface:#FCF1EA;
   --card:#FFFFFF;
@@ -664,6 +666,55 @@ input,button,textarea,select { font-family:inherit; }
 .auth-tab.active { background:var(--primary); color:#fff; border-color:var(--primary); }
 .auth-error { font-size:0.76rem; color:var(--accent2); margin-bottom:8px; display:none; min-height:18px; }
 
+/* ── 홈화면 신규 레이아웃 ── */
+.home-header { width:100%; max-width:400px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.home-header-right { display:flex; align-items:center; gap:8px; }
+.home-streak-badge { display:flex; align-items:center; gap:4px; background:var(--warn-bg); border:1px solid #F0DCB2; border-radius:20px; padding:5px 10px; font-size:0.75rem; font-weight:700; color:#D97706; }
+.home-user-info { display:flex; flex-direction:row; align-items:center; gap:5px; cursor:pointer; }
+.home-user-name { font-size:0.82rem; font-weight:700; color:var(--text); }
+.home-user-lv { font-size:0.75rem; font-weight:600; color:var(--muted); }
+.home-member-badge { font-size:0.6rem; font-weight:700; padding:2px 7px; border-radius:5px; white-space:nowrap; }
+.home-member-badge.free { background:var(--surface); color:var(--muted); border:1px solid var(--border); }
+.home-member-badge.pro { background:var(--gold-bg); color:var(--gold); border:1px solid #F0DCB2; }
+.home-profile-btn { width:34px; height:34px; border-radius:50%; border:none; background:var(--surface); color:var(--text-soft); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+
+.hero-card { width:100%; max-width:400px; background:var(--card); border:1px solid var(--border); border-radius:22px; padding:24px 22px; margin-bottom:16px; box-shadow:var(--shadow-md); }
+.hero-label { font-size:0.7rem; font-weight:700; color:var(--primary); letter-spacing:0.06em; margin-bottom:10px; }
+.hero-body { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; }
+.hero-text-col { flex:1; }
+.hero-title { font-family:var(--font-body); font-weight:800; font-size:1.45rem; color:var(--text); letter-spacing:-0.02em; line-height:1.3; margin-bottom:6px; }
+.hero-sub { font-size:0.78rem; color:var(--muted); line-height:1.5; }
+.hero-ring-col { flex-shrink:0; }
+.ring-wrap { position:relative; width:72px; height:72px; }
+.ring-wrap svg { transform:rotate(-90deg); }
+.ring-pct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-body); font-weight:800; font-size:1.05rem; color:var(--primary); }
+.hero-cta { width:100%; padding:15px; border-radius:14px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.18s; }
+.hero-cta:hover { background:var(--primary-deep); transform:translateY(-1px); }
+.hero-cta:disabled { opacity:0.5; cursor:default; transform:none; }
+
+.home-section-label { width:100%; max-width:400px; font-size:0.72rem; font-weight:700; color:var(--text-soft); margin-bottom:10px; }
+.mode-grid { width:100%; max-width:400px; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.mode-grid-btn { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:20px 16px; cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; gap:6px; transition:all 0.18s; box-shadow:var(--shadow-sm); }
+.mode-grid-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--border-strong); }
+.mode-grid-btn.multi { background:linear-gradient(135deg,#FFE5DC,rgba(247,100,80,0.04)); border-color:#FFCEB5; }
+.mgb-icon { font-size:1.4rem; line-height:1; }
+.mgb-title { font-family:var(--font-body); font-weight:800; font-size:0.98rem; color:var(--text); }
+.mgb-sub { font-size:0.7rem; color:var(--muted); }
+.mode-grid-btn.multi .mgb-title { color:#C5410B; }
+
+.home-util-row { width:100%; max-width:400px; display:flex; gap:8px; margin-bottom:16px; }
+.util-btn { flex:1; padding:12px; border-radius:13px; border:1px solid var(--border); background:var(--surface); color:var(--text-soft); font-family:inherit; font-size:0.78rem; font-weight:600; cursor:pointer; text-align:center; transition:all 0.15s; }
+.util-btn:hover { background:var(--card); color:var(--text); }
+
+/* diff dot (구슬 대체) */
+.diff-dot { display:inline-block; width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.diff-dot.easy   { background:var(--success); }
+.diff-dot.normal { background:var(--info); }
+.diff-dot.hard   { background:var(--warn); }
+.diff-dot.extreme{ background:var(--accent2); }
+.diff-dot.insane { background:#C5410B; }
+.diff-dot.random { background:conic-gradient(#2A8C5F,#3E6B9A,#C57B12,#FF8866,#2A8C5F); }
+
 </style>
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
@@ -825,12 +876,12 @@ input,button,textarea,select { font-family:inherit; }
     </div>
     <div class="divider"><div class="divider-line"></div><span class="divider-text">소셜 로그인</span><div class="divider-line"></div></div>
     <div class="social-login-row">
-      <button class="social-btn kakao" onclick="loginKakao()">💬 카카오</button>
+      <button class="social-btn kakao" onclick="loginKakao()">카카오</button>
       <button class="social-btn" disabled style="opacity:0.4;cursor:default;flex:1;padding:11px 4px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:0.75rem;font-weight:600">N 준비중</button>
       <button class="social-btn" disabled style="opacity:0.4;cursor:default;flex:1;padding:11px 4px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:0.75rem;font-weight:600">G 준비중</button>
     </div>
     <div class="divider"><div class="divider-line"></div><span class="divider-text">또는</span><div class="divider-line"></div></div>
-    <button class="guest-btn" onclick="doGuest()">👤 게스트로 플레이</button>
+    <button class="guest-btn" onclick="doGuest()">게스트로 플레이</button>
   </div>
 </div>
 
@@ -871,11 +922,11 @@ input,button,textarea,select { font-family:inherit; }
 <div class="screen" id="screenWrongNote">
   <div class="w400" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
     <button class="back-btn" onclick="showScreen('screenMode')">← 뒤로</button>
-    <span style="font-family:var(--font-display);font-size:1rem">📝 다시풀기</span>
+    <span style="font-family:var(--font-body);font-size:1rem;font-weight:700">다시풀기</span>
     <div style="width:60px"></div>
   </div>
   <div class="w400" id="wrongNoteList"></div>
-  <button class="wn-clear-btn w400" onclick="clearWrongNote()">🗑 다시풀기 초기화</button>
+  <button class="wn-clear-btn w400" onclick="clearWrongNote()">초기화</button>
 </div>
 
 <!-- 2. 모드 선택 -->
@@ -884,7 +935,7 @@ input,button,textarea,select { font-family:inherit; }
 <div class="screen" id="screenOnePct">
   <div class="w400" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
     <button class="back-btn" onclick="showScreen('screenMode')">← 뒤로</button>
-    <span style="font-family:var(--font-display);font-size:1.15rem;color:var(--accent2)">📅 오늘의 문제</span>
+    <span style="font-family:var(--font-display);font-size:1.15rem;color:var(--accent2)">오늘의 문제</span>
     <div style="width:60px"></div>
   </div>
 
@@ -929,7 +980,7 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
 
-  <button class="w400" id="opShareBtn" onclick="shareOnePct()" style="display:none;max-width:400px;width:100%;padding:15px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;">📤 결과 공유하기</button>
+  <button class="w400" id="opShareBtn" onclick="shareOnePct()" style="display:none;max-width:400px;width:100%;padding:15px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;">결과 공유하기</button>
   <button class="w400 next-btn" id="opNextBtn" onclick="showScreen('screenMode')" style="display:none;max-width:400px">다음에 또 도전하기 →</button>
 </div>
 
@@ -937,13 +988,13 @@ input,button,textarea,select { font-family:inherit; }
 <div class="screen" id="screenSuggest">
   <div class="w400" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
     <button class="back-btn" onclick="reportGoBack()">← 뒤로</button>
-    <span style="font-family:var(--font-display);font-size:1rem">💡 제보 · 신고</span>
+    <span style="font-family:var(--font-display);font-size:1rem">제보 · 신고</span>
     <div style="width:60px"></div>
   </div>
   <!-- 탭 -->
   <div class="w400" style="display:flex;gap:8px;margin-bottom:16px">
     <button id="tabSuggest" onclick="switchReportTab('suggest')" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--primary);background:var(--primary-soft);color:var(--accent);font-family:var(--font-body);font-weight:700;font-size:0.82rem;cursor:pointer">💡 단어 제보</button>
-    <button id="tabReport" onclick="switchReportTab('report')" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-weight:700;font-size:0.82rem;cursor:pointer">🚨 힌트 신고</button>
+    <button id="tabReport" onclick="switchReportTab('report')" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-weight:700;font-size:0.82rem;cursor:pointer">힌트 신고</button>
   </div>
   <!-- 제보 패널 -->
   <div class="suggest-card" id="panelSuggest">
@@ -991,27 +1042,54 @@ input,button,textarea,select { font-family:inherit; }
 <div class="screen" id="screenProfile">
   <div class="w400" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
     <button class="back-btn" onclick="showScreen('screenMode')">← 뒤로</button>
-    <span style="font-family:var(--font-display);font-size:1rem">👤 내 프로필</span>
-    <div style="width:60px"></div>
+    <span style="font-family:var(--font-body);font-size:1rem;font-weight:700">프로필</span>
+    <button onclick="showScreen('screenSuggest')" style="font-size:0.75rem;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-weight:700;cursor:pointer;white-space:nowrap">제보·신고</button>
   </div>
   <div class="profile-card">
-    <div class="profile-avatar-row">
-      <div class="avatar-circle" id="profileEmoji">🎮</div>
-      <div class="profile-name-block">
-        <div class="pname" id="profileName">플레이어</div>
-        <div class="ptitle" id="profileTitle">단어 새싹 🌱</div>
+    <div class="profile-avatar-row" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div class="avatar-circle" id="profileEmoji">🎮</div>
+        <div class="profile-name-block">
+          <div class="pname" id="profileName">플레이어</div>
+          <div class="ptitle" id="profileTitle">단어 새싹 🌱</div>
+        </div>
       </div>
+      <button onclick="toggleSettingsPanel()" id="settingsGearBtn" style="background:none;border:none;cursor:pointer;font-size:2rem;color:var(--muted);padding:4px;line-height:1;border-radius:10px;align-self:flex-start" aria-label="설정">⚙️</button>
+    </div>
+    <!-- XP 바 (프로필 전용) -->
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <span class="xp-level" id="xpLevel">Lv.1 · 단어 씨앗</span>
+        <span class="xp-pts" id="xpPts">0 / 100 XP</span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    </div>
+    <!-- 설정 패널 -->
+    <div id="settingsPanel" style="display:none;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:0.68rem;color:var(--muted);font-weight:700;letter-spacing:0.12em;margin-bottom:12px">설정</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:0.85rem;font-weight:700;color:var(--text)">게임 알림</span>
+        <button id="pushToggleBtn" onclick="togglePushNotification()" style="font-size:0.78rem;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer"><span id="pushToggleState">확인 중...</span></button>
+      </div>
+    </div>
+    <!-- 오늘의 미션 (프로필 전용) -->
+    <div class="daily-section" id="dailySection" style="margin-bottom:4px">
+      <div class="daily-header">
+        <span class="daily-title">오늘의 미션</span>
+        <span class="daily-reset" id="dailyReset"></span>
+      </div>
+      <div id="dailyMissionList"></div>
     </div>
     <div class="stat-grid">
       <div class="stat-box"><div class="sv" id="pSTotal">0</div><div class="sl">총 플레이</div></div>
       <div class="stat-box"><div class="sv" id="pSCorrect">0</div><div class="sl">총 정답</div></div>
       <div class="stat-box"><div class="sv" id="pSStreak">0</div><div class="sl">최고연속</div></div>
-      <div class="stat-box"><div class="sv" id="pSEasy" style="color:var(--success)">0</div><div class="sl">🟢 쉬움</div></div>
-      <div class="stat-box"><div class="sv" id="pSNormal" style="color:var(--info)">0</div><div class="sl">🔵 보통</div></div>
-      <div class="stat-box"><div class="sv" id="pSHard" style="color:var(--warn)">0</div><div class="sl">🟡 어려움</div></div>
-      <div class="stat-box"><div class="sv" id="pSExtreme" style="color:var(--accent2)">0</div><div class="sl">🔴 극한</div></div>
-      <div class="stat-box"><div class="sv" id="pSInsane" style="color:#C5410B">0</div><div class="sl">💜 지옥</div></div>
-      <div class="stat-box"><div class="sv" id="pSRank" style="color:var(--gold)">0</div><div class="sl">🏆 랭크</div></div>
+      <div class="stat-box"><div class="sv" id="pSEasy" style="color:var(--success)">0</div><div class="sl">쉬움</div></div>
+      <div class="stat-box"><div class="sv" id="pSNormal" style="color:var(--info)">0</div><div class="sl">보통</div></div>
+      <div class="stat-box"><div class="sv" id="pSHard" style="color:var(--warn)">0</div><div class="sl">어려움</div></div>
+      <div class="stat-box"><div class="sv" id="pSExtreme" style="color:var(--accent2)">0</div><div class="sl">극한</div></div>
+      <div class="stat-box"><div class="sv" id="pSInsane" style="color:#C5410B">0</div><div class="sl">지옥</div></div>
+      <div class="stat-box"><div class="sv" id="pSRank" style="color:var(--gold)">0</div><div class="sl">랭크</div></div>
     </div>
   </div>
 
@@ -1045,11 +1123,6 @@ input,button,textarea,select { font-family:inherit; }
     <div class="avatar-picker-title">🎭 아바타 선택</div>
     <div class="avatar-grid"><div class="avatar-opt" onclick="selectAvatar('🦊')">🦊</div><div class="avatar-opt" onclick="selectAvatar('🐼')">🐼</div><div class="avatar-opt" onclick="selectAvatar('🦁')">🦁</div><div class="avatar-opt" onclick="selectAvatar('🐯')">🐯</div><div class="avatar-opt" onclick="selectAvatar('🐺')">🐺</div><div class="avatar-opt" onclick="selectAvatar('🦋')">🦋</div><div class="avatar-opt" onclick="selectAvatar('🐉')">🐉</div><div class="avatar-opt" onclick="selectAvatar('🦄')">🦄</div><div class="avatar-opt" onclick="selectAvatar('🐸')">🐸</div><div class="avatar-opt" onclick="selectAvatar('🐲')">🐲</div><div class="avatar-opt" onclick="selectAvatar('🎮')">🎮</div><div class="avatar-opt" onclick="selectAvatar('⚡')">⚡</div><div class="avatar-opt" onclick="selectAvatar('🔥')">🔥</div><div class="avatar-opt" onclick="selectAvatar('💎')">💎</div><div class="avatar-opt" onclick="selectAvatar('🌟')">🌟</div><div class="avatar-opt" onclick="selectAvatar('🧠')">🧠</div><div class="avatar-opt" onclick="selectAvatar('👑')">👑</div><div class="avatar-opt" onclick="selectAvatar('🎯')">🎯</div><div class="avatar-opt" onclick="selectAvatar('🗡️')">🗡️</div><div class="avatar-opt" onclick="selectAvatar('💀')">💀</div><div class="avatar-opt" onclick="selectAvatar('🧙')">🧙</div><div class="avatar-opt" onclick="selectAvatar('🦸')">🦸</div><div class="avatar-opt" onclick="selectAvatar('🐧')">🐧</div><div class="avatar-opt" onclick="selectAvatar('🌊')">🌊</div></div>
   </div>
-  <button id="pushToggleBtn" style="width:100%;max-width:400px;margin-bottom:8px;padding:13px;border-radius:13px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:inherit;font-size:0.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="togglePushNotification()">
-    <span>🔔 게임 알림 받기</span>
-    <span id="pushToggleState" style="font-size:0.75rem;color:var(--muted)">확인 중...</span>
-  </button>
-  <button class="suggest-btn" style="width:100%;max-width:400px;margin-bottom:14px;padding:13px;border-radius:13px;border:none;background:var(--primary-soft);color:var(--accent);font-family:inherit;font-size:0.85rem;font-weight:700;cursor:pointer" onclick="showScreen('screenSuggest')">💡 제보하기</button>
   <div class="section-title">🏅 업적</div>
   <div class="mission-list" id="missionList"></div>
 </div>
@@ -1059,19 +1132,27 @@ input,button,textarea,select { font-family:inherit; }
 </div>
 
 <div class="screen" id="screenMode">
-  <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
-  <div class="tagline">모드를 선택하세요</div>
-  <div class="w400 user-bar">
-    <div style="display:flex;align-items:center;gap:8px">
-      <span id="userAvatarBar" style="font-size:1.3rem;line-height:1">🎮</span>
-      <span class="user-name" id="userNameDisplay">게스트</span>
-    </div>
-    <div class="user-bar-right">
-      <button class="profile-btn" onclick="goProfile()">👤 프로필</button>
-      <button class="profile-btn" onclick="changeLang()">🌐 언어</button>
-      <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+  <!-- 상단 헤더 -->
+  <div class="home-header w400">
+    <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
+    <div class="home-header-right">
+      <div class="home-user-info" onclick="goProfile()">
+        <span class="home-member-badge free" id="homeMemberBadge">일반</span>
+        <div class="home-streak-badge" id="homeStreakBadge" style="display:none">
+          <span id="homeStreakFire">🔥</span><span id="homeStreakNum">0</span>일
+        </div>
+        <span class="home-user-name" id="homeNameDisplay">게스트</span>
+        <span class="home-user-lv" id="homeLvDisplay">Lv.1</span>
+      </div>
+      <button class="home-profile-btn" onclick="goProfile()" aria-label="프로필">
+        <span id="userAvatarBar" style="font-size:1rem;line-height:1">👤</span>
+      </button>
     </div>
   </div>
+  <!-- JS 호환용 숨김 -->
+  <span id="userNameDisplay" style="display:none">게스트</span>
+  <button style="display:none" onclick="changeLang()">언어</button>
+  <button style="display:none" onclick="doLogout()">로그아웃</button>
   
   <!-- 출석 배너 -->
   <div class="attendance-banner" id="attendanceBanner">
@@ -1082,29 +1163,18 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
 
-  <!-- 출석 스트릭 배너 -->
-  <div class="streak-banner" id="streakBanner" style="display:none">
-    <div class="streak-fire" id="streakFire">🔥</div>
-    <div class="streak-info">
-      <div class="streak-text"><span id="streakNum">0</span>일 연속 출석 중!</div>
-      <div class="streak-days" id="streakDays"></div>
-    </div>
+  <!-- 스트릭 배너 (JS 호환 유지, 화면엔 미표시) -->
+  <div id="streakBanner" style="display:none">
+    <span id="streakFire">🔥</span>
+    <span id="streakNum">0</span>
+    <div id="streakDays"></div>
   </div>
 
-
-  <!-- XP 바 -->
-  <div class="xp-bar-wrap">
-    <div class="xp-row">
-      <span class="xp-level" id="xpLevel">Lv.1 · 단어 씨앗</span>
-      <span class="xp-pts" id="xpPts">0 / 100 XP</span>
-    </div>
-    <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
-  </div>
 
   <!-- 1% 문제 카드 -->
   <div class="one-pct-card" onclick="goOnePct()">
     <div class="one-pct-header">
-      <span class="one-pct-badge">📅 오늘의 문제</span>
+      <span class="one-pct-badge">오늘의 문제</span>
       <span class="one-pct-refresh" id="onePctRefresh">매일 00:00 갱신</span>
     </div>
     <div class="one-pct-title">오늘 이 단어 맞힐 수 있어?</div>
@@ -1125,29 +1195,19 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
 
-  <!-- 일일 미션 -->
-  <div class="daily-section" id="dailySection">
-    <div class="daily-header">
-      <span class="daily-title">📋 오늘의 미션</span>
-      <span class="daily-reset" id="dailyReset"></span>
-    </div>
-    <div id="dailyMissionList"></div>
-  </div>
   <div class="w400 mode-cards-top">
     <div class="mode-card-top solo-top" onclick="showScreen('screenSolo')">
-      <div class="top-icon">🎯</div>
       <div class="top-title">솔로 모드</div>
       <div class="top-sub">연습 · 랭크</div>
     </div>
     <div class="mode-card-top party-top" id="partyModeCard" onclick="enterBattleScreen()">
-      <div class="top-icon">🎮</div>
       <div class="top-title">멀티 모드</div>
       <div class="top-sub" id="partyModeDesc">협동 · 경쟁</div>
     </div>
   </div>
   <div class="w400" style="display:flex;gap:10px;margin-top:12px">
-    <button onclick="showScreen('screenWrongNote');renderWrongNote()" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-size:0.8rem;font-weight:700;cursor:pointer">📝 다시풀기</button>
-    <button onclick="showScreen('screenSuggest')" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-size:0.8rem;font-weight:700;cursor:pointer">💡 제보·신고</button>
+    <button onclick="showScreen('screenWrongNote');renderWrongNote()" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-size:0.8rem;font-weight:700;cursor:pointer">다시풀기</button>
+    <button onclick="showScreen('screenSuggest')" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-size:0.8rem;font-weight:700;cursor:pointer">제보·신고</button>
   </div>
 </div>
 
@@ -1156,20 +1216,14 @@ input,button,textarea,select { font-family:inherit; }
   <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
   <div class="w400 nav-bar">
     <button class="nav-back" onclick="showScreen('screenMode')">← 뒤로</button>
-    <span class="nav-title">🎯 솔로 모드</span>
+    <span class="nav-title">솔로 모드</span>
   </div>
   <div class="w400 mode-cards">
     <div class="mode-card practice" onclick="goSelectDiff('practice')">
-      <div class="mode-tag">자유롭게</div>
-      <div class="mode-icon">🎮</div>
       <div class="mode-title">연습모드</div>
-      <div class="mode-desc">부담 없이 즐기기</div>
     </div>
     <div class="mode-card ranked" id="rankedModeCard" onclick="tryRankedMode()">
-      <div class="mode-tag">랭크전</div>
-      <div class="mode-icon">🏆</div>
       <div class="mode-title">랭크모드</div>
-      <div class="mode-desc" id="rankedModeDesc">월간 랭킹 경쟁</div>
     </div>
   </div>
 </div>
@@ -1183,51 +1237,37 @@ input,button,textarea,select { font-family:inherit; }
   </div>
   <!-- 게스트 차단 배너 (랭크모드) -->
   <div class="w400" id="rankedGuestBlock" style="display:none;text-align:center;padding:32px 0">
-    <div style="font-size:3rem;margin-bottom:12px">🔒</div>
-    <div style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:8px;color:var(--warn)">로그인이 필요해요</div>
-    <div style="font-size:0.78rem;color:var(--muted);line-height:1.7;margin-bottom:20px">랭크모드는 로그인 후 이용할 수 있어요.<br>점수와 기록을 쌓으려면 로그인이 필요해요.</div>
-    <button onclick="doLogout()" style="padding:13px 28px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-family:var(--font-display);font-size:0.95rem;cursor:pointer">로그인하러 가기</button>
+    <div style="font-family:var(--font-body);font-size:1rem;margin-bottom:8px;color:var(--text-soft)">로그인이 필요해요</div>
+    <button onclick="doLogout()" style="padding:13px 28px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.95rem;cursor:pointer">로그인하러 가기</button>
   </div>
 
   <div class="w400" id="diffCardsArea" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
     <div class="diff-card easy" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px" onclick="startGame('easy')">
-      <div class="diff-icon" style="margin:0;font-size:1.6rem">🟢</div>
-      <div style="flex:1">
-        <div class="diff-name" style="margin:0 0 2px">쉬움</div>
-        <div class="diff-rate">쉬운힌트 5개 하드힌트 1개 제공</div>
-      </div>
+      <div style="flex:1"><div class="diff-name" style="margin:0">쉬움</div></div>
       <div style="flex-shrink:0;text-align:right">
         <div style="font-size:0.82rem;font-weight:800;color:var(--success);margin-bottom:5px">93%</div>
         <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:93%"></div></div>
       </div>
     </div>
     <div class="diff-card" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,rgba(100,200,255,0.1),rgba(100,200,255,0.03));border-color:rgba(100,200,255,0.25)" onclick="startGame('normal')">
-      <div style="font-size:1.6rem;margin:0">🔵</div>
-      <div style="flex:1">
-        <div style="font-family:var(--font-display);font-size:1rem;color:var(--info);margin:0 0 2px">보통</div>
-        <div class="diff-rate">쉬운힌트 4개 하드힌트 2개 제공</div>
-      </div>
+      <div style="flex:1"><div style="font-family:var(--font-body);font-size:1rem;font-weight:800;color:var(--info);margin:0">보통</div></div>
       <div style="flex-shrink:0;text-align:right">
         <div style="font-size:0.82rem;font-weight:800;color:var(--info);margin-bottom:5px">69%</div>
         <div class="diff-bar" style="width:80px;margin:0"><div style="height:100%;border-radius:4px;background:var(--info);width:69%"></div></div>
       </div>
     </div>
     <div class="diff-card hard" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px" onclick="startGame('hard')">
-      <div class="diff-icon" style="margin:0;font-size:1.6rem">🟡</div>
-      <div style="flex:1">
-        <div class="diff-name" style="margin:0 0 2px">어려움</div>
-        <div class="diff-rate">쉬운힌트 3개 하드힌트 3개 제공</div>
-      </div>
+      <div style="flex:1"><div class="diff-name" style="margin:0">어려움</div></div>
       <div style="flex-shrink:0;text-align:right">
         <div style="font-size:0.82rem;font-weight:800;color:var(--warn);margin-bottom:5px">47%</div>
         <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:47%"></div></div>
       </div>
     </div>
     <div class="diff-card extreme" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer" id="extremeDiffCard" onclick="tryStartExtreme()">
-      <div class="diff-icon" style="margin:0;font-size:1.6rem" id="extremeIcon">🔒</div>
+      <span id="extremeIcon" style="display:none;font-size:0.9rem;flex-shrink:0"></span>
       <div style="flex:1">
-        <div class="diff-name" style="margin:0 0 2px">극한</div>
-        <div class="diff-rate" id="extremeDesc">레벨 10 도달 시 해금</div>
+        <div class="diff-name" style="margin:0">극한</div>
+        <div class="diff-rate" id="extremeDesc" style="margin-top:2px">Lv.10 해금</div>
       </div>
       <div style="flex-shrink:0;text-align:right">
         <div style="font-size:0.82rem;font-weight:800;color:var(--accent2);margin-bottom:5px">22%</div>
@@ -1235,10 +1275,10 @@ input,button,textarea,select { font-family:inherit; }
       </div>
     </div>
     <div style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;background:linear-gradient(135deg,#FDE0D6,rgba(180,0,255,0.03));border:1px solid #FFCEB5" id="insaneDiffCard" onclick="tryStartInsane()">
-      <div style="font-size:1.6rem;margin:0" id="insaneIcon">🔒</div>
+      <span id="insaneIcon" style="display:none;font-size:0.9rem;flex-shrink:0"></span>
       <div style="flex:1">
-        <div style="font-family:var(--font-display);font-size:1rem;color:#C5410B;margin:0 0 2px">지옥</div>
-        <div class="diff-rate" id="insaneDesc">레벨 20 도달 시 해금</div>
+        <div style="font-family:var(--font-body);font-size:1rem;font-weight:800;color:#C5410B;margin:0">지옥</div>
+        <div class="diff-rate" id="insaneDesc" style="margin-top:2px">Lv.20 해금</div>
       </div>
       <div style="flex-shrink:0;text-align:right">
         <div style="font-size:0.82rem;font-weight:800;color:#C5410B;margin-bottom:5px">9%</div>
@@ -1246,20 +1286,15 @@ input,button,textarea,select { font-family:inherit; }
       </div>
     </div>
     <div class="diff-card random" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px" onclick="startGame('random')">
-      <span style="display:inline-block;width:1.5rem;height:1.5rem;border-radius:50%;background:conic-gradient(#ff0000,#ff7700,#ffff00,#00cc00,#0066ff,#8800ff,#ff0000);flex-shrink:0;margin:0"></span>
-      <div style="flex:1">
-        <div class="diff-name" style="margin:0 0 2px">랜덤</div>
-        <div class="diff-rate">쉬움 ~ 어려움 혼합 출제</div>
-      </div>
+      <div style="flex:1"><div class="diff-name" style="margin:0">랜덤</div></div>
       <div style="flex-shrink:0;text-align:right">
-        <div style="font-size:0.82rem;font-weight:800;color:var(--primary);margin-bottom:5px">랜덤</div>
+        <div style="font-size:0.82rem;font-weight:800;color:var(--primary);margin-bottom:5px">—</div>
         <div class="diff-bar" style="width:80px;margin:0"><div class="diff-bar-fill" style="width:60%"></div></div>
       </div>
     </div>
   </div>
-  <!-- 랭크모드일 때만 보임 -->
   <div class="w400" id="rankViewWrap" style="display:none; margin-top:4px;">
-    <button class="rank-view-btn" onclick="showScreen('screenRank')">🏅 랭킹 보기</button>
+    <button class="rank-view-btn" onclick="showScreen('screenRank')">랭킹 보기</button>
   </div>
 </div>
 
@@ -1289,19 +1324,19 @@ input,button,textarea,select { font-family:inherit; }
     <div class="pills">
       <button id="inlineSubBtn" onclick="goToPremiumFromGame()" style="display:none;font-size:0.65rem;color:#fff;background:var(--primary);border:none;border-radius:20px;padding:4px 11px;font-family:inherit;font-weight:700;cursor:pointer;letter-spacing:0;white-space:nowrap">✨ 구독하기</button>
       <span id="inlineProBadge" style="display:none;font-size:0.6rem;color:var(--gold);background:var(--gold-bg);border:1px solid #F0DCB2;border-radius:20px;padding:3px 10px;font-weight:700;white-space:nowrap">✨ PRO</span>
-<span class="mode-pill" id="modePill">🎮 연습</span>
-      <button id="saveWrongNoteBtn" onclick="saveCurrentWordToWrongNote()" style="font-size:0.7rem;padding:5px 10px;border-radius:20px;border:none;background:var(--primary-soft);color:var(--primary);cursor:pointer;font-family:inherit;font-weight:600;transition:all 0.15s;white-space:nowrap">📝 다시풀기</button>
+<span class="mode-pill" id="modePill">연습</span>
+      <button id="saveWrongNoteBtn" onclick="saveCurrentWordToWrongNote()" style="font-size:0.7rem;padding:5px 10px;border-radius:20px;border:none;background:var(--primary-soft);color:var(--primary);cursor:pointer;font-family:inherit;font-weight:600;transition:all 0.15s;white-space:nowrap">다시풀기</button>
       <span class="diff-pill" id="diffPill">쉬움</span>
     </div>
   </div>
   <div class="w400 score-bar" id="scoreBar">
     <div class="score-item"><div class="s-label">정답</div><div class="s-val green" id="scoreCorrect">0</div></div>
-    <div class="score-item"><div class="s-label">🔥연속</div><div class="s-val orange" id="scoreStreak">0</div></div>
+    <div class="score-item"><div class="s-label">연속</div><div class="s-val orange" id="scoreStreak">0</div></div>
     <div class="score-item"><div class="s-label">플레이</div><div class="s-val purple" id="scoreTotal">0</div></div>
   </div>
   <!-- 경쟁모드 전광판 -->
   <div class="w400" id="competeboard" style="display:none;background:var(--card);border:1px solid rgba(107,36,24,0.25);border-radius:16px;padding:12px 14px;margin-bottom:12px">
-    <div style="font-size:0.62rem;color:var(--muted);letter-spacing:0.15em;margin-bottom:8px">⚔️ 실시간 스코어</div>
+    <div style="font-size:0.62rem;color:var(--muted);letter-spacing:0.15em;margin-bottom:8px">실시간 스코어</div>
     <div id="scoreboardList"></div>
   </div>
   <div class="w400 game-card">
@@ -1309,11 +1344,11 @@ input,button,textarea,select { font-family:inherit; }
       <span class="round-label" id="roundLabel">1라운드</span>
       <div style="display:flex;align-items:center;gap:8px">
         <span class="round-diff easy" id="roundDiff" style="display:none">쉬움</span>
-        <button onclick="openReportInGame()" aria-label="힌트 신고" style="background:none;border:none;color:var(--muted);font-size:0.7rem;cursor:pointer;padding:2px 6px;border-radius:6px;border:1px solid var(--border)" title="힌트 신고">🚨</button>
+        <button onclick="openReportInGame()" aria-label="힌트 신고" style="background:none;border:none;color:var(--muted);font-size:0.7rem;cursor:pointer;padding:2px 6px;border-radius:6px;border:1px solid var(--border)">신고</button>
       </div>
     </div>
     <div class="hints-area" id="hintsArea"></div>
-    <button class="more-hint-btn" id="moreHintBtn" onclick="isBattleGame?requestPartyHint():requestMoreHint()">💡 힌트 추가 공개</button>
+    <button class="more-hint-btn" id="moreHintBtn" onclick="isBattleGame?requestPartyHint():requestMoreHint()">힌트 더 보기</button>
     <div class="input-wrap" id="gameInputWrap">
       <input type="text" class="answer-input" id="answerInput" placeholder="단어를 입력하세요..." maxlength="20"/>
       <button class="submit-btn" id="submitBtn" onclick="checkAnswer()" aria-label="정답 제출">→</button>
@@ -1327,8 +1362,8 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
   <div class="w400 bottom-row" id="bottomRow">
-    <button class="action-btn" id="giveUpBtn" onclick="isBattleGame?requestPartyAnswer():requestGiveUp()">🏳 모르겠어요<br><span style="font-size:0.65rem;opacity:0.7">정답 공개</span></button>
-    <button class="action-btn skip-style" id="skipRoundBtn" onclick="confirmSkip()">➡️ 그냥 넘어가기<br><span style="font-size:0.65rem;opacity:0.7">정답은 안 알려줌</span></button>
+    <button class="action-btn" id="giveUpBtn" onclick="isBattleGame?requestPartyAnswer():requestGiveUp()">모르겠어요</button>
+    <button class="action-btn skip-style" id="skipRoundBtn" onclick="confirmSkip()">건너뛰기</button>
   </div>
   <button class="w400 next-btn" id="nextBtn" onclick="nextRound()">다음 단어 →</button>
 </div>
@@ -1342,8 +1377,8 @@ input,button,textarea,select { font-family:inherit; }
     <div class="party-vote-sub" id="pvSub">요청이 왔어요.</div>
     <div class="party-vote-status" id="pvStatus"></div>
     <div class="party-vote-btns" style="margin-top:16px">
-      <button class="vote-yes" onclick="submitPartyVote(true)">✅ 동의</button>
-      <button class="vote-no" onclick="submitPartyVote(false)">❌ 거부</button>
+      <button class="vote-yes" onclick="submitPartyVote(true)">동의</button>
+      <button class="vote-no" onclick="submitPartyVote(false)">거부</button>
     </div>
   </div>
 </div>
@@ -1355,8 +1390,8 @@ input,button,textarea,select { font-family:inherit; }
     <div class="party-vote-title" id="joinReqName">누군가</div>
     <div class="party-vote-sub">님이 파티 입장을 요청했어요.<br>수락하시겠어요?</div>
     <div class="party-vote-btns" style="margin-top:16px">
-      <button class="vote-yes" onclick="approveJoin(true)">✅ 수락</button>
-      <button class="vote-no" onclick="approveJoin(false)">❌ 거부</button>
+      <button class="vote-yes" onclick="approveJoin(true)">수락</button>
+      <button class="vote-no" onclick="approveJoin(false)">거부</button>
     </div>
   </div>
 </div>
@@ -1368,7 +1403,7 @@ input,button,textarea,select { font-family:inherit; }
     <div class="op-result-title">정답입니다!</div>
     <div class="op-result-sub" id="opCorrectSub">오늘의 문제를 맞혔어요</div>
     <div class="op-result-btns">
-      <button class="op-result-share" onclick="shareOnePct();closeOpModal('opCorrectModal')">📤 결과 공유하기</button>
+      <button class="op-result-share" onclick="shareOnePct();closeOpModal('opCorrectModal')">결과 공유하기</button>
       <button class="op-result-close" onclick="closeOpModal('opCorrectModal')">닫기</button>
     </div>
   </div>
@@ -1446,7 +1481,7 @@ input,button,textarea,select { font-family:inherit; }
   <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
   <div class="w400 nav-bar">
     <button class="back-btn" id="battleBackBtn" onclick="battleNavBack()">← 뒤로</button>
-    <span style="font-family:var(--font-display);font-size:1rem">🎮 멀티모드</span>
+    <span style="font-family:var(--font-display);font-size:1rem">멀티모드</span>
   </div>
 
   <!-- 게스트 차단 배너 -->
@@ -1471,14 +1506,10 @@ input,button,textarea,select { font-family:inherit; }
         <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:12px">① 게임 방식 선택</div>
         <div style="display:flex;gap:10px;margin-bottom:18px">
           <div id="bMode_compete" onclick="selectBattleMode('compete')" style="flex:1;padding:16px 10px;border-radius:14px;border:2px solid var(--accent);background:var(--primary-soft);cursor:pointer;text-align:center">
-            <div style="font-size:1.4rem;margin-bottom:6px">⚔️</div>
-            <div style="font-family:var(--font-display);font-size:0.9rem;margin-bottom:4px">경쟁</div>
-            <div style="font-size:0.65rem;color:var(--muted)">먼저 맞추는 사람이 승리</div>
+            <div style="font-family:var(--font-display);font-size:1rem;font-weight:800">경쟁</div>
           </div>
           <div id="bMode_coop" onclick="selectBattleMode('coop')" style="flex:1;padding:16px 10px;border-radius:14px;border:2px solid transparent;background:var(--card);cursor:pointer;text-align:center">
-            <div style="font-size:1.4rem;margin-bottom:6px">🤝</div>
-            <div style="font-family:var(--font-display);font-size:0.9rem;margin-bottom:4px">협동</div>
-            <div style="font-size:0.65rem;color:var(--muted)">같이 힌트 의논하며 풀기</div>
+            <div style="font-family:var(--font-display);font-size:1rem;font-weight:800">협동</div>
           </div>
         </div>
         <!-- 문제 수 선택 -->
@@ -1502,10 +1533,8 @@ input,button,textarea,select { font-family:inherit; }
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
           <div class="diff-card easy" id="bDiff_easy" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;cursor:pointer" onclick="selectBattleDiff('easy')">
-            <div class="diff-icon" style="margin:0;font-size:1.6rem">🟢</div>
             <div style="flex:1">
-              <div class="diff-name" style="margin:0 0 2px">쉬움</div>
-              <div class="diff-rate">쉬운힌트 5개 어려운힌트 1개 제공</div>
+              <div class="diff-name" style="margin:0">쉬움</div>
             </div>
             <div style="flex-shrink:0;text-align:right">
               <div style="font-size:0.82rem;font-weight:800;color:var(--success);margin-bottom:5px">93%</div>
@@ -1513,10 +1542,8 @@ input,button,textarea,select { font-family:inherit; }
             </div>
           </div>
           <div id="bDiff_normal" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;background:linear-gradient(135deg,rgba(100,200,255,0.1),rgba(100,200,255,0.03));border:1px solid rgba(100,200,255,0.25);cursor:pointer" onclick="selectBattleDiff('normal')">
-            <div style="font-size:1.6rem;margin:0">🔵</div>
             <div style="flex:1">
-              <div style="font-family:var(--font-display);font-size:1rem;color:var(--info);margin:0 0 2px">보통</div>
-              <div class="diff-rate">쉬운힌트 4개 어려운힌트 2개 제공</div>
+              <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--info);margin:0">보통</div>
             </div>
             <div style="flex-shrink:0;text-align:right">
               <div style="font-size:0.82rem;font-weight:800;color:var(--info);margin-bottom:5px">69%</div>
@@ -1524,10 +1551,8 @@ input,button,textarea,select { font-family:inherit; }
             </div>
           </div>
           <div class="diff-card hard" id="bDiff_hard" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;cursor:pointer" onclick="selectBattleDiff('hard')">
-            <div class="diff-icon" style="margin:0;font-size:1.6rem">🟡</div>
             <div style="flex:1">
-              <div class="diff-name" style="margin:0 0 2px">어려움</div>
-              <div class="diff-rate">쉬운힌트 3개 어려운힌트 3개 제공</div>
+              <div class="diff-name" style="margin:0">어려움</div>
             </div>
             <div style="flex-shrink:0;text-align:right">
               <div style="font-size:0.82rem;font-weight:800;color:var(--warn);margin-bottom:5px">47%</div>
@@ -1535,10 +1560,10 @@ input,button,textarea,select { font-family:inherit; }
             </div>
           </div>
           <div class="diff-card extreme" id="bDiff_extreme" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box">
-            <div class="diff-icon" style="margin:0;font-size:1.6rem" id="bExtIcon">🔒</div>
+            <span id="bExtIcon" style="display:none;font-size:0.9rem;flex-shrink:0"></span>
             <div style="flex:1">
-              <div class="diff-name" style="margin:0 0 2px"><span id="bDiffExtremeLabel">극한 🔒</span></div>
-              <div class="diff-rate" id="bDiffExtremeRight">레벨 10 도달 시 해금</div>
+              <div class="diff-name" style="margin:0"><span id="bDiffExtremeLabel">극한</span></div>
+              <div class="diff-rate" id="bDiffExtremeRight">Lv.10 해금</div>
             </div>
             <div style="flex-shrink:0;text-align:right">
               <div style="font-size:0.82rem;font-weight:800;color:var(--accent2);margin-bottom:5px">22%</div>
@@ -1546,10 +1571,10 @@ input,button,textarea,select { font-family:inherit; }
             </div>
           </div>
           <div id="bDiff_insane" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;background:linear-gradient(135deg,#FDE0D6,rgba(180,0,255,0.03));border:1px solid #FFCEB5">
-            <div style="font-size:1.6rem;margin:0" id="bInsIcon">🔒</div>
+            <span id="bInsIcon" style="display:none;font-size:0.9rem;flex-shrink:0"></span>
             <div style="flex:1">
-              <div style="font-family:var(--font-display);font-size:1rem;color:#C5410B;margin:0 0 2px"><span id="bDiffInsaneLabel">지옥 🔒</span></div>
-              <div class="diff-rate" id="bDiffInsaneRight">레벨 20 도달 시 해금</div>
+              <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;color:#C5410B;margin:0"><span id="bDiffInsaneLabel">지옥</span></div>
+              <div class="diff-rate" id="bDiffInsaneRight">Lv.20 해금</div>
             </div>
             <div style="flex-shrink:0;text-align:right">
               <div style="font-size:0.82rem;font-weight:800;color:#C5410B;margin-bottom:5px">9%</div>
@@ -1557,10 +1582,8 @@ input,button,textarea,select { font-family:inherit; }
             </div>
           </div>
           <div class="diff-card random" id="bDiff_random" style="width:100%;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;box-sizing:border-box;cursor:pointer" onclick="selectBattleDiff('random')">
-            <span style="display:inline-block;width:1.5rem;height:1.5rem;border-radius:50%;background:conic-gradient(#ff0000,#ff7700,#ffff00,#00cc00,#0066ff,#8800ff,#ff0000);flex-shrink:0;margin:0"></span>
             <div style="flex:1">
-              <div class="diff-name" style="margin:0 0 2px">랜덤</div>
-              <div class="diff-rate" id="bRandomDesc">쉬움 ~ 어려움 혼합 출제</div>
+              <div class="diff-name" style="margin:0">랜덤</div>
             </div>
             <div style="flex-shrink:0;text-align:right">
               <div style="font-size:0.82rem;font-weight:800;color:var(--primary);margin-bottom:5px">랜덤</div>
@@ -1584,15 +1607,17 @@ input,button,textarea,select { font-family:inherit; }
   <div class="w400" id="battleCodePanel" style="display:none">
     <!-- 방 정보 -->
     <div style="background:var(--card);border:2px solid var(--warn);border-radius:18px;padding:22px;text-align:center;margin-bottom:14px">
-      <div id="bCodeModeEmoji" style="font-size:1.4rem;margin-bottom:4px">⚔️</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div id="bCodeModeEmoji" style="font-size:1.15rem;font-weight:800;color:var(--accent)">경쟁 5문제</div>
+        <div id="battleDiffDisplay" style="font-size:1.15rem;font-weight:800;color:var(--muted)"></div>
+      </div>
       <div style="font-size:0.65rem;color:var(--muted);letter-spacing:0.15em;margin-bottom:6px">대결 코드</div>
       <div id="battleCodeDisplay" style="font-family:var(--font-display);font-size:2.6rem;color:var(--warn);letter-spacing:0.15em;margin-bottom:4px">----</div>
-      <div id="battleDiffDisplay" style="font-size:0.72rem;color:var(--muted)"></div>
       <div id="myRoleBadge" style="margin-top:8px;font-size:0.7rem;padding:3px 10px;border-radius:20px;display:inline-block;background:var(--primary-soft);color:var(--accent)">👑 방장</div>
     </div>
     <!-- 초대 공유 (모두 가능) -->
-    <button onclick="copyBattleCode()" style="width:100%;padding:11px;border-radius:12px;border:1px solid var(--warn);background:#FFF6E8;color:var(--warn);font-family:var(--font-body);font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:6px">📋 코드 복사</button>
-    <button id="battleInviteBtn" onclick="shareKakaoInvite()" style="width:100%;padding:11px;border-radius:12px;border:none;background:#FEE500;color:#3A1D1D;font-family:var(--font-body);font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:6px">💬 카카오로 초대하기</button>
+    <button onclick="copyBattleCode()" style="width:100%;padding:11px;border-radius:12px;border:1px solid var(--warn);background:#FFF6E8;color:var(--warn);font-family:var(--font-body);font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:6px">코드 복사</button>
+    <button id="battleInviteBtn" onclick="shareKakaoInvite()" style="width:100%;padding:11px;border-radius:12px;border:none;background:#FEE500;color:#3A1D1D;font-family:var(--font-body);font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:6px">카카오로 초대하기</button>
     <!-- 참가자 현황 -->
     <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px">참가자 현황</div>
     <div id="battlePlayersPanel" style="margin-bottom:12px">
@@ -1951,6 +1976,7 @@ function updatePremiumUI(){
   var activeArea = document.getElementById('premiumActiveArea');
   var untilText = document.getElementById('premiumUntilText');
   if(!card) return;
+  var homeBadge = document.getElementById('homeMemberBadge');
   if(isPremium && premiumUntil){
     card.className = 'premium-card active';
     badge.className = 'premium-badge active'; badge.textContent = '✨ 프리미엄';
@@ -1958,11 +1984,13 @@ function updatePremiumUI(){
     activeArea.style.display = 'block';
     var d = new Date(premiumUntil);
     untilText.textContent = d.toLocaleDateString('ko-KR') + ' 까지 이용 가능';
+    if(homeBadge){ homeBadge.textContent='PRO'; homeBadge.className='home-member-badge pro'; }
   } else {
     card.className = 'premium-card free';
     badge.style.display = 'none';
     freeArea.style.display = 'block';
     activeArea.style.display = 'none';
+    if(homeBadge){ homeBadge.textContent='일반'; homeBadge.className='home-member-badge free'; }
   }
   // user-bar에 프리미엄 뱃지
   var nameEl = document.getElementById('userNameDisplay');
@@ -2242,12 +2270,19 @@ function getStreakXP(streak){
 
 function renderStreakBanner(){
   var banner=document.getElementById('streakBanner');
+  var badge=document.getElementById('homeStreakBadge');
   if(!banner)return;
-  if(isGuest){banner.style.display='none';return;}
+  if(isGuest){banner.style.display='none';if(badge)badge.style.display='none';return;}
   var streak=stats.loginStreak||0;
-  if(streak<1){banner.style.display='none';return;}
-  banner.style.display='flex';
+  if(streak<1){banner.style.display='none';if(badge)badge.style.display='none';return;}
+  banner.style.display='none'; // 배너는 숨기고 상단 배지로만 표시
   document.getElementById('streakNum').textContent=streak;
+  if(badge){
+    badge.style.display='inline-flex';
+    var fireIcon=streak>=30?'🌟':streak>=14?'⚡':'🔥';
+    document.getElementById('homeStreakFire').textContent=fireIcon;
+    document.getElementById('homeStreakNum').textContent=streak;
+  }
   // 마일스톤 클래스 + 아이콘
   banner.className='streak-banner'+(streak>=30?' milestone-30': streak>=14?' milestone-14':'');
   var fire=document.getElementById('streakFire');
@@ -2429,7 +2464,6 @@ function renderDailyMissions(){
     var pct = done ? 100 : Math.round((curVal/maxVal)*100);
     var countText = (pm && !done) ? curVal+'/'+maxVal : '';
     return '<div class="daily-mission'+(done?' done':'')+'">'+
-      '<div class="dm-icon">'+m.icon+'</div>'+
       '<div class="dm-info">'+
         '<div class="dm-name" style="display:flex;justify-content:space-between;align-items:center">'+
           '<span>'+(done?'<s style="opacity:0.5">':'')+m.name+(done?'</s>':'')+'</span>'+
@@ -2586,12 +2620,21 @@ function getLevelInfo(xp){
 }
 
 function updateXP(){
-  if(isGuest){ document.getElementById('xpLevel').textContent='Lv.— · 게스트'; document.getElementById('xpPts').textContent='로그인하면 XP 적립'; document.getElementById('xpFill').style.width='0%'; }
-  else {
+  var homeLv=document.getElementById('homeLvDisplay');
+  var homeName=document.getElementById('homeNameDisplay');
+  if(isGuest){
+    document.getElementById('xpLevel').textContent='Lv.— · 게스트';
+    document.getElementById('xpPts').textContent='로그인하면 XP 적립';
+    document.getElementById('xpFill').style.width='0%';
+    if(homeLv) homeLv.textContent='게스트';
+    if(homeName) homeName.textContent='게스트';
+  } else {
     var xp=loadXP();
     var info=getLevelInfo(xp);
     var lv=info.cur, nx=info.next;
     document.getElementById('xpLevel').textContent='Lv.'+lv.level+' · '+lv.title;
+    if(homeLv) homeLv.textContent='Lv.'+lv.level;
+    if(homeName) homeName.textContent=currentUser||'유저';
     if(nx){
       var prog=xp-lv.xpNeeded, needed=nx.xpNeeded-lv.xpNeeded;
       document.getElementById('xpPts').textContent=prog+' / '+needed+' XP';
@@ -2643,7 +2686,6 @@ function changeLang(){
 // ── 출석 + 스트릭 통합 체크 ──
 function checkAttendance(){
   if(isGuest) return;
-  if(isMaster) return;
   var today    =new Date().toDateString();
   var yesterday=new Date(Date.now()-86400000).toDateString();
   var banner=document.getElementById('attendanceBanner');
@@ -2746,30 +2788,10 @@ async function confirmLang(){
 
 // ── 게스트 랭크/파티 잠금 상태 표시 ──
 function updateRankedCardState(){
-  // 랭크 카드
   var rCard=document.getElementById('rankedModeCard');
-  var rDesc=document.getElementById('rankedModeDesc');
-  if(rCard){
-    if(isGuest){
-      rCard.style.opacity='0.5';
-      rDesc.innerHTML='🔒 로그인 후 이용 가능<br><span style="font-size:0.7rem;color:var(--accent2)">클릭하면 안내 화면이 나와요</span>';
-    } else {
-      rCard.style.opacity='1';
-      rDesc.innerHTML='월간 랭킹 경쟁';
-    }
-  }
-  // 파티 카드 (랭크와 동일 방식)
+  if(rCard) rCard.style.opacity=isGuest?'0.5':'1';
   var pCard=document.getElementById('partyModeCard');
-  var pDesc=document.getElementById('partyModeDesc');
-  if(pCard){
-    if(isGuest){
-      pCard.style.opacity='0.5';
-      pDesc.innerHTML='🔒 로그인 후 이용 가능<br><span style="font-size:0.7rem;color:var(--accent2)">클릭하면 안내 화면이 나와요</span>';
-    } else {
-      pCard.style.opacity='1';
-      pDesc.innerHTML='코드 하나로 같은 문제 도전';
-    }
-  }
+  if(pCard) pCard.style.opacity=isGuest?'0.5':'1';
 }
 function tryRankedMode(){
   // 게스트 차단은 goSelectDiff 내에서 배너로 처리 (파티모드와 동일)
@@ -2839,7 +2861,7 @@ function retryWrongNote(idx){
   document.getElementById('roundDiff').className='round-diff '+(item.diff||'easy');
   document.getElementById('roundDiff').textContent=dl[item.diff||'easy']||'쉬움';
   var modePill=document.getElementById('modePill');
-  modePill.textContent=currentMode==='ranked'?'🏆 랭크':'🎮 연습';
+  modePill.textContent=currentMode==='ranked'?'랭크':'연습';
   modePill.className='mode-pill '+(currentMode==='ranked'?'ranked':'practice');
   var diffPill=document.getElementById('diffPill');
   var _dl2={easy:'쉬움',normal:'보통',hard:'어려움',extreme:'극한',insane:'지옥',random:'랜덤'}; diffPill.textContent=_dl2[item.diff||'easy']||'쉬움'; diffPill.className='diff-pill '+(item.diff||'easy');
@@ -3056,6 +3078,14 @@ function _urlB64ToUint8(base64String) {
   return arr;
 }
 
+function toggleSettingsPanel(){
+  var panel=document.getElementById('settingsPanel');
+  if(!panel) return;
+  var open=panel.style.display!=='none';
+  panel.style.display=open?'none':'block';
+  if(!open) updatePushToggleUI();
+}
+
 async function updatePushToggleUI() {
   var btn = document.getElementById('pushToggleState');
   if (!btn) return;
@@ -3136,7 +3166,7 @@ function _handleKakaoCallback(){
   var params = new URLSearchParams(window.location.search);
   var code = params.get('code');
   var error = params.get('error');
-  if(error){ showShareToast('💬 카카오 로그인 취소됨'); history.replaceState(null,'',window.location.pathname); return; }
+  if(error){ showShareToast('카카오 로그인 취소됨'); history.replaceState(null,'',window.location.pathname); return; }
   if(!code) return;
   history.replaceState(null,'',window.location.pathname);
   // 인가 코드 → 토큰 교환
@@ -3153,7 +3183,7 @@ function _handleKakaoCallback(){
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
-    if(!data.access_token){ showShareToast('💬 카카오 토큰 발급 실패'); return; }
+    if(!data.access_token){ showShareToast('카카오 토큰 발급 실패'); return; }
     return fetch('https://kapi.kakao.com/v2/user/me', {
       headers: { Authorization: 'Bearer ' + data.access_token }
     }).then(function(r){ return r.json(); });
@@ -3164,7 +3194,7 @@ function _handleKakaoCallback(){
     var nickname = (profile && profile.nickname) || '카카오유저';
     doLogin(nickname, '카카오');
   })
-  .catch(function(){ showShareToast('💬 카카오 로그인 실패'); });
+  .catch(function(){ showShareToast('카카오 로그인 실패'); });
 }
 // ── 네이버 로그인 ──
 var NAVER_CLIENT_ID = 'LlnKIH9lvE8ftnsL3kL0';
@@ -3230,7 +3260,7 @@ function loginGoogle(){
 // 모드 선택
 function goSelectDiff(mode){
   currentMode=mode;
-  document.getElementById('diffNavTitle').textContent = mode==='ranked'?'🏆 랭크모드':'🎮 연습모드';
+  document.getElementById('diffNavTitle').textContent = mode==='ranked'?'랭크모드':'연습모드';
   // 게스트 + 랭크모드 → 차단 배너 표시 (파티모드와 동일 방식)
   var guestBlock = document.getElementById('rankedGuestBlock');
   var diffCards  = document.getElementById('diffCardsArea');
@@ -3382,12 +3412,12 @@ function updateExtremeLock(){
   var extremePct = Math.min(100, Math.round(curLv/10*100));
   if(extremeUnlocked){
     extremeCard.style.opacity='1'; extremeCard.style.pointerEvents='';
-    extremeIcon.textContent='🟠'; extremeDesc.textContent='쉬운힌트 2개 어려운힌트 4개 제공';
-    extremeBar.style.width='100%'; extremeBar.style.background='var(--accent2)';
+    extremeIcon.style.display='none'; extremeIcon.textContent=''; extremeDesc.textContent='';
+    extremeBar.style.width='22%'; extremeBar.style.background='var(--accent2)';
   } else {
     extremeCard.style.opacity='0.45'; extremeCard.style.pointerEvents='none';
-    extremeIcon.textContent='🔒';
-    extremeDesc.textContent='Lv.'+curLv+'/10 도달 시 해금 (현재 Lv.'+curLv+')';
+    extremeIcon.style.display='inline'; extremeIcon.textContent='🔒';
+    extremeDesc.textContent='Lv.10 해금';
     extremeBar.style.width=extremePct+'%'; extremeBar.style.background='var(--accent2)';
   }
 
@@ -3401,12 +3431,12 @@ function updateExtremeLock(){
   var insanePct = Math.min(100, Math.round(curLv/20*100));
   if(insaneUnlocked){
     insaneCard.style.opacity='1'; insaneCard.style.pointerEvents='';
-    insaneIcon.textContent='🔴'; insaneDesc.textContent='쉬운힌트 1개 어려운힌트 5개 제공';
-    insaneBar.style.width='100%'; insaneBar.style.background='#C5410B';
+    insaneIcon.style.display='none'; insaneIcon.textContent=''; insaneDesc.textContent='';
+    insaneBar.style.width='9%'; insaneBar.style.background='#C5410B';
   } else {
     insaneCard.style.opacity='0.45'; insaneCard.style.pointerEvents='none';
-    insaneIcon.textContent='🔒';
-    insaneDesc.textContent='Lv.'+curLv+'/20 도달 시 해금 (현재 Lv.'+curLv+')';
+    insaneIcon.style.display='inline'; insaneIcon.textContent='🔒';
+    insaneDesc.textContent='Lv.20 해금';
     insaneBar.style.width=insanePct+'%'; insaneBar.style.background='#C5410B';
   }
 
@@ -3466,7 +3496,7 @@ function startGame(diff) {
   SESSION_SEED = Math.floor(Math.random() * 99991) + 1;
 
   const mp = document.getElementById('modePill');
-  mp.textContent = currentMode==='ranked'?'🏆 랭크':'🎮 연습';
+  mp.textContent = currentMode==='ranked'?'랭크':'연습';
   mp.className = 'mode-pill '+(currentMode==='ranked'?'ranked':'practice');
 
   const dp = document.getElementById('diffPill');
@@ -3665,8 +3695,7 @@ function startRound() {
     currentWord=item.word;
     currentAltWords=item.alt_words||[];
     currentHints=seededPickHints(item, battleDiff, getBattleSeed());
-    var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
-    document.getElementById('roundLabel').textContent=modeLabel+' '+battleMaxRounds+'문제';
+    document.getElementById('roundLabel').textContent=round+'/'+battleMaxRounds;
     var dl2={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME'};
     document.getElementById('roundDiff').className='round-diff '+battleDiff;
     document.getElementById('roundDiff').textContent=dl2[battleDiff]||battleDiff.toUpperCase();
@@ -3736,9 +3765,9 @@ function startRound() {
       document.getElementById('moreHintBtn').className='more-hint-btn show';
       document.getElementById('moreHintBtn').disabled=false;
       if(shownHintCount<allH2.length){
-        document.getElementById('moreHintBtn').textContent='💡 힌트 추가 공개 ('+(shownHintCount+1)+'/'+allH2.length+')';
+        document.getElementById('moreHintBtn').textContent='힌트 추가 공개 ('+(shownHintCount+1)+'/'+allH2.length+')';
       } else {
-        document.getElementById('moreHintBtn').textContent='💡 힌트를 모두 공개했어요 ('+allH2.length+'개)';
+        document.getElementById('moreHintBtn').textContent='힌트를 모두 공개했어요 ('+allH2.length+'개)';
         document.getElementById('moreHintBtn').disabled=true;
       }
     }
@@ -3773,7 +3802,7 @@ function requestMoreHint(){
   var allHints = window.currentHintsAll || currentHints;
   var maxHints = allHints.length; // 최대 21개
   if(shownHintCount>=maxHints){
-    document.getElementById('moreHintBtn').textContent='💡 힌트를 모두 공개했어요 ('+maxHints+'개)';
+    document.getElementById('moreHintBtn').textContent='힌트를 모두 공개했어요 ('+maxHints+'개)';
     document.getElementById('moreHintBtn').disabled=true;
     return;
   }
@@ -3783,11 +3812,11 @@ function requestMoreHint(){
       var hint = allHints[shownHintCount-1];
       renderHintCard(shownHintCount, hint);
       if(shownHintCount>=maxHints){
-        document.getElementById('moreHintBtn').textContent='💡 힌트를 모두 공개했어요 ('+maxHints+'개)';
+        document.getElementById('moreHintBtn').textContent='힌트를 모두 공개했어요 ('+maxHints+'개)';
         document.getElementById('moreHintBtn').disabled=true;
       } else {
         document.getElementById('moreHintBtn').className='more-hint-btn show';
-        document.getElementById('moreHintBtn').textContent='💡 힌트 추가 공개 ('+(shownHintCount+1)+'/'+maxHints+')';
+        document.getElementById('moreHintBtn').textContent='힌트 추가 공개 ('+(shownHintCount+1)+'/'+maxHints+')';
         document.getElementById('moreHintBtn').disabled=false;
       }
     }
@@ -4052,8 +4081,9 @@ async function goOnePct(){
   }
 
   loadDailyChallengeStats(today);
-  // 2초마다 통계 자동 갱신 (다른 유저 시도 반영)
-  window._dcPollInterval = setInterval(function(){ if(window._dcDate) loadDailyChallengeStats(window._dcDate); }, 2000);
+  // 통계 자동 갱신 (이전 인터벌 먼저 정리 후 재설정)
+  if(window._dcPollInterval){ clearInterval(window._dcPollInterval); window._dcPollInterval=null; }
+  window._dcPollInterval = setInterval(function(){ if(window._dcDate) loadDailyChallengeStats(window._dcDate); }, 5000);
 }
 
 async function checkOnePct(){
@@ -4931,6 +4961,28 @@ async function onPlayersChange(battleIdVal){
       });
     }
   }
+
+  // ── 빈 방 자동 정리 ──
+  if(battleId){
+    var aloneInGame = isBattleGame && players.length <= 1;
+    var roomEmpty   = players.length === 0;
+    if(roomEmpty){
+      // 아무도 없으면 즉시 DB 닫기
+      if(window._emptyRoomTimer){ clearTimeout(window._emptyRoomTimer); window._emptyRoomTimer=null; }
+      if(battleIsCreator) sbUpdateBattle(battleId,{status:'closed'});
+      battleReset();
+    } else if(aloneInGame && !window._emptyRoomTimer){
+      // 게임 중 혼자 남음 → 5초 후 자동 종료 (하트비트 좀비감지와 중복 방지)
+      window._emptyRoomTimer = setTimeout(function(){
+        window._emptyRoomTimer = null;
+        if(battleId && Object.keys(battlePlayers).length <= 1){
+          showShareToast('⚠️ 상대가 나가서 게임을 종료해요');
+          if(battleIsCreator) sbUpdateBattle(battleId,{status:'closed'});
+          leaveParty();
+        }
+      }, 5000);
+    }
+  }
 }
 
 function renderScoreboard(players){
@@ -5145,6 +5197,43 @@ function stopBattlePolling(){
   }
 }
 
+// ── 하트비트: 게임 중 20초마다 last_seen 갱신 + 좀비 감지 ──
+var _heartbeatTimer = null;
+function startHeartbeat(){
+  stopHeartbeat();
+  _heartbeatTimer = setInterval(function(){
+    if(!myPlayerId || !isBattleGame || !battleId) return;
+    // 내 last_seen 갱신
+    sbUpdatePlayer(myPlayerId, {last_seen: new Date().toISOString()});
+    // 상대 좀비 감지 (last_seen이 60초 이상 멈춘 경우)
+    var now = Date.now();
+    var hasZombie = Object.values(battlePlayers).some(function(p){
+      if(p.username === currentUser) return false;
+      if(!p.last_seen) return false;
+      return (now - new Date(p.last_seen).getTime()) > 60000;
+    });
+    if(hasZombie && !window._emptyRoomTimer){
+      showShareToast('⚠️ 상대 연결이 끊긴 것 같아요. 5초 후 종료...');
+      window._emptyRoomTimer = setTimeout(function(){
+        window._emptyRoomTimer = null;
+        var stillDead = battleId && isBattleGame && Object.values(battlePlayers).some(function(p){
+          if(p.username === currentUser) return false;
+          if(!p.last_seen) return false;
+          return (Date.now() - new Date(p.last_seen).getTime()) > 60000;
+        });
+        if(stillDead){
+          showShareToast('⚠️ 상대 연결이 끊겨 게임을 종료해요');
+          if(battleIsCreator) sbUpdateBattle(battleId, {status:'closed'});
+          leaveParty();
+        }
+      }, 5000);
+    }
+  }, 20000);
+}
+function stopHeartbeat(){
+  if(_heartbeatTimer){ clearInterval(_heartbeatTimer); _heartbeatTimer=null; }
+}
+
 function showVotePopup(){}
 function renderVoteStatus(){}
 async function submitVote(){}
@@ -5233,8 +5322,8 @@ async function cancelPartyRequest(){
 function _restoreVoteBtns(){
   var el = document.querySelector('#partyVoteOverlay .party-vote-btns');
   if(el) el.innerHTML =
-    '<button class="vote-yes" onclick="submitPartyVote(true)">✅ 동의</button>'+
-    '<button class="vote-no" onclick="submitPartyVote(false)">❌ 거부</button>';
+    '<button class="vote-yes" onclick="submitPartyVote(true)">동의</button>'+
+    '<button class="vote-no" onclick="submitPartyVote(false)">거부</button>';
 }
 
 async function submitPartyVote(agreed){
@@ -5256,7 +5345,7 @@ async function submitPartyVote(agreed){
 
   // 동의 → 버튼을 "동의했습니다"로 교체 (팝업 유지)
   var btnsEl = document.querySelector('#partyVoteOverlay .party-vote-btns');
-  if(btnsEl) btnsEl.innerHTML = '<div style="padding:10px;color:var(--success);font-weight:700;font-size:0.9rem">✅ 동의했습니다. 대기중...</div>';
+  if(btnsEl) btnsEl.innerHTML = '<div style="padding:10px;color:var(--success);font-weight:700;font-size:0.9rem">동의했습니다. 대기중...</div>';
 
   // agreed_count 증가 (DB에서 현재 값 읽어서 +1)
   var rows = await sbFetch('battles?id=eq.'+battleId+'&select=consent_agreed_count,consent_total,consent_type&limit=1');
@@ -5439,7 +5528,10 @@ function _revealAnswer(){
   // 자동 저장 제거 → 다시풀기 버튼 클릭으로만 저장
   var swb2=document.getElementById('saveWrongNoteBtn');
   if(swb2){ swb2.style.background='#FFE5DC'; swb2.style.borderColor='var(--accent2)'; swb2.style.color='var(--accent2)'; }
-  if(isBattleGame) setTimeout(function(){ showBattleResult(false, false); },600);
+  if(isBattleGame){
+    var _revealRound=round;
+    setTimeout(function(){ if(round===_revealRound) showBattleResult(false, false, true); },600);
+  }
 }
 
 // ── 파티 퇴장 ──
@@ -5542,6 +5634,9 @@ function applyPendingBattleCode(){
 
 // ── 파티모드 완전 초기화 (모든 진입점에서 이걸 써야 함) ──
 async function battleReset(){
+  // 빈 방 자동 종료 타이머 + 하트비트 취소
+  if(window._emptyRoomTimer){ clearTimeout(window._emptyRoomTimer); window._emptyRoomTimer=null; }
+  stopHeartbeat();
   // 1. 폴링/WS 먼저 중단 (closed 이벤트 자기수신 방지)
   stopBattlePolling();
   var _bid = battleId; // 정리할 배틀 ID 보관
@@ -5741,15 +5836,16 @@ function updateBattleExtremeLock(){
     if(curLv >= 10){
       extEl.style.cursor='pointer'; extEl.style.opacity='1';
       extEl.onclick=function(){ selectBattleDiff('extreme'); };
-      if(extLabel) extLabel.textContent='🟠 극한';
-      if(extRight) extRight.textContent='쉬운힌트 2개 어려운힌트 4개 제공';
-      var bExtIcon=document.getElementById('bExtIcon'); if(bExtIcon) bExtIcon.textContent='🟠';
+      if(extLabel) extLabel.textContent='극한';
+      if(extRight) extRight.textContent='';
+      var bExtIcon=document.getElementById('bExtIcon'); if(bExtIcon){ bExtIcon.style.display='none'; bExtIcon.textContent=''; }
       var bExtBar=document.getElementById('bExtBar'); if(bExtBar){ bExtBar.style.width='22%'; bExtBar.style.background='var(--accent2)'; }
     } else {
       extEl.style.cursor='not-allowed'; extEl.style.opacity='0.45';
-      extEl.onclick=function(){ showShareToast('🔒 레벨 10 도달 시 방장이 개설할 수 있어요!'); };
-      if(extLabel) extLabel.textContent='🟠 극한 🔒';
-      if(extRight) extRight.innerHTML='Lv.10 해금 <span style="color:var(--muted)">('+curLv+'/10)</span>';
+      extEl.onclick=function(){ showShareToast('레벨 10 도달 시 해금'); };
+      if(extLabel) extLabel.textContent='극한';
+      if(extRight) extRight.textContent='Lv.10 해금';
+      var bExtIcon2=document.getElementById('bExtIcon'); if(bExtIcon2){ bExtIcon2.style.display='inline'; bExtIcon2.textContent='🔒'; }
       var bExtBar2=document.getElementById('bExtBar'); if(bExtBar2){ bExtBar2.style.width=Math.min(100,Math.round(curLv/10*100))+'%'; bExtBar2.style.background='var(--accent2)'; }
       if(battleDiff==='extreme'){ battleDiff='easy'; selectBattleDiff('easy'); }
     }
@@ -5762,15 +5858,16 @@ function updateBattleExtremeLock(){
     if(curLv >= 20){
       insEl.style.cursor='pointer'; insEl.style.opacity='1';
       insEl.onclick=function(){ selectBattleDiff('insane'); };
-      if(insLabel) insLabel.textContent='🔴 지옥';
-      if(insRight) insRight.textContent='쉬운힌트 1개 어려운힌트 5개 제공';
-      var bInsIcon=document.getElementById('bInsIcon'); if(bInsIcon) bInsIcon.textContent='🔴';
+      if(insLabel) insLabel.textContent='지옥';
+      if(insRight) insRight.textContent='';
+      var bInsIcon=document.getElementById('bInsIcon'); if(bInsIcon){ bInsIcon.style.display='none'; bInsIcon.textContent=''; }
       var bInsBar=document.getElementById('bInsBar'); if(bInsBar){ bInsBar.style.width='9%'; }
     } else {
       insEl.style.cursor='not-allowed'; insEl.style.opacity='0.45';
-      insEl.onclick=function(){ showShareToast('🔒 레벨 20 도달 시 방장이 개설할 수 있어요!'); };
-      if(insLabel) insLabel.textContent='🔴 지옥 🔒';
-      if(insRight) insRight.innerHTML='Lv.20 해금 <span style="color:var(--muted)">('+curLv+'/20)</span>';
+      insEl.onclick=function(){ showShareToast('레벨 20 도달 시 해금'); };
+      if(insLabel) insLabel.textContent='지옥';
+      if(insRight) insRight.textContent='Lv.20 해금';
+      var bInsIcon2=document.getElementById('bInsIcon'); if(bInsIcon2){ bInsIcon2.style.display='inline'; bInsIcon2.textContent='🔒'; }
       var bInsBar2=document.getElementById('bInsBar'); if(bInsBar2){ bInsBar2.style.width=Math.min(100,Math.round(curLv/20*100))+'%'; }
       if(battleDiff==='insane'){ battleDiff='easy'; selectBattleDiff('easy'); }
     }
@@ -5839,11 +5936,10 @@ async function createBattle(){
   battleWordIdx=wIdx; battleIsCreator=true; battleHostPremium=isPremium;
   var modeIdx=battleBattleMode==='coop'?1:0;
   _updateBattleCode(diffIdx, modeIdx, wIdx);
-  var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한',insane:'💀 지옥',random:'🎲 랜덤'};
+  var diffLabel={easy:'쉬움',normal:'보통',hard:'어려움',extreme:'극한',insane:'지옥',random:'랜덤'};
   document.getElementById('battleDiffDisplay').textContent=diffLabel[battleDiff];
-  var modeEmoji=battleBattleMode==='coop'?'🤝':'⚔️';
   var bce=document.getElementById('bCodeModeEmoji');
-  if(bce) bce.textContent=modeEmoji+(battleBattleMode==='coop'?' 협동':'  경쟁');
+  if(bce) bce.textContent=(battleBattleMode==='coop'?'협동':'경쟁')+' '+battleMaxRounds+'문제';
   // 역할 배지 - 방장
   var badge=document.getElementById('myRoleBadge');
   if(badge){ badge.textContent='👑 방장'; badge.style.background='var(--primary-soft)'; badge.style.color='var(--accent)'; }
@@ -6080,7 +6176,6 @@ function joinBattle(){
   battleWordIdx=wIdx;
   battleIsCreator=false;
   // 참여 확인 패널 표시
-  var modeEmoji=battleBattleMode==='coop'?'🤝':'⚔️';
   var modeLabel=battleBattleMode==='coop'?'협동 대결':'경쟁 대결';
   var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한'};
   document.getElementById('bjcModeEmoji').textContent=modeEmoji;
@@ -6104,7 +6199,21 @@ async function joinBattleWithSB(){
     var battle=await sbFindBattle(code);
     if(!battle){showShareToast('⚠️ 방을 찾을 수 없어요. 코드를 다시 확인해주세요.');return;}
     if(battle.status==='closed'){showShareToast('⚠️ 이미 종료된 방이에요.');return;}
-    if(battle.status==='playing'){showShareToast('⚠️ 이미 시작된 방이에요. 입장할 수 없어요.');return;}
+    if(battle.status==='playing'){
+      // 고아 방 감지: 모든 플레이어 last_seen이 5분 이상 지났으면 자동 정리
+      var _deadPlayers = await sbGetPlayers(battle.id);
+      var _now = Date.now();
+      var _isDead = _deadPlayers && _deadPlayers.length > 0 && _deadPlayers.every(function(p){
+        return p.last_seen && (_now - new Date(p.last_seen).getTime()) > 300000;
+      });
+      if(_isDead){
+        await sbFetch('battles?id=eq.'+battle.id,{method:'PATCH',headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({status:'closed'})});
+        showShareToast('⚠️ 오래된 방이 정리됐어요. 새 방을 만들어 주세요.');
+        return;
+      }
+      showShareToast('⚠️ 이미 시작된 방이에요. 입장할 수 없어요.');
+      return;
+    }
     battleId=battle.id;
     battleDiff=battle.diff;
     battleBattleMode=battle.battle_mode;
@@ -6135,11 +6244,10 @@ async function joinBattleWithSB(){
     return;
   }
   // UI 세팅
-  var diffLabel={easy:'🟢 쉬움',normal:'🔵 보통',hard:'🟡 어려움',extreme:'🔴 극한'};
+  var diffLabel={easy:'쉬움',normal:'보통',hard:'어려움',extreme:'극한'};
   document.getElementById('battleDiffDisplay').textContent=diffLabel[battleDiff]||battleDiff.toUpperCase();
-  var modeEmoji=battleBattleMode==='coop'?'🤝':'⚔️';
   var bce=document.getElementById('bCodeModeEmoji');
-  if(bce) bce.textContent=modeEmoji+(battleBattleMode==='coop'?' 협동':' 경쟁');
+  if(bce) bce.textContent=(battleBattleMode==='coop'?'협동':'경쟁')+' '+battleMaxRounds+'문제';
   document.getElementById('battleCodeDisplay').textContent=code;
   _applyParticipantUI();
   battleShowPanel('code');
@@ -6219,13 +6327,12 @@ function _launchBattleGame(){
   // 다시풀기 버튼 스타일 초기화 (파티모드)
   var _swbP=document.getElementById('saveWrongNoteBtn');
   if(_swbP){ _swbP.style.background='var(--primary-soft)'; _swbP.style.borderColor='var(--primary)'; _swbP.style.color='var(--accent)'; _swbP.textContent='📝 다시풀기'; }
-  var modeLabel=battleBattleMode==='coop'?'🤝 협동':'⚔️ 경쟁';
-  document.getElementById('roundLabel').textContent=modeLabel+' '+battleMaxRounds+'문제';
+  document.getElementById('roundLabel').textContent=round+'/'+battleMaxRounds;
   var dl={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME',insane:'INSANE',random:'RANDOM'};
   document.getElementById('roundDiff').className='round-diff '+battleDiff;
   document.getElementById('roundDiff').textContent=dl[battleDiff]||battleDiff.toUpperCase();
   var modePill=document.getElementById('modePill');
-  modePill.textContent = (battleBattleMode==='coop' ? '🤝 협동' : '⚔️ 경쟁')+' '+battleMaxRounds+'문제';
+  modePill.textContent = (battleBattleMode==='coop' ? '협동' : '경쟁')+' '+battleMaxRounds+'문제';
   modePill.className='mode-pill practice';
   var diffPill=document.getElementById('diffPill');
   diffPill.textContent=battleDiff.toUpperCase(); diffPill.className='diff-pill '+battleDiff;
@@ -6277,18 +6384,21 @@ function _launchBattleGame(){
       });
     }, 800);
   }
+  startHeartbeat();
 }
 
-function showBattleResult(solved, isWin){
+function showBattleResult(solved, isWin, noCount){
   if(!isBattleGame) return;
   // 멀티모드: isBattleGame은 false로 만들지 않음 (방에 계속 남아있어야 함)
   // gameOver=true는 checkAnswer/onBattleChange에서 이미 세팅됨
   var isCoop=battleBattleMode==='coop';
 
-  // 라운드 통계 누적
-  battleRoundsPlayed++;
-  if(!isCoop && solved && isWin) battleCompeteWins++;
-  if(isCoop && solved) battleCoopSolved++;
+  // 라운드 통계 누적 (정답보기/건너뛰기는 noCount=true로 누적 안 함)
+  if(!noCount){
+    battleRoundsPlayed++;
+    if(!isCoop && solved && isWin) battleCompeteWins++;
+    if(isCoop && solved) battleCoopSolved++;
+  }
 
   var isFinal = (battleRoundsPlayed >= battleMaxRounds);
 
@@ -6404,6 +6514,10 @@ document.addEventListener('visibilitychange', function(){
     if(!battleWs || battleWs.readyState !== WebSocket.OPEN){
       startBattlePolling(battleId);
     }
+    // 즉시 last_seen 갱신 (백그라운드 동안 하트비트 멈췄던 것 복구)
+    if(myPlayerId && isBattleGame){
+      sbUpdatePlayer(myPlayerId, {last_seen: new Date().toISOString()});
+    }
   }
 });
 
@@ -6476,3 +6590,5 @@ function maybeShowOnboarding(){
 </script>
 </body>
 </html>
+
+
