@@ -3708,7 +3708,8 @@ function startRound() {
     currentWord=item.word;
     currentAltWords=item.alt_words||[];
     currentHints=seededPickHints(item, battleDiff, getBattleSeed());
-    document.getElementById('roundLabel').textContent=round+'/'+battleMaxRounds;
+    var _bCorrect=(battleBattleMode==='coop')?battleCoopSolved:battleCompeteWins;
+    document.getElementById('roundLabel').textContent=_bCorrect+'/'+battleMaxRounds;
     var dl2={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME'};
     document.getElementById('roundDiff').className='round-diff '+battleDiff;
     document.getElementById('roundDiff').textContent=dl2[battleDiff]||battleDiff.toUpperCase();
@@ -6340,7 +6341,8 @@ function _launchBattleGame(){
   // 다시풀기 버튼 스타일 초기화 (파티모드)
   var _swbP=document.getElementById('saveWrongNoteBtn');
   if(_swbP){ _swbP.style.background='var(--primary-soft)'; _swbP.style.borderColor='var(--primary)'; _swbP.style.color='var(--accent)'; _swbP.textContent='📝 다시풀기'; }
-  document.getElementById('roundLabel').textContent=round+'/'+battleMaxRounds;
+  var _bCorrect2=(battleBattleMode==='coop')?battleCoopSolved:battleCompeteWins;
+  document.getElementById('roundLabel').textContent=_bCorrect2+'/'+battleMaxRounds;
   var dl={easy:'EASY',normal:'NORMAL',hard:'HARD',extreme:'EXTREME',insane:'INSANE',random:'RANDOM'};
   document.getElementById('roundDiff').className='round-diff '+battleDiff;
   document.getElementById('roundDiff').textContent=dl[battleDiff]||battleDiff.toUpperCase();
@@ -6412,6 +6414,9 @@ function showBattleResult(solved, isWin, noCount){
     if(!isCoop && solved && isWin) battleCompeteWins++;
     if(isCoop && solved) battleCoopSolved++;
   }
+  // roundLabel: 정답 맞춘 수/전체 (skip/giveUp 시엔 변화 없음)
+  var _rl=document.getElementById('roundLabel');
+  if(_rl){ var _bc=(isCoop?battleCoopSolved:battleCompeteWins); _rl.textContent=_bc+'/'+battleMaxRounds; }
 
   var isFinal = (battleRoundsPlayed >= battleMaxRounds);
 
