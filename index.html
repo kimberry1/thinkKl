@@ -674,9 +674,9 @@ input,button,textarea,select { font-family:inherit; }
 @media (min-width:600px) { .home-header,.w400 { max-width:560px; } }
 .home-streak-badge { display:flex; align-items:center; gap:4px; background:var(--warn-bg); border:1px solid #F0DCB2; border-radius:20px; padding:5px 10px; font-size:0.75rem; font-weight:700; color:#D97706; }
 .home-user-info { display:flex; flex-direction:row; align-items:center; gap:5px; cursor:pointer; }
-.home-user-name { font-size:0.82rem; font-weight:700; color:var(--text); }
+.home-user-name { font-size:0.75rem; font-weight:700; color:var(--text); }
 .home-user-lv { font-size:0.75rem; font-weight:600; color:var(--muted); }
-.home-member-badge { font-size:0.6rem; font-weight:700; padding:2px 7px; border-radius:5px; white-space:nowrap; }
+.home-member-badge { font-size:0.75rem; font-weight:700; padding:5px 10px; border-radius:20px; white-space:nowrap; }
 .home-member-badge.free { background:var(--surface); color:var(--muted); border:1px solid var(--border); }
 .home-member-badge.pro { background:var(--gold-bg); color:var(--gold); border:1px solid #F0DCB2; }
 .home-profile-btn { width:34px; height:34px; border-radius:50%; border:none; background:var(--surface); color:var(--text-soft); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
@@ -1139,17 +1139,17 @@ input,button,textarea,select { font-family:inherit; }
   <div class="home-header w400">
     <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
     <div class="home-header-sub">
-      <div class="home-user-info" onclick="goProfile()">
-        <span class="home-member-badge free" id="homeMemberBadge">일반</span>
-        <div class="home-streak-badge" id="homeStreakBadge" style="display:none">
-          <span id="homeStreakFire">🔥</span><span id="homeStreakNum">0</span>일
-        </div>
+      <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="goProfile()">
+        <button class="home-profile-btn" onclick="goProfile()" aria-label="프로필">
+          <span id="userAvatarBar" style="font-size:1rem;line-height:1">👤</span>
+        </button>
         <span class="home-user-name" id="homeNameDisplay">게스트</span>
         <span class="home-user-lv" id="homeLvDisplay">Lv.1</span>
+        <span class="home-member-badge free" id="homeMemberBadge">일반</span>
       </div>
-      <button class="home-profile-btn" onclick="goProfile()" aria-label="프로필">
-        <span id="userAvatarBar" style="font-size:1rem;line-height:1">👤</span>
-      </button>
+      <div class="home-streak-badge" id="homeStreakBadge" style="display:none">
+        <span id="homeStreakFire">🔥</span><span id="homeStreakNum">0</span>일
+      </div>
     </div>
   </div>
   <!-- JS 호환용 숨김 -->
@@ -3123,10 +3123,13 @@ async function togglePushNotification() {
     var sub = await reg.pushManager.getSubscription();
     if (sub) {
       await sub.unsubscribe();
-      if (supabase && currentEmail) {
-        await supabase.from('push_subscriptions').delete().eq('user_email', currentEmail);
+      if (currentEmail) {
+        fetch(SB_URL + '/rest/v1/push_subscriptions?user_email=eq.' + encodeURIComponent(currentEmail), {
+          method: 'DELETE',
+          headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON }
+        }).catch(function(){});
       }
-      showShareToast('🔕 알림이 꺼졌어요');
+      showShareToast('알림이 꺼졌어요');
     } else {
       var permission = await Notification.requestPermission();
       if (permission !== 'granted') { showShareToast('⚠️ 알림 권한이 거부됐어요'); return; }
@@ -3134,13 +3137,20 @@ async function togglePushNotification() {
         userVisibleOnly: true,
         applicationServerKey: _urlB64ToUint8(VAPID_PUBLIC_KEY)
       });
-      if (supabase) {
-        await supabase.from('push_subscriptions').upsert({
-          user_email: currentEmail || 'guest_' + Date.now(),
-          subscription: JSON.stringify(sub)
-        }, { onConflict: 'user_email' });
+      var pushEmail = currentEmail || currentUser;
+      if (pushEmail) {
+        fetch(SB_URL + '/rest/v1/push_subscriptions', {
+          method: 'POST',
+          headers: {
+            'apikey': SB_ANON,
+            'Authorization': 'Bearer ' + SB_ANON,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify({ user_email: pushEmail, subscription: JSON.stringify(sub) })
+        }).catch(function(){});
       }
-      showShareToast('🔔 알림이 켜졌어요!');
+      showShareToast('알림이 켜졌어요!');
     }
     updatePushToggleUI();
   } catch(e) {
