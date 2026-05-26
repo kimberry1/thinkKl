@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>noonchi · 힌트 읽고 단어 맞히기</title>
+<title>noonchi v36 · Neobrutal Cozy</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236B2418'/><circle cx='34' cy='50' r='15' fill='%23FFF9F4'/><circle cx='66' cy='50' r='15' fill='%23FFF9F4'/><circle cx='38' cy='50' r='5.5' fill='%232B1A12'/><circle cx='62' cy='50' r='5.5' fill='%232B1A12'/></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#6B2418">
@@ -23,7 +23,7 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════
    noonchi Design System · Wine + Peach (Light)
@@ -98,19 +98,12 @@ input,button,textarea,select { font-family:inherit; }
 .social-btn.naver { background:#03C75A; color:#fff; border-color:#03C75A; }
 .social-btn.google { background:#fff; color:#333; border-color:rgba(0,0,0,0.12); }
 
-/* 유저바 */
-.user-bar { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; box-shadow:var(--shadow-sm); }
-.user-name { font-family:var(--font-body); font-size:0.95rem; font-weight:700; color:var(--text); }
-.user-bar-right { display:flex; gap:6px; align-items:center; }
-.profile-btn { font-size:0.74rem; color:var(--primary); cursor:pointer; background:var(--primary-soft); border:none; padding:6px 11px; border-radius:8px; font-weight:600; font-family:inherit; transition:all 0.15s; }
-.profile-btn:hover { background:#FBD5C0; }
-.logout-btn { font-size:0.74rem; color:var(--muted); cursor:pointer; background:none; border:none; padding:6px 8px; border-radius:8px; font-family:inherit; font-weight:600; }
 .logout-btn:hover { color:var(--text); background:var(--surface); }
 .back-btn { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:8px 14px; color:var(--text-soft); font-size:0.84rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.15s; }
 .back-btn:hover { background:var(--surface); }
 
 /* 프로필 */
-.profile-card { width:100%; max-width:400px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:24px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+.profile-card { width:100%; max-width:400px; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:20px 16px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
 .profile-card::before { display:none; }
 .profile-avatar-row { display:flex; align-items:center; gap:16px; margin-bottom:20px; }
 .avatar-circle { width:64px; height:64px; border-radius:50%; background:var(--primary-soft); border:2px solid var(--primary); display:flex; align-items:center; justify-content:center; font-size:1.8rem; }
@@ -178,6 +171,35 @@ input,button,textarea,select { font-family:inherit; }
 .mode-card.practice .mode-title { color:var(--text); }
 .mode-card.ranked .mode-title { color:var(--text); }
 .mode-desc { font-size:0.8rem; color:var(--muted); line-height:1.55; }
+.mode-card.rush { background:linear-gradient(135deg,#FFF0EB 0%,var(--card) 80%); border-color:#FFCEB5; }
+.mode-card.rush .mode-title { color:var(--accent2); }
+.mode-card.rush .mode-tag { background:#FFE5DC; color:var(--accent2); }
+
+/* 러쉬모드 타이머 바 */
+#rushBar { display:none; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:10px 16px; margin-bottom:10px; flex-direction:row; align-items:center; justify-content:space-between; }
+#rushBar.active { display:flex; }
+#rushTimerDisplay { font-family:var(--font-body); font-size:1.4rem; font-weight:800; color:var(--primary); min-width:52px; }
+#rushScoreDisplay { font-family:var(--font-body); font-size:1.4rem; font-weight:800; color:var(--accent2); }
+.rush-timer-label { font-size:0.7rem; color:var(--muted); font-weight:600; }
+
+/* 러쉬 결과 모달 */
+#rushResultModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:900; align-items:center; justify-content:center; }
+#rushResultModal.show { display:flex; }
+.rush-result-box { background:var(--bg); border-radius:22px; padding:32px 28px 24px; max-width:340px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.18); }
+.rush-result-score { font-size:3.2rem; font-weight:800; color:var(--accent2); line-height:1; margin:8px 0 4px; }
+.rush-result-rank { font-size:1rem; font-weight:700; color:var(--muted); margin-bottom:20px; }
+.rush-lb-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
+.rush-lb-rank { width:24px; font-weight:800; color:var(--primary); text-align:center; }
+.rush-lb-name { flex:1; font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rush-lb-score { font-weight:800; color:var(--accent2); }
+
+/* 팝업 공통 X 버튼 */
+.popup-x { position:absolute; top:12px; right:14px; background:none; border:none; font-size:1.1rem; color:var(--muted); cursor:pointer; padding:4px 6px; line-height:1; border-radius:6px; font-weight:400; }
+.popup-x:hover { color:var(--text); background:var(--surface); }
+
+/* 러쉬 정보 화면 */
+.rush-info-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 18px; margin-bottom:12px; }
+.rush-diff-badge { display:inline-block; font-size:0.72rem; font-weight:700; padding:4px 12px; border-radius:20px; margin-bottom:4px; }
 
 /* 모드 선택 — 상위 카드 (솔로/파티 2-column) */
 .mode-cards-top { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; max-width:400px; }
@@ -398,14 +420,13 @@ input,button,textarea,select { font-family:inherit; }
 .sparkle-piece { position:absolute; will-change:transform,opacity; }
 .sparkle-piece svg { display:block; }
 @keyframes sparkleFly {
-  0%   { opacity:0; transform:translate(0,0) scale(0.4) rotate(0deg); }
-  15%  { opacity:1; }
-  100% { opacity:0; transform:translate(var(--sx),var(--sy)) scale(1) rotate(var(--sr)); }
+  0%   { opacity:1; transform:translate(0,0) scale(1.2) rotate(0deg); }
+  80%  { opacity:1; }
+  100% { opacity:0; transform:translate(var(--sx),var(--sy)) scale(0.6) rotate(var(--sr)); }
 }
 .pop-text { font-family:var(--font-body); font-weight:800; font-size:1.3rem; color:var(--success); }
 
 /* XP */
-.xp-bar-wrap { width:100%; max-width:400px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 16px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
 .xp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
 .xp-level { font-family:var(--font-body); font-weight:700; font-size:0.92rem; color:var(--primary); }
 .xp-pts { font-size:0.74rem; color:var(--muted); font-weight:500; }
@@ -430,10 +451,10 @@ input,button,textarea,select { font-family:inherit; }
 
 /* 일일 미션 */
 .daily-section { width:100%; max-width:400px; margin-bottom:14px; }
-.daily-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.daily-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
 .daily-title { font-size:0.74rem; color:var(--text-soft); font-weight:700; }
 .daily-reset { font-size:0.7rem; color:var(--muted); }
-.daily-mission { background:var(--card); border:1px solid var(--border); border-radius:13px; padding:13px 15px; display:flex; align-items:center; gap:12px; margin-bottom:8px; box-shadow:var(--shadow-sm); }
+.daily-mission { background:var(--card); border-radius:13px; padding:16px 16px; display:flex; align-items:center; gap:12px; margin-bottom:10px; }
 .daily-mission.done { border-color:#BFE5CC; background:var(--success-bg); }
 .dm-icon { font-size:1.4rem; width:32px; text-align:center; flex-shrink:0; }
 .dm-info { flex:1; }
@@ -505,9 +526,11 @@ input,button,textarea,select { font-family:inherit; }
 .streak-banner.milestone-30 { background:#FEF9E8; border-color:#E8CC6A; }
 .streak-banner.milestone-30 .streak-text { color:#B8860B; }
 .streak-banner.milestone-30 .streak-dot.done { background:#B8860B; border-color:#B8860B; }
-/* 정답 스트릭 배너 (초록) */
-.streak-banner.onepct-streak { background:#E8F4ED; border-color:#B0D9C0; }
-.streak-banner.onepct-streak .streak-text { color:var(--success); }
+/* 정답 스트릭 배너 (초록) — 가운데 정렬 */
+.streak-banner.onepct-streak { background:#E8F4ED; border-color:#B0D9C0; flex-direction:column; align-items:center; padding:12px 18px; }
+.streak-banner.onepct-streak .streak-text { color:var(--success); text-align:center; font-size:0.88rem; white-space:nowrap; }
+.streak-banner.onepct-streak .streak-info { align-items:center; margin:0; width:100%; }
+.streak-banner.onepct-streak .streak-days { justify-content:center; margin-top:8px; }
 .streak-banner.onepct-streak .streak-dot.done { background:var(--success); border-color:var(--success); }
 .streak-banner.onepct-streak.milestone-14 { background:#E6F0F8; border-color:#A8C8E8; }
 .streak-banner.onepct-streak.milestone-14 .streak-text { color:var(--info); }
@@ -670,8 +693,8 @@ input,button,textarea,select { font-family:inherit; }
 .home-header { width:100%; max-width:400px; display:flex; flex-direction:column; align-items:center; gap:6px; margin-bottom:20px; }
 .home-header-sub { display:flex; align-items:center; justify-content:space-between; width:100%; }
 .home-header-right { display:flex; align-items:center; gap:8px; }
-@media (min-width:480px) { .home-header,.w400 { max-width:480px; } }
-@media (min-width:600px) { .home-header,.w400 { max-width:560px; } }
+@media (min-width:480px) { .home-header,.w400,.premium-card,.daily-section,.one-pct-game-header,.suggest-card,.rush-info-card,.streak-banner,.profile-card,.avatar-picker,.one-pct-card,.section-title,.mission-list,.attendance-banner,.lang-cards,.lang-confirm-btn,.onboard-shell { max-width:480px; } }
+@media (min-width:600px) { .home-header,.w400,.premium-card,.daily-section,.one-pct-game-header,.suggest-card,.rush-info-card,.streak-banner,.profile-card,.avatar-picker,.one-pct-card,.section-title,.mission-list,.attendance-banner,.lang-cards,.lang-confirm-btn,.onboard-shell { max-width:560px; } }
 .home-streak-badge { display:flex; align-items:center; gap:4px; background:var(--warn-bg); border:1px solid #F0DCB2; border-radius:20px; padding:5px 10px; font-size:0.75rem; font-weight:700; color:#D97706; }
 .home-user-info { display:flex; flex-direction:row; align-items:center; gap:5px; cursor:pointer; }
 .home-user-name { font-size:0.75rem; font-weight:700; color:var(--text); }
@@ -681,33 +704,6 @@ input,button,textarea,select { font-family:inherit; }
 .home-member-badge.pro { background:var(--gold-bg); color:var(--gold); border:1px solid #F0DCB2; }
 .home-profile-btn { width:34px; height:34px; border-radius:50%; border:none; background:var(--surface); color:var(--text-soft); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 
-.hero-card { width:100%; max-width:400px; background:var(--card); border:1px solid var(--border); border-radius:22px; padding:24px 22px; margin-bottom:16px; box-shadow:var(--shadow-md); }
-.hero-label { font-size:0.7rem; font-weight:700; color:var(--primary); letter-spacing:0.06em; margin-bottom:10px; }
-.hero-body { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; }
-.hero-text-col { flex:1; }
-.hero-title { font-family:var(--font-body); font-weight:800; font-size:1.45rem; color:var(--text); letter-spacing:-0.02em; line-height:1.3; margin-bottom:6px; }
-.hero-sub { font-size:0.78rem; color:var(--muted); line-height:1.5; }
-.hero-ring-col { flex-shrink:0; }
-.ring-wrap { position:relative; width:72px; height:72px; }
-.ring-wrap svg { transform:rotate(-90deg); }
-.ring-pct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--font-body); font-weight:800; font-size:1.05rem; color:var(--primary); }
-.hero-cta { width:100%; padding:15px; border-radius:14px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.18s; }
-.hero-cta:hover { background:var(--primary-deep); transform:translateY(-1px); }
-.hero-cta:disabled { opacity:0.5; cursor:default; transform:none; }
-
-.home-section-label { width:100%; max-width:400px; font-size:0.72rem; font-weight:700; color:var(--text-soft); margin-bottom:10px; }
-.mode-grid { width:100%; max-width:400px; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-.mode-grid-btn { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:20px 16px; cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; gap:6px; transition:all 0.18s; box-shadow:var(--shadow-sm); }
-.mode-grid-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--border-strong); }
-.mode-grid-btn.multi { background:linear-gradient(135deg,#FFE5DC,rgba(247,100,80,0.04)); border-color:#FFCEB5; }
-.mgb-icon { font-size:1.4rem; line-height:1; }
-.mgb-title { font-family:var(--font-body); font-weight:800; font-size:0.98rem; color:var(--text); }
-.mgb-sub { font-size:0.7rem; color:var(--muted); }
-.mode-grid-btn.multi .mgb-title { color:#C5410B; }
-
-.home-util-row { width:100%; max-width:400px; display:flex; gap:8px; margin-bottom:16px; }
-.util-btn { flex:1; padding:12px; border-radius:13px; border:1px solid var(--border); background:var(--surface); color:var(--text-soft); font-family:inherit; font-size:0.78rem; font-weight:600; cursor:pointer; text-align:center; transition:all 0.15s; }
-.util-btn:hover { background:var(--card); color:var(--text); }
 
 /* diff dot (구슬 대체) */
 .diff-dot { display:inline-block; width:10px; height:10px; border-radius:50%; flex-shrink:0; }
@@ -718,9 +714,187 @@ input,button,textarea,select { font-family:inherit; }
 .diff-dot.insane { background:#C5410B; }
 .diff-dot.random { background:conic-gradient(#2A8C5F,#3E6B9A,#C57B12,#FF8866,#2A8C5F); }
 
+/* ══ v3 OVERRIDE · Neobrutal Cozy (v36) ══
+   와인=기본 / 라임=활성 / 핫핑크=희소 / 피치=보조
+   1.5px 와인틴트 보더 + 와인 오프셋 그림자
+   숫자 영역 JetBrains Mono                  */
+:root {
+  --lime:#C8E843;
+  --lime-soft:#EEF7C8;
+  --lime-deep:#7FA814;
+  --pink:#FF3D7F;
+  --pink-soft:#FFE3ED;
+  --wine-line:#C9A89D;
+  --wine-hard:#6B2418;
+  --shadow-wine-3:3px 3px 0 #6B2418;
+  --shadow-wine-2:2px 2px 0 #C9A89D;
+  --font-mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,monospace;
+}
+
+/* ─ 카드 프레임 ─ */
+.game-card {
+  border:1.5px solid var(--wine-line) !important;
+  box-shadow:var(--shadow-wine-3) !important;
+  border-radius:16px !important;
+}
+.score-item {
+  border:1.5px solid var(--wine-line) !important;
+  box-shadow:var(--shadow-wine-2) !important;
+  border-radius:12px !important;
+  background:var(--card) !important;
+}
+.profile-card, .login-card, .avatar-picker {
+  border:1.5px solid var(--wine-line) !important;
+  box-shadow:var(--shadow-wine-2) !important;
+}
+.mode-card, .mode-card-top {
+  border:1.5px solid var(--wine-line) !important;
+  box-shadow:var(--shadow-wine-3) !important;
+  border-radius:16px !important;
+}
+.mode-card:hover, .mode-card-top:hover {
+  transform:translate(-1px,-1px) !important;
+  box-shadow:4px 4px 0 var(--wine-hard) !important;
+}
+.mode-card-top.party-top {
+  background:linear-gradient(135deg,#FFE5DC,#FCE8DC) !important;
+  border-color:var(--wine-hard) !important;
+}
+
+/* ─ 힌트 카드 (회색 → 와인 틴트, 마지막 = 현재 턴) ─ */
+.hint-card {
+  background:var(--card) !important;
+  border:1.5px solid var(--wine-line) !important;
+  border-radius:14px !important;
+}
+
+/* ─ 숫자 → JetBrains Mono ─ */
+.s-val, .sv, .stat-box .sv,
+#onePctStreakNum, #pSTotal, #pSCorrect, #pSStreak,
+#pSEasy, #pSNormal, #pSHard, #pSExtreme, #pSInsane, #pSRank,
+#rushTimerDisplay, #rushScoreDisplay, #rushResultScore {
+  font-family:var(--font-mono) !important;
+  font-weight:700 !important;
+  letter-spacing:-0.04em !important;
+}
+.s-val.green   { color:var(--lime-deep) !important; }
+.s-val.orange  { color:var(--pink) !important; }
+.s-val.purple  { color:var(--wine-hard) !important; }
+.streak-text > span, #onePctStreakNum {
+  font-family:var(--font-mono) !important;
+  font-weight:800 !important;
+}
+
+/* ─ EASY 칩 → 라임 ─ */
+.diff-pill.easy, .round-diff.easy {
+  background:var(--lime-soft) !important;
+  color:var(--lime-deep) !important;
+  border:1px solid var(--lime-deep) !important;
+}
+.diff-pill, .round-diff, .mode-pill {
+  font-weight:800 !important;
+  letter-spacing:0.02em !important;
+}
+
+/* ─ 정답 스트릭 배너(1% 화면) ─ */
+.streak-banner.onepct-streak {
+  border:1.5px solid var(--wine-line) !important;
+  background:var(--lime-soft) !important;
+  box-shadow:var(--shadow-wine-2) !important;
+}
+.streak-banner.onepct-streak .streak-text {
+  color:var(--lime-deep) !important;
+  font-weight:800 !important;
+}
+.streak-banner.onepct-streak .streak-dot.done {
+  background:var(--lime-deep) !important;
+  border-color:var(--lime-deep) !important;
+  color:#fff !important;
+}
+
+/* ─ 주요 CTA 하드섀도 ─ */
+.login-btn {
+  border:1.5px solid var(--text) !important;
+  box-shadow:var(--shadow-wine-3) !important;
+  border-radius:14px !important;
+  font-weight:800 !important;
+}
+.login-btn:hover {
+  transform:translate(-1px,-1px) !important;
+  box-shadow:4px 4px 0 var(--text) !important;
+}
+
+/* ─ 프로필 통계 숫자 키우기 ─ */
+.stat-box .sv { font-size:1.45rem !important; }
+
+/* ─ 라운드 라벨 강조 ─ */
+.round-label {
+  font-weight:800 !important;
+  color:var(--text) !important;
+  letter-spacing:-0.01em !important;
+}
+
+/* ─ 러쉬모드 카드 ─ */
+.rush-info-card,
+.one-pct-game-header,
+.suggest-card,
+.premium-card,
+.daily-mission,
+#rushBar {
+  border:1.5px solid var(--wine-line) !important;
+  box-shadow:var(--shadow-wine-2) !important;
+  border-radius:16px !important;
+}
+
+/* ══ v3 펀치 코코 시스템 ══ */
+.confetti-rain { position:fixed; inset:0; pointer-events:none; z-index:9000; overflow:hidden; }
+.confetti-bit {
+  position:absolute; top:-20px; width:10px; height:14px;
+  will-change:transform,opacity;
+  animation:confettiFall var(--dur,2400ms) linear forwards;
+  animation-delay:var(--delay,0ms);
+}
+@keyframes confettiFall {
+  0%   { opacity:0; transform:translateY(-20px) translateX(0) rotate(0deg); }
+  8%   { opacity:1; }
+  100% { opacity:0.85; transform:translateY(110vh) translateX(var(--drift,40px)) rotate(var(--spin,720deg)); }
+}
+.punch-banner {
+  position:fixed; top:38%; left:50%;
+  transform:translate(-50%,-50%) scale(0.4);
+  z-index:9100; pointer-events:none;
+  font-family:var(--font-body);
+  font-weight:900;
+  letter-spacing:-0.04em;
+  color:#fff;
+  padding:18px 28px;
+  border:2.5px solid #1A1612;
+  border-radius:18px;
+  box-shadow:5px 5px 0 #1A1612, 0 12px 32px rgba(107,36,24,0.35);
+  opacity:0;
+  animation:punchBannerPop 1900ms cubic-bezier(.2,1.4,.3,1) forwards;
+  white-space:nowrap;
+  text-align:center;
+}
+@keyframes punchBannerPop {
+  0%   { opacity:0; transform:translate(-50%,-50%) scale(0.4) rotate(-8deg); }
+  18%  { opacity:1; transform:translate(-50%,-50%) scale(1.08) rotate(2deg); }
+  30%  { transform:translate(-50%,-50%) scale(0.98) rotate(-1deg); }
+  42%  { transform:translate(-50%,-50%) scale(1.02) rotate(0.5deg); }
+  60%  { opacity:1; transform:translate(-50%,-50%) scale(1) rotate(0deg); }
+  100% { opacity:0; transform:translate(-50%,-58%) scale(0.96) rotate(0deg); }
+}
+.punch-banner.mega   { background:#FF3D7F; font-size:2.4rem; }
+.punch-banner.strong { background:#6B2418; font-size:1.9rem; }
+.punch-banner.medium { background:#7FA814; color:#1A1612; font-size:1.6rem; }
+.punch-banner small { display:block; font-size:0.62em; opacity:0.9; font-weight:700; letter-spacing:0.05em; margin-top:2px; }
+.bigbang-flash { position:fixed;inset:0;pointer-events:none;z-index:8998;animation:bigBangFlash 0.55s ease forwards; }
+@keyframes bigBangFlash { 0%{opacity:0.8;background:#C8E843} 40%{opacity:0.4;background:#FF3D7F} 100%{opacity:0;background:#FF3D7F} }
+
 </style>
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
+<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
 <script>
@@ -841,6 +1015,11 @@ input,button,textarea,select { font-family:inherit; }
 <div class="screen active" id="screenLogin">
   <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
   <div class="tagline">힌트를 연결하고 눈치껏 단어 맞히기</div>
+  <div id="referralBanner" class="w400" style="display:none;background:linear-gradient(135deg,#6B2418,#9B3829);border-radius:14px;padding:14px 18px;margin-bottom:12px;text-align:center;color:#fff">
+    <div style="font-size:0.75rem;font-weight:700;opacity:0.8;letter-spacing:0.05em;margin-bottom:4px">초대 받으셨어요</div>
+    <div id="referralBannerText" style="font-weight:700;font-size:0.95rem">친구가 noonchi에 초대했어요</div>
+    <div style="font-size:0.78rem;opacity:0.85;margin-top:4px">지금 가입하면 1개월 프리미엄 무료</div>
+  </div>
   <div class="w400 login-card">
     <!-- 로그인 / 회원가입 탭 -->
     <div class="auth-tabs">
@@ -944,7 +1123,7 @@ input,button,textarea,select { font-family:inherit; }
 
   <!-- 정답 스트릭 배너 (오늘의 문제 화면 내) -->
   <div class="streak-banner onepct-streak w400" id="onePctStreakBanner" style="display:none">
-    <div class="streak-fire" id="onePctStreakFire">📅</div>
+    <div class="streak-fire" id="onePctStreakFire" style="display:none"></div>
     <div class="streak-info">
       <div class="streak-text"><span id="onePctStreakNum">0</span>일 연속 정답 중!</div>
       <div class="streak-days" id="onePctStreakDays"></div>
@@ -952,11 +1131,10 @@ input,button,textarea,select { font-family:inherit; }
   </div>
 
   <div class="one-pct-game-header w400">
-    <div class="opg-row">
-      <span class="opg-badge">오늘의 문제</span>
-      <div style="text-align:right">
-        <div class="opg-rate" id="opLiveRate">?%</div>
-        <div class="opg-rate-label">현재 정답률</div>
+    <div class="opg-row" style="justify-content:center">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span class="opg-rate-label" style="font-size:0.72rem;color:var(--text-soft);font-weight:600">현재 정답률</span>
+        <span class="opg-rate" id="opLiveRate">?%</span>
       </div>
     </div>
     <div class="opg-bar"><div class="opg-bar-fill" id="opBarFill" style="width:0%"></div></div>
@@ -983,8 +1161,8 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
 
-  <button class="w400" id="opShareBtn" onclick="shareOnePct()" style="display:none;max-width:400px;width:100%;padding:15px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;">결과 공유하기</button>
-  <button class="w400 next-btn" id="opNextBtn" onclick="showScreen('screenMode')" style="display:none;max-width:400px">다음에 또 도전하기 →</button>
+  <button class="w400" id="opShareBtn" onclick="shareOnePct()" style="display:none;padding:15px;border-radius:14px;border:1.5px solid var(--text);background:var(--primary);color:#fff;font-family:inherit;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;box-shadow:3px 3px 0 var(--wine-hard)">결과 공유하기</button>
+  <button class="w400 next-btn" id="opNextBtn" onclick="showScreen('screenMode')" style="display:none">다음에 또 도전하기 →</button>
 </div>
 
 <!-- ══════════════════ 단어 제보 화면 ══════════════════ -->
@@ -1033,7 +1211,8 @@ input,button,textarea,select { font-family:inherit; }
 
 <!-- 레벨업 팝업 -->
 <div class="levelup-popup" id="levelupPopup">
-  <div class="levelup-box">
+  <div class="levelup-box" style="position:relative">
+    <button class="popup-x" onclick="closeLevelup()">✕</button>
     <div class="levelup-emoji">🎉</div>
     <div class="levelup-label">레벨업!</div>
     <div class="levelup-num" id="levelupNum">2</div>
@@ -1054,7 +1233,11 @@ input,button,textarea,select { font-family:inherit; }
         <div class="avatar-circle" id="profileEmoji">🎮</div>
         <div class="profile-name-block">
           <div class="pname" id="profileName">플레이어</div>
-          <div class="ptitle" id="profileTitle">단어 새싹 🌱</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap">
+            <span id="profileMemberBadge" class="home-member-badge free">일반</span>
+            <button id="profileSubBtn" onclick="startPortonePayment()" style="display:none;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-family:inherit;cursor:pointer">구독하기</button>
+            <div onclick="openCoinShop()" style="display:flex;align-items:center;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 9px;font-size:0.72rem;font-weight:700;color:var(--text);cursor:pointer">🪙 <span class="coin-balance-display">0</span></div>
+          </div>
         </div>
       </div>
       <button onclick="toggleSettingsPanel()" id="settingsGearBtn" style="background:none;border:none;cursor:pointer;font-size:2rem;color:var(--muted);padding:4px;line-height:1;border-radius:10px;align-self:flex-start" aria-label="설정">⚙️</button>
@@ -1063,7 +1246,7 @@ input,button,textarea,select { font-family:inherit; }
     <div style="margin-bottom:16px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <span class="xp-level" id="xpLevel">Lv.1 · 단어 씨앗</span>
-        <span class="xp-pts" id="xpPts">0 / 100 XP</span>
+        <span class="xp-pts" id="xpPts" style="display:none">0 / 100 XP</span>
       </div>
       <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
     </div>
@@ -1076,13 +1259,14 @@ input,button,textarea,select { font-family:inherit; }
       </div>
     </div>
     <!-- 오늘의 미션 (프로필 전용) -->
-    <div class="daily-section" id="dailySection" style="margin-bottom:4px">
+    <div class="daily-section" id="dailySection" style="margin-bottom:16px;border-top:1.5px solid var(--border);padding-top:14px">
       <div class="daily-header">
         <span class="daily-title">오늘의 미션</span>
         <span class="daily-reset" id="dailyReset"></span>
       </div>
       <div id="dailyMissionList"></div>
     </div>
+    <div class="section-title" style="border-top:1.5px solid var(--border);padding-top:14px;margin-bottom:10px">내 기록</div>
     <div class="stat-grid">
       <div class="stat-box"><div class="sv" id="pSTotal">0</div><div class="sl">총 플레이</div></div>
       <div class="stat-box"><div class="sv" id="pSCorrect">0</div><div class="sl">총 정답</div></div>
@@ -1108,9 +1292,9 @@ input,button,textarea,select { font-family:inherit; }
       <div style="font-size:0.8rem;color:var(--muted);line-height:1.75;margin-bottom:4px">
         · 모든 광고 완전 제거<br>
         · 파티 방장이면 참가자도 광고 없음<br>
-        · 월 <b style="color:var(--text)">1,000원</b>
+        · 월 <b style="color:var(--text)">2,900원</b>
       </div>
-      <button class="premium-subscribe-btn" onclick="startPortonePayment()">구독하기 · 월 1,000원</button>
+      <button class="premium-subscribe-btn" onclick="startPortonePayment()">구독하기 · 월 2,900원</button>
     </div>
     <div id="premiumActiveArea" style="display:none">
       <div style="font-size:0.82rem;color:var(--text-soft);line-height:1.7">
@@ -1122,7 +1306,7 @@ input,button,textarea,select { font-family:inherit; }
   </div>
   </div>
 
-  <div class="avatar-picker" style="width:100%;max-width:400px;margin-bottom:14px">
+  <div class="avatar-picker w400" style="margin-bottom:14px">
     <div class="avatar-picker-title">🎭 아바타 선택</div>
     <div class="avatar-grid"><div class="avatar-opt" onclick="selectAvatar('🦊')">🦊</div><div class="avatar-opt" onclick="selectAvatar('🐼')">🐼</div><div class="avatar-opt" onclick="selectAvatar('🦁')">🦁</div><div class="avatar-opt" onclick="selectAvatar('🐯')">🐯</div><div class="avatar-opt" onclick="selectAvatar('🐺')">🐺</div><div class="avatar-opt" onclick="selectAvatar('🦋')">🦋</div><div class="avatar-opt" onclick="selectAvatar('🐉')">🐉</div><div class="avatar-opt" onclick="selectAvatar('🦄')">🦄</div><div class="avatar-opt" onclick="selectAvatar('🐸')">🐸</div><div class="avatar-opt" onclick="selectAvatar('🐲')">🐲</div><div class="avatar-opt" onclick="selectAvatar('🎮')">🎮</div><div class="avatar-opt" onclick="selectAvatar('⚡')">⚡</div><div class="avatar-opt" onclick="selectAvatar('🔥')">🔥</div><div class="avatar-opt" onclick="selectAvatar('💎')">💎</div><div class="avatar-opt" onclick="selectAvatar('🌟')">🌟</div><div class="avatar-opt" onclick="selectAvatar('🧠')">🧠</div><div class="avatar-opt" onclick="selectAvatar('👑')">👑</div><div class="avatar-opt" onclick="selectAvatar('🎯')">🎯</div><div class="avatar-opt" onclick="selectAvatar('🗡️')">🗡️</div><div class="avatar-opt" onclick="selectAvatar('💀')">💀</div><div class="avatar-opt" onclick="selectAvatar('🧙')">🧙</div><div class="avatar-opt" onclick="selectAvatar('🦸')">🦸</div><div class="avatar-opt" onclick="selectAvatar('🐧')">🐧</div><div class="avatar-opt" onclick="selectAvatar('🌊')">🌊</div></div>
   </div>
@@ -1144,8 +1328,9 @@ input,button,textarea,select { font-family:inherit; }
           <span id="userAvatarBar" style="font-size:1rem;line-height:1">👤</span>
         </button>
         <span class="home-user-name" id="homeNameDisplay">게스트</span>
-        <span class="home-user-lv" id="homeLvDisplay">Lv.1</span>
         <span class="home-member-badge free" id="homeMemberBadge">일반</span>
+        <button id="homeSubBtn" onclick="startPortonePayment()" style="display:none;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-family:inherit;cursor:pointer;white-space:nowrap">구독하기</button>
+        <div onclick="openCoinShop()" style="display:flex;align-items:center;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 9px;font-size:0.74rem;font-weight:700;color:var(--text);cursor:pointer;white-space:nowrap">🪙 <span class="coin-balance-display">0</span></div>
       </div>
       <div class="home-streak-badge" id="homeStreakBadge" style="display:none">
         <span id="homeStreakFire">🔥</span><span id="homeStreakNum">0</span>일
@@ -1201,11 +1386,9 @@ input,button,textarea,select { font-family:inherit; }
   <div class="w400 mode-cards-top">
     <div class="mode-card-top solo-top" onclick="showScreen('screenSolo')">
       <div class="top-title">솔로 모드</div>
-      <div class="top-sub">연습 · 랭크</div>
     </div>
     <div class="mode-card-top party-top" id="partyModeCard" onclick="enterBattleScreen()">
       <div class="top-title">멀티 모드</div>
-      <div class="top-sub" id="partyModeDesc">협동 · 경쟁</div>
     </div>
   </div>
   <div class="w400" style="display:flex;gap:10px;margin-top:12px">
@@ -1228,6 +1411,55 @@ input,button,textarea,select { font-family:inherit; }
     <div class="mode-card ranked" id="rankedModeCard" onclick="tryRankedMode()">
       <div class="mode-title">랭크모드</div>
     </div>
+    <div class="mode-card rush" onclick="enterRushMode()">
+      <div class="mode-title">러쉬모드</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3c. 러쉬모드 -->
+<div class="screen" id="screenRush">
+  <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
+  <div class="w400 nav-bar">
+    <button class="nav-back" onclick="showScreen('screenSolo')">← 뒤로</button>
+    <span class="nav-title">러쉬모드</span>
+  </div>
+  <div class="w400">
+    <div class="rush-info-card" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:0.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">오늘의 난이도</div>
+        <span class="rush-diff-badge" id="rushDiffBadge">NORMAL</span>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:0.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">남은 도전</div>
+        <div style="font-size:1.2rem;font-weight:800;color:var(--accent2)" id="rushAttemptsLeft">6/6</div>
+      </div>
+    </div>
+
+    <div class="rush-info-card">
+      <div style="font-size:0.72rem;color:var(--muted);font-weight:700;letter-spacing:0.08em;margin-bottom:10px">오늘의 TOP 5</div>
+      <div id="rushLeaderboard">
+        <div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:12px 0">아직 도전한 사람이 없어요</div>
+      </div>
+    </div>
+
+    <button id="rushStartBtn" onclick="launchRushGame()" style="width:100%;padding:16px;border-radius:14px;border:none;background:var(--accent2);color:#fff;font-family:var(--font-body);font-size:1rem;font-weight:800;cursor:pointer;margin-top:4px">60초 시작</button>
+    <div id="rushNoAttemptsMsg" style="display:none;text-align:center;color:var(--muted);font-size:0.85rem;padding:12px 0">오늘 도전 횟수를 모두 사용했어요</div>
+  </div>
+</div>
+
+<!-- 러쉬 결과 모달 -->
+<div id="rushResultModal">
+  <div class="rush-result-box" style="position:relative">
+    <button class="popup-x" onclick="closeRushResultToGame()">✕</button>
+    <div style="font-size:0.8rem;font-weight:700;color:var(--muted);margin-bottom:4px">러쉬모드 결과</div>
+    <div class="rush-result-score" id="rushResultScore">0</div>
+    <div style="font-size:0.85rem;color:var(--text);font-weight:600;margin-bottom:2px">개 맞혔어요!</div>
+    <div class="rush-result-rank" id="rushResultRank">순위 계산 중...</div>
+    <div style="font-size:0.72rem;color:var(--muted);font-weight:700;letter-spacing:0.08em;margin:12px 0 6px;text-align:left">오늘의 TOP 5</div>
+    <div id="rushResultLb" style="margin-bottom:16px"></div>
+    <button onclick="shareRushResult()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:8px">결과 공유하기</button>
+    <div id="rushActionArea" style="display:flex;flex-direction:column;gap:8px"></div>
   </div>
 </div>
 
@@ -1332,15 +1564,22 @@ input,button,textarea,select { font-family:inherit; }
       <span class="diff-pill" id="diffPill">쉬움</span>
     </div>
   </div>
+  <!-- 러쉬모드 타이머 바 -->
+  <div class="w400" id="rushBar">
+    <div style="font-size:0.88rem;color:var(--accent2);font-weight:800;min-width:52px">러쉬모드</div>
+    <div id="rushTimerDisplay" style="font-size:1.8rem;font-weight:800;font-family:monospace;color:var(--primary);letter-spacing:0.02em">60:00</div>
+    <div id="rushScoreDisplay" style="font-size:1.4rem;font-weight:800;color:var(--accent2);min-width:52px;text-align:right">0</div>
+  </div>
   <div class="w400 score-bar" id="scoreBar">
     <div class="score-item"><div class="s-label">정답</div><div class="s-val green" id="scoreCorrect">0</div></div>
     <div class="score-item"><div class="s-label">연속</div><div class="s-val orange" id="scoreStreak">0</div></div>
     <div class="score-item"><div class="s-label">플레이</div><div class="s-val purple" id="scoreTotal">0</div></div>
   </div>
-  <!-- 경쟁모드 전광판 -->
-  <div class="w400" id="competeboard" style="display:none;background:var(--card);border:1px solid rgba(107,36,24,0.25);border-radius:16px;padding:12px 14px;margin-bottom:12px">
-    <div style="font-size:0.62rem;color:var(--muted);letter-spacing:0.15em;margin-bottom:8px">실시간 스코어</div>
-    <div id="scoreboardList"></div>
+  <!-- 경쟁모드 바 (러쉬모드와 동일 형태) -->
+  <div class="w400" id="competeboard" style="display:none;background:var(--card);border:1.5px solid rgba(107,36,24,0.25);border-radius:14px;padding:10px 16px;margin-bottom:10px;flex-direction:row;align-items:center;justify-content:space-between;">
+    <div style="font-size:0.88rem;color:var(--accent2);font-weight:800;min-width:52px">경쟁모드</div>
+    <div id="competeRoundDisplay" style="font-size:1.8rem;font-weight:800;font-family:var(--font-mono);color:var(--primary);letter-spacing:0.02em">1/5</div>
+    <div id="competeScoreDisplay" style="font-size:1.4rem;font-weight:800;color:var(--accent2);min-width:52px;text-align:right">0승</div>
   </div>
   <div class="w400 game-card">
     <div class="round-row">
@@ -1351,7 +1590,7 @@ input,button,textarea,select { font-family:inherit; }
       </div>
     </div>
     <div class="hints-area" id="hintsArea"></div>
-    <button class="more-hint-btn" id="moreHintBtn" onclick="isBattleGame?requestPartyHint():requestMoreHint()">힌트 더 보기</button>
+    <button class="more-hint-btn" id="moreHintBtn" onclick="isBattleGame?requestPartyHint():requestMoreHint()">힌트 추가 공개</button>
     <div class="input-wrap" id="gameInputWrap">
       <input type="text" class="answer-input" id="answerInput" placeholder="단어를 입력하세요..." maxlength="20"/>
       <button class="submit-btn" id="submitBtn" onclick="checkAnswer()" aria-label="정답 제출">→</button>
@@ -1365,8 +1604,9 @@ input,button,textarea,select { font-family:inherit; }
     </div>
   </div>
   <div class="w400 bottom-row" id="bottomRow">
-    <button class="action-btn" id="giveUpBtn" onclick="isBattleGame?requestPartyAnswer():requestGiveUp()">모르겠어요</button>
+    <button class="action-btn" id="giveUpBtn" onclick="isBattleGame?requestPartyAnswer():requestGiveUp()">정답 공개 · 3코인</button>
     <button class="action-btn skip-style" id="skipRoundBtn" onclick="confirmSkip()">건너뛰기</button>
+    <button class="action-btn skip-style" id="rushSkipBtn" onclick="rushSkip()" style="display:none;width:100%">넘어가기</button>
   </div>
   <button class="w400 next-btn" id="nextBtn" onclick="nextRound()">다음 단어 →</button>
 </div>
@@ -1449,7 +1689,7 @@ input,button,textarea,select { font-family:inherit; }
 </div>
 
 
-<!-- 광고 오버레이 (숨김 상태 유지 - showAd가 즉시 콜백 실행하므로 표시 안 됨) -->
+<!-- 광고 오버레이 -->
 <div class="ad-overlay" id="adHint">
   <div class="ad-box">
     <div class="ad-badge">AD · 광고</div>
@@ -1475,6 +1715,20 @@ input,button,textarea,select { font-family:inherit; }
       <span class="ad-bottom-label">잠시 후 닫기 가능</span>
       <span class="ad-count" id="answerAdCount">5</span>
       <button class="ad-skip-btn" id="answerAdSkip" onclick="finishAd('answer')">스킵 ▶</button>
+    </div>
+  </div>
+</div>
+<div class="ad-overlay" id="adRush">
+  <div class="ad-box">
+    <div class="ad-badge">AD · 광고</div>
+    <div class="ad-placeholder" id="adRushSlot">
+      <div class="ad-ico">⏱</div><div class="ad-title">광고 영역</div><div class="ad-desc">러쉬 보너스 광고</div>
+    </div>
+    <div class="ad-reward-text">광고 후 <b>도전권 +1회</b>가 추가됩니다</div>
+    <div class="ad-bottom">
+      <span class="ad-bottom-label">잠시 후 닫기 가능</span>
+      <span class="ad-count" id="rushAdCount">5</span>
+      <button class="ad-skip-btn" id="rushAdSkip" onclick="finishAd('rush')">스킵 ▶</button>
     </div>
   </div>
 </div>
@@ -1504,6 +1758,14 @@ input,button,textarea,select { font-family:inherit; }
 
     <!-- 만들기: ①모드 → ②난이도 -->
     <div id="battleCreate">
+      <!-- 프리미엄 잠금 -->
+      <div id="battleCreateLock" style="display:none;text-align:center;padding:28px 0">
+        <div style="font-size:2.2rem;margin-bottom:10px">🔒</div>
+        <div style="font-weight:800;font-size:1rem;margin-bottom:6px">방 만들기는 프리미엄 전용이에요</div>
+        <div style="font-size:0.83rem;color:var(--muted);margin-bottom:20px">코드 입장은 무료로 가능해요</div>
+        <button onclick="startPortonePayment()" style="width:100%;padding:13px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">프리미엄 구독하기 · 월 2,900원</button>
+        <button onclick="switchBattleTab('join')" style="width:100%;padding:11px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:inherit;font-size:0.85rem;font-weight:600;cursor:pointer">코드 입장으로 가기</button>
+      </div>
       <!-- STEP 1: 모드 선택 -->
       <div id="bStepMode">
         <div style="font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:12px">① 게임 방식 선택</div>
@@ -1647,7 +1909,8 @@ input,button,textarea,select { font-family:inherit; }
 
 <!-- 대결 결과 오버레이 -->
 <div class="confirm-overlay" id="battleResultOverlay">
-  <div class="confirm-box" style="max-width:340px">
+  <div class="confirm-box" style="max-width:340px;position:relative">
+    <button class="popup-x" onclick="document.getElementById('battleResultOverlay').className='confirm-overlay'">✕</button>
     <div style="font-size:2rem;margin-bottom:6px" id="brEmoji">🏆</div>
     <div style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:4px" id="brTitle">내 결과</div>
     <div style="font-size:0.75rem;color:var(--muted);margin-bottom:16px" id="brSub">이번 라운드 결과</div>
@@ -1972,6 +2235,160 @@ async function savePremiumStatus(email, until){
   });
 }
 
+// ── 코인 시스템 ──
+async function loadCoins(email){
+  if(!email || isGuest) return;
+  try {
+    var rows = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=coins&limit=1');
+    if(rows && rows[0]) userCoins = parseInt(rows[0].coins || 0);
+    updateCoinUI();
+  } catch(e){}
+}
+function sbSaveCoins(email){
+  if(isGuest || !email) return;
+  sbFetch('users?email=eq.'+encodeURIComponent(email), { method:'PATCH', body:{ coins: userCoins } }).catch(function(){});
+}
+function earnCoins(amount){
+  userCoins += amount;
+  sbSaveCoins(currentEmail);
+  updateCoinUI();
+  showCoinEarnToast(amount);
+}
+function earnCoinsQuiet(amount){
+  userCoins += amount;
+  sbSaveCoins(currentEmail);
+  updateCoinUI();
+}
+function spendCoins(amount){
+  if(userCoins < amount) return false;
+  userCoins -= amount;
+  sbSaveCoins(currentEmail);
+  updateCoinUI();
+  return true;
+}
+function updateCoinUI(){
+  document.querySelectorAll('.coin-balance-display').forEach(function(el){
+    el.textContent = userCoins;
+  });
+}
+function showCoinEarnToast(amount){
+  showShareToast('+' + amount + '코인 획득!');
+}
+function showCoinInsufficient(need){
+  var el = document.getElementById('coinInsufficientModal');
+  if(!el) return;
+  document.getElementById('coinNeedAmt').textContent = need + '코인';
+  document.getElementById('coinHaveAmt').textContent = userCoins + '코인';
+  el.style.opacity='1'; el.style.pointerEvents='all';
+}
+function closeCoinInsufficient(){
+  var el = document.getElementById('coinInsufficientModal');
+  if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
+}
+function openCoinShop(){
+  closeCoinInsufficient();
+  var el = document.getElementById('coinShopModal');
+  if(el){ el.style.opacity='1'; el.style.pointerEvents='all'; }
+}
+function closeCoinShop(){
+  var el = document.getElementById('coinShopModal');
+  if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
+}
+function showShareSheet(kakaoFn, nativeFn){
+  var el = document.getElementById('shareSheetModal');
+  if(!el) return;
+  document.getElementById('shareSheetKakao').onclick = function(){ closeShareSheet(); setTimeout(kakaoFn, 150); };
+  document.getElementById('shareSheetNative').onclick = function(){ closeShareSheet(); setTimeout(nativeFn, 150); };
+  el.style.opacity='1'; el.style.pointerEvents='all';
+}
+function closeShareSheet(){
+  var el = document.getElementById('shareSheetModal');
+  if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
+}
+function buyCoinPack(coins, price){
+  closeCoinShop();
+  if(typeof IMP === 'undefined'){ showShareToast('결제 모듈 로드 중...'); return; }
+  IMP.request_pay({
+    pg: 'kakaopay',
+    pay_method: 'card',
+    merchant_uid: 'coin_' + Date.now(),
+    name: coins + '코인',
+    amount: price,
+    buyer_email: currentEmail,
+    buyer_name: currentUser,
+  }, function(rsp){
+    if(rsp.success){
+      earnCoins(coins);
+      showShareToast('✨ ' + coins + '코인이 충전됐어요!');
+    } else {
+      showShareToast('결제 실패: ' + rsp.error_msg);
+    }
+  });
+}
+
+// ── 리퍼럴 시스템 ──
+function initReferral(){
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var ref = params.get('ref');
+    if(ref && ref !== localStorage.getItem('noonchi_ref_self')){
+      localStorage.setItem('noonchi_ref', ref);
+    }
+    var stored = localStorage.getItem('noonchi_ref');
+    if(stored){
+      var banner = document.getElementById('referralBanner');
+      var text   = document.getElementById('referralBannerText');
+      if(banner) banner.style.display='';
+      if(text)   text.textContent = stored + '님이 noonchi에 초대했어요';
+    }
+  } catch(e){}
+}
+
+async function processReferral(){
+  try {
+    var refUser = localStorage.getItem('noonchi_ref');
+    if(!refUser) return;
+    if(localStorage.getItem('noonchi_ref_claimed')) return;
+    if(refUser === currentUser) return; // 자기 초대 방지
+    localStorage.setItem('noonchi_ref_claimed', '1');
+
+    // 신규 유저 1개월 프리미엄
+    var myUntil = new Date();
+    if(isPremium && premiumUntil) myUntil = new Date(premiumUntil);
+    myUntil.setMonth(myUntil.getMonth() + 1);
+    await savePremiumStatus(currentEmail, myUntil.toISOString());
+    isPremium = true; premiumUntil = myUntil.toISOString(); updatePremiumUI();
+
+    // 초대자 1개월 프리미엄 연장
+    var refRows = await sbFetch('users?username=eq.'+encodeURIComponent(refUser)+'&select=email,is_premium,premium_until&limit=1');
+    if(refRows && refRows[0] && refRows[0].email){
+      var ru = refRows[0];
+      var rUntil = new Date();
+      if(ru.is_premium && ru.premium_until) rUntil = new Date(ru.premium_until);
+      rUntil.setMonth(rUntil.getMonth() + 1);
+      await savePremiumStatus(ru.email, rUntil.toISOString());
+    }
+    showShareToast('1개월 무료 프리미엄이 지급됐어요!');
+    localStorage.removeItem('noonchi_ref');
+  } catch(e){}
+}
+
+function getMyReferralURL(){
+  var base = 'https://kimberry1.github.io/noonchi/';
+  return base + '?ref=' + encodeURIComponent(currentUser);
+}
+
+function shareMyReferral(){
+  var url = getMyReferralURL();
+  var text = currentUser + '님과 noonchi에서 눈치 대결! 지금 가입하면 1개월 무료 → ' + url;
+  if(navigator.share){
+    navigator.share({ title:'noonchi 초대', text: text, url: url }).catch(function(){});
+  } else {
+    try{ navigator.clipboard.writeText(url); } catch(e){ var t=document.createElement('textarea'); t.value=url; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); }
+    showShareToast('초대 링크가 복사됐어요!');
+  }
+}
+
 function updatePremiumUI(){
   var card = document.getElementById('premiumCard');
   var badge = document.getElementById('premiumBadge');
@@ -1980,20 +2397,45 @@ function updatePremiumUI(){
   var untilText = document.getElementById('premiumUntilText');
   if(!card) return;
   var homeBadge = document.getElementById('homeMemberBadge');
-  if(isPremium && premiumUntil){
+  if(isMaster){
+    card.className = 'premium-card active';
+    if(badge){ badge.className = 'premium-badge active'; badge.textContent = '👑 관리자'; }
+    if(freeArea) freeArea.style.display = 'none';
+    if(activeArea) activeArea.style.display = 'block';
+    if(untilText) untilText.textContent = '관리자 계정 — 영구 이용';
+    if(homeBadge){ homeBadge.textContent='관리자'; homeBadge.className='home-member-badge pro'; }
+    var homeSubBtn = document.getElementById('homeSubBtn');
+    if(homeSubBtn) homeSubBtn.style.display='none';
+    var profBadge = document.getElementById('profileMemberBadge');
+    var profSubBtn = document.getElementById('profileSubBtn');
+    if(profBadge){ profBadge.textContent='관리자'; profBadge.className='home-member-badge pro'; }
+    if(profSubBtn) profSubBtn.style.display='none';
+  } else if(isPremium && premiumUntil){
     card.className = 'premium-card active';
     badge.className = 'premium-badge active'; badge.textContent = '✨ 프리미엄';
     freeArea.style.display = 'none';
     activeArea.style.display = 'block';
     var d = new Date(premiumUntil);
     untilText.textContent = d.toLocaleDateString('ko-KR') + ' 까지 이용 가능';
-    if(homeBadge){ homeBadge.textContent='PRO'; homeBadge.className='home-member-badge pro'; }
+    if(homeBadge){ homeBadge.textContent='프리미엄'; homeBadge.className='home-member-badge pro'; }
+    var homeSubBtn = document.getElementById('homeSubBtn');
+    if(homeSubBtn) homeSubBtn.style.display='none';
+    var profBadge = document.getElementById('profileMemberBadge');
+    var profSubBtn = document.getElementById('profileSubBtn');
+    if(profBadge){ profBadge.textContent='프리미엄'; profBadge.className='home-member-badge pro'; }
+    if(profSubBtn) profSubBtn.style.display='none';
   } else {
     card.className = 'premium-card free';
     badge.style.display = 'none';
     freeArea.style.display = 'block';
     activeArea.style.display = 'none';
     if(homeBadge){ homeBadge.textContent='일반'; homeBadge.className='home-member-badge free'; }
+    var homeSubBtn = document.getElementById('homeSubBtn');
+    if(homeSubBtn) homeSubBtn.style.display = isGuest ? 'none' : '';
+    var profBadge = document.getElementById('profileMemberBadge');
+    var profSubBtn = document.getElementById('profileSubBtn');
+    if(profBadge){ profBadge.textContent='일반'; profBadge.className='home-member-badge free'; }
+    if(profSubBtn) profSubBtn.style.display = isGuest ? 'none' : '';
   }
   // user-bar에 프리미엄 뱃지
   var nameEl = document.getElementById('userNameDisplay');
@@ -2014,6 +2456,19 @@ function updatePremiumUI(){
     else if(!isGuest){ subBtn.style.display=''; proBadge.style.display='none'; }
     else { subBtn.style.display='none'; proBadge.style.display='none'; }
   }
+  updateGameBtns();
+}
+
+function updateGameBtns(){
+  var hintBtn = document.getElementById('moreHintBtn');
+  var giveUpBtn = document.getElementById('giveUpBtn');
+  var free = !isPremium && !isMaster;
+  if(hintBtn){
+    hintBtn.textContent = '힌트 추가 공개' + (free ? ' · 1코인' : '');
+  }
+  if(giveUpBtn && !giveUpBtn.disabled){
+    giveUpBtn.textContent = free ? '정답 공개 · 3코인' : '정답 공개';
+  }
 }
 
 function goToPremiumFromGame(){
@@ -2025,25 +2480,28 @@ function goToPremiumFromGame(){
 }
 
 // ── PortOne 결제 ──
-function startPortonePayment(){
+function startPortonePayment(amount){
   if(isGuest){ showShareToast('⚠️ 로그인 후 구독할 수 있어요'); return; }
   if(typeof IMP === 'undefined'){ showShareToast('⚠️ 결제 모듈 로딩 중이에요. 잠시 후 다시 시도해 주세요.'); return; }
   if(PORTONE_IMP_CODE === 'imp_YOUR_CODE'){ showShareToast('⚠️ 가맹점 코드를 설정해 주세요 (PORTONE_IMP_CODE)'); return; }
+  var isYearly = (amount === 29000);
+  var payAmt = isYearly ? 29000 : 2900;
+  var payName = isYearly ? 'noonchi 프리미엄 (1년)' : 'noonchi 프리미엄 (1개월)';
   IMP.init(PORTONE_IMP_CODE);
   var orderId = 'noonchi_' + currentEmail.replace(/[^a-z0-9]/gi,'') + '_' + Date.now();
   IMP.request_pay({
-    pg: 'html5_inicis',   // PG사: html5_inicis / kakaopay / tosspay 등
+    pg: 'html5_inicis',
     pay_method: 'card',
     merchant_uid: orderId,
-    name: 'noonchi 프리미엄 (1개월)',
-    amount: 1000,
+    name: payName,
+    amount: payAmt,
     buyer_email: currentEmail,
     buyer_name: currentUser,
   }, function(rsp){
     if(rsp.success){
-      // 결제 성공 → 프리미엄 활성화 (프로덕션에서는 서버사이드 검증 필요)
       var until = new Date();
-      until.setMonth(until.getMonth() + 1);
+      if(isYearly){ until.setFullYear(until.getFullYear() + 1); }
+      else { until.setMonth(until.getMonth() + 1); }
       savePremiumStatus(currentEmail, until.toISOString()).then(function(){
         isPremium = true;
         premiumUntil = until.toISOString();
@@ -2326,9 +2784,7 @@ function renderOnePctStreakBanner(){
   // 불 크기: 1주마다 10% 증가
   var fire=document.getElementById('onePctStreakFire');
   if(fire){
-    fire.textContent= streak>=30?'🌟': streak>=14?'⚡': '📅';
-    var weeks=Math.min(Math.floor((streak-1)/7),7);
-    fire.style.fontSize=(2+weeks*0.2).toFixed(1)+'rem';
+    fire.style.display='none';
   }
   // 고정 일월화수목금토 그리드
   var days=document.getElementById('onePctStreakDays');
@@ -2435,6 +2891,25 @@ function loadDailyProgress(){
 function saveDailyProgress(d){try{localStorage.setItem('wl_daily',JSON.stringify(d));}catch(e){}}
 var dailyProgress = loadDailyProgress();
 
+function checkAndAwardDailyMissions(){
+  if(isGuest) return;
+  var missions = getTodayMissions();
+  var awarded = dailyProgress._awardedMissions || [];
+  var changed = false;
+  missions.forEach(function(m){
+    if(awarded.indexOf(m.id) > -1) return;
+    if(m.check(stats, dailyProgress)){
+      awarded.push(m.id);
+      earnCoinsQuiet(Math.floor(m.xp/10));
+      changed = true;
+    }
+  });
+  if(changed){
+    dailyProgress._awardedMissions = awarded;
+    saveDailyProgress(dailyProgress);
+  }
+}
+
 function renderDailyMissions(){
   var missions = getTodayMissions();
   var list = document.getElementById('dailyMissionList');
@@ -2474,7 +2949,7 @@ function renderDailyMissions(){
         '</div>'+
         '<div class="dm-prog-bar"><div class="dm-prog-fill" style="width:'+pct+'%"></div></div>'+
       '</div>'+
-      '<div class="dm-xp">'+(done?'<span style="color:var(--success)">완료 ✓</span>':'+'+m.xp+' XP')+'</div>'+
+      '<div class="dm-xp">'+(done?'<span style="color:var(--success)">완료 ✓</span>':'+'+Math.floor(m.xp/10)+'🪙')+'</div>'+
     '</div>';
   }).join('');
 }
@@ -2487,7 +2962,10 @@ function checkMissions(){
     if(m.cond(stats)){
       stats.unlockedMissions.push(m.id);
       newly.push(m);
-      if(m.xp) addXP(m.xp); // 업적 XP 지급
+      if(m.xp) addXP(m.xp);
+      var coinReward = Math.max(2, Math.round((m.xp || 5) / 2));
+      earnCoinsQuiet(coinReward);
+      m._coinReward = coinReward;
     }
   }
   if(newly.length>0){saveStats(stats);showAchievement(newly[0]);if(newly.length>1)setTimeout(function(){showAchievement(newly[1]);},2500);}
@@ -2498,12 +2976,28 @@ function showAchievement(m){
   document.getElementById('achName').textContent=m.name;
   document.getElementById('achTitle').textContent=m.title;
   var xpEl=document.getElementById('achXp');
-  if(xpEl){ if(m.xp){ xpEl.textContent='+'+m.xp+' XP'; xpEl.style.display=''; } else { xpEl.style.display='none'; } }
+  if(xpEl){
+    var achLabel = '';
+    if(m.xp) achLabel += '+'+m.xp+' XP';
+    if(m._coinReward) achLabel += (achLabel?' · ':'')+'+'+m._coinReward+'코인';
+    if(achLabel){ xpEl.textContent=achLabel; xpEl.style.display=''; } else { xpEl.style.display='none'; }
+  }
   var p=document.getElementById('achievementPopup');
   p.className='achievement-popup';
   void p.offsetWidth;
   p.className='achievement-popup show';
-  setTimeout(function(){p.className='achievement-popup';},3000);
+  setTimeout(function(){
+    p.className='achievement-popup';
+    if(isGuest) showShareToast('🔒 로그인하면 업적이 저장돼요!');
+  },3000);
+  // 업적 펀치 (이름 키워드로 강도 분기)
+  try {
+    var name = m.name || '';
+    var lvl = /100일|지옥|전설|insane/i.test(name) ? 'mega'
+            : /30일|hard|퍼펙트|PB|최고/i.test(name) ? 'strong'
+            : 'medium';
+    noonchiPunch(lvl, { banner: name, subBanner: '업적 달성' });
+  } catch(e){}
 }
 
 function goProfile(){
@@ -2520,7 +3014,8 @@ function goProfile(){
   document.getElementById('pSInsane').textContent=stats.correctInsane||0;
   document.getElementById('pSRank').textContent=stats.rankCorrect;
   var _lvInfo=getLevelInfo(loadXP());
-  document.getElementById('profileTitle').textContent='Lv.'+_lvInfo.cur.level+' · '+_lvInfo.cur.title;
+  var _xpLevel=document.getElementById('xpLevel');
+  if(_xpLevel) _xpLevel.textContent='Lv.'+_lvInfo.cur.level+' · '+_lvInfo.cur.title;
   var _savedAv=(function(){try{return localStorage.getItem('wl_avatar')||'🎮';}catch(e){return '🎮';}})();
   document.getElementById('profileEmoji').textContent=_savedAv;
   document.querySelectorAll('.avatar-opt').forEach(function(el){
@@ -2554,7 +3049,8 @@ function goProfile(){
     var done=stats.unlockedMissions.indexOf(m.id)>-1;
     var prog='';
     if(!done&&progMap[m.id]){prog='<div class="mission-progress">'+Math.min(stats[valMap[m.id]]||0,progMap[m.id])+'/'+progMap[m.id]+'</div>';}
-    return '<div class="mission-item'+(done?' done':'')+'"><div style="font-size:1.6rem;width:36px;text-align:center">'+(done?m.icon:'🔒')+'</div><div style="flex:1"><div class="mission-name">'+(done?m.name:'???')+'</div><div class="mission-desc">'+m.desc+'</div></div>'+(done?'<div class="mission-badge done">달성 ✓</div>':(prog||'<div class="mission-badge locked">미달성</div>'))+'</div>';
+    var coinAmt = Math.max(2, Math.round((m.xp||5)/2));
+    return '<div class="mission-item'+(done?' done':'')+'"><div style="font-size:1.6rem;width:36px;text-align:center">'+(done?m.icon:'🔒')+'</div><div style="flex:1"><div class="mission-name">'+(done?m.name:'???')+'</div><div class="mission-desc">'+m.desc+'</div></div>'+(done?'<div class="mission-badge done">달성 ✓</div>':(prog||'<div class="mission-badge locked" style="font-size:0.62rem">+'+coinAmt+'🪙</div>'))+'</div>';
   }).join('');
   updatePushToggleUI();
   showScreen('screenProfile');
@@ -2569,6 +3065,11 @@ var premiumUntil = null;      // 구독 만료일 (ISO string)
 var sbAuthToken = null;       // Supabase Auth JWT
 var battleHostPremium = false;// 파티 방장이 프리미엄인지
 var isMaster = false;         // 마스터 계정 여부
+var userCoins = 0;            // 코인 잔액
+var COIN_HINT   = 1;          // 힌트 1회 = 1코인 (10원)
+var COIN_ANSWER = 3;          // 정답 1회 = 3코인 (30원)
+var COIN_RUSH   = 2;          // 러쉬 재도전 = 2코인 (20원)
+var COIN_DAILY  = 1;          // 매일 출석 = 1코인 (스트릭 마일스톤 보너스 별도)
 
 // ── 마스터 계정 이메일 목록 (모든 제한 해제 + 광고 없음) ──
 var MASTER_EMAILS = [];
@@ -2647,6 +3148,9 @@ function updateXP(){
       document.getElementById('xpFill').style.width='100%';
     }
   }
+  // 홈 구독 버튼 갱신
+  var homeSubBtn=document.getElementById('homeSubBtn');
+  if(homeSubBtn) homeSubBtn.style.display=(!isGuest && !isPremium)?'':'none';
   // 게임 화면 인라인 슬롯도 갱신
   var subBtn=document.getElementById('inlineSubBtn');
   var proBadge=document.getElementById('inlineProBadge');
@@ -2716,6 +3220,7 @@ function checkAttendance(){
   var streak  =stats.loginStreak;
   var xpAmount=getStreakXP(streak);
   addXP(xpAmount);
+  earnCoinsQuiet(COIN_DAILY);
   saveStats(stats);
 
   // 배너 메시지
@@ -2728,17 +3233,25 @@ function checkAttendance(){
     msg='🔥 '+streak+'일 연속 출석 중!';
   }
   if(title) title.textContent=msg;
-  if(sub)   sub.textContent='+'+xpAmount+' XP 획득';
+  if(sub)   sub.textContent='+'+COIN_DAILY+'코인 획득'+(broken?'':' ('+streak+'일째)');
   if(banner){ banner.className='attendance-banner show'; setTimeout(function(){ banner.className='attendance-banner'; },3500); }
 
-  // 마일스톤 팝업 (3·7·14·30·50·100일)
-  var milestones=[100,50,30,14,7,3];
-  for(var mi=0;mi<milestones.length;mi++){
-    if(streak===milestones[mi]){
-      var m=milestones[mi];
-      setTimeout(function(days){
-        showAchievement({icon:'🔥',name:days+'일 연속 출석!',title:days+'일 스트릭 달성'});
-      }.bind(null,m),1800);
+  // 스트릭 마일스톤 보너스 코인 + 팝업
+  var streakBonusTable = [
+    {day:100, coins:50},
+    {day:50,  coins:30},
+    {day:30,  coins:20},
+    {day:14,  coins:10},
+    {day:7,   coins:7},
+    {day:3,   coins:3},
+  ];
+  for(var mi=0;mi<streakBonusTable.length;mi++){
+    if(streak===streakBonusTable[mi].day){
+      var _sb=streakBonusTable[mi];
+      earnCoinsQuiet(_sb.coins);
+      setTimeout(function(days,coins){
+        showAchievement({icon:'🔥',name:days+'일 연속 출석!',title:days+'일 스트릭 달성',_coinReward:coins});
+      }.bind(null,_sb.day,_sb.coins),1800);
       break;
     }
   }
@@ -2780,6 +3293,7 @@ async function confirmLang(){
   if(ds) ds.style.display=isGuest?'none':'';
   if(!isGuest) renderDailyMissions();
   updateRankedCardState();
+  if(!isGuest && currentEmail) processReferral();
   // URL로 배틀 코드가 있으면 바로 대결 화면으로
   if(window._pendingBattleCode){
     showScreen('screenMode');
@@ -2875,6 +3389,7 @@ function retryWrongNote(idx){
   setTimeout(function(){
     document.getElementById('moreHintBtn').className='more-hint-btn show';
     document.getElementById('answerInput').focus();
+    updateGameBtns();
   }, showCount*150+300);
 }
 function clearWrongNote(){
@@ -3033,6 +3548,7 @@ function _afterAuthLogin(username, email){
     }
     if(email){
       loadPremiumStatus(email);
+      loadCoins(email);
       sbLoadAndMergeXP(email);
     }
   }).catch(function(e){ console.warn('SB 유저 등록 실패:', e); });
@@ -3101,7 +3617,10 @@ async function updatePushToggleUI() {
     return;
   }
   try {
-    var reg = await navigator.serviceWorker.ready;
+    var reg = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise(function(_, reject){ setTimeout(function(){ reject(new Error('timeout')); }, 3000); })
+    ]);
     var sub = await reg.pushManager.getSubscription();
     btn.textContent = sub ? '켜짐 ✅' : '꺼짐';
   } catch(e) {
@@ -3119,7 +3638,10 @@ async function togglePushNotification() {
     return;
   }
   try {
-    var reg = await navigator.serviceWorker.ready;
+    var reg = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise(function(_, reject){ setTimeout(function(){ reject(new Error('sw-timeout')); }, 5000); })
+    ]);
     var sub = await reg.pushManager.getSubscription();
     if (sub) {
       await sub.unsubscribe();
@@ -3669,6 +4191,7 @@ function startRound() {
   }
   document.getElementById('giveUpBtn').disabled=false;
   document.getElementById('skipRoundBtn').disabled=false;
+  updateGameBtns();
   if(isBattleGame && !battleIsCreator && battleBattleMode==='coop'){
     // 협동모드 참가자: 입력창 전부 숨김
     var giw=document.getElementById('gameInputWrap'); if(giw) giw.style.display='none';
@@ -3676,12 +4199,12 @@ function startRound() {
     document.getElementById('skipRoundBtn').style.display='none';
     document.getElementById('moreHintBtn').style.display='none';
   } else if(isBattleGame && !battleIsCreator && battleBattleMode==='compete'){
-    // 경쟁모드 참가자: 방장과 동일하게 모두 표시
+    // 경쟁모드 참가자: 입력창만 표시, 힌트/정답/넘어가기는 방장만
     var giw3=document.getElementById('gameInputWrap'); if(giw3) giw3.style.display='';
     document.getElementById('answerInput').disabled=false;
-    document.getElementById('giveUpBtn').style.display='';
-    document.getElementById('skipRoundBtn').style.display='none'; // 넘어가기는 불필요
-    document.getElementById('moreHintBtn').style.display='';
+    document.getElementById('giveUpBtn').style.display='none';
+    document.getElementById('skipRoundBtn').style.display='none';
+    document.getElementById('moreHintBtn').style.display='none';
   } else {
     // 방장 또는 일반 모드
     var giw2=document.getElementById('gameInputWrap'); if(giw2) giw2.style.display='';
@@ -3775,15 +4298,10 @@ function startRound() {
 
   setTimeout(()=>{
     if(currentMode!=='ranked'){
-      var allH2 = window.currentHintsAll || currentHints;
+      var free2 = !isPremium && !isMaster;
       document.getElementById('moreHintBtn').className='more-hint-btn show';
       document.getElementById('moreHintBtn').disabled=false;
-      if(shownHintCount<allH2.length){
-        document.getElementById('moreHintBtn').textContent='힌트 추가 공개 ('+(shownHintCount+1)+'/'+allH2.length+')';
-      } else {
-        document.getElementById('moreHintBtn').textContent='힌트를 모두 공개했어요 ('+allH2.length+'개)';
-        document.getElementById('moreHintBtn').disabled=true;
-      }
+      document.getElementById('moreHintBtn').textContent='힌트 추가 공개' + (free2 ? ' · 1코인' : '');
     }
     document.getElementById('answerInput').focus();
   },initCount*180+200);
@@ -3813,34 +4331,24 @@ function renderHintCard(n,text){
 
 function requestMoreHint(){
   if(gameOver||currentMode==='ranked')return;
-  var allHints = window.currentHintsAll || currentHints;
-  var maxHints = allHints.length; // 최대 21개
-  if(shownHintCount>=maxHints){
-    document.getElementById('moreHintBtn').textContent='힌트를 모두 공개했어요 ('+maxHints+'개)';
-    document.getElementById('moreHintBtn').disabled=true;
-    return;
-  }
-  adCallback=()=>{
-    if(shownHintCount<maxHints){
-      shownHintCount++;
-      var hint = allHints[shownHintCount-1];
-      renderHintCard(shownHintCount, hint);
-      if(shownHintCount>=maxHints){
-        document.getElementById('moreHintBtn').textContent='힌트를 모두 공개했어요 ('+maxHints+'개)';
-        document.getElementById('moreHintBtn').disabled=true;
-      } else {
-        document.getElementById('moreHintBtn').className='more-hint-btn show';
-        document.getElementById('moreHintBtn').textContent='힌트 추가 공개 ('+(shownHintCount+1)+'/'+maxHints+')';
-        document.getElementById('moreHintBtn').disabled=false;
-      }
+  if(!isPremium && !isMaster){
+    if(!spendCoins(COIN_HINT)){
+      showCoinInsufficient(COIN_HINT);
+      return;
     }
-  };
-  showAd('hint');
+  }
+  _doRevealHint();
 }
-function generateFallbackHint(n){
-  const w=currentWord;
-  const fb=[`글자 수: ${w.length}자`,`첫 글자: "${w[0]}"`,`마지막 글자: "${w[w.length-1]}"`,`두 번째 글자: "${w.length>1?w[1]:'?'}"`,`거의 다 왔어요...`,`힌트 ${n}: 포기하지 마세요!`];
-  return fb[(n-currentHints.length-1)%fb.length];
+function _doRevealHint(){
+  var allHints = window.currentHintsAll || currentHints;
+  shownHintCount++;
+  var hint = allHints[shownHintCount-1] || allHints[allHints.length-1] || '';
+  renderHintCard(shownHintCount, hint);
+  var costLabel = (isPremium || isMaster) ? '' : ' · 1코인';
+  var btn = document.getElementById('moreHintBtn');
+  btn.className='more-hint-btn show';
+  btn.textContent='힌트 추가 공개' + costLabel;
+  btn.disabled=false;
 }
 
 function saveCurrentWordToWrongNote(){
@@ -3856,19 +4364,24 @@ function saveCurrentWordToWrongNote(){
 }
 
 function requestGiveUp(){
-  adCallback=()=>{
-    gameOver=true; scoreTotal++; scoreStreak=0; updateScoreUI();
-    document.getElementById('answerWord').textContent=currentWord;
-    document.getElementById('answerReveal').className='answer-reveal show';
-    document.getElementById('giveUpBtn').disabled=true;
-    document.getElementById('skipRoundBtn').disabled=true;
-    document.getElementById('moreHintBtn').className='more-hint-btn';
-    document.getElementById('nextBtn').classList.add('show');
-    // 정답 공개 후 다시풀기 버튼 강조 (자동저장 X → 버튼 클릭으로만 저장)
-    var swb=document.getElementById('saveWrongNoteBtn');
-    if(swb){ swb.style.background='#FFE5DC'; swb.style.borderColor='var(--accent2)'; swb.style.color='var(--accent2)'; }
-  };
-  showAd('answer');
+  if(!isPremium && !isMaster){
+    if(!spendCoins(COIN_ANSWER)){
+      showCoinInsufficient(COIN_ANSWER);
+      return;
+    }
+  }
+  _doRevealAnswer();
+}
+function _doRevealAnswer(){
+  gameOver=true; scoreTotal++; scoreStreak=0; updateScoreUI();
+  document.getElementById('answerWord').textContent=currentWord;
+  document.getElementById('answerReveal').className='answer-reveal show';
+  document.getElementById('giveUpBtn').disabled=true;
+  document.getElementById('skipRoundBtn').disabled=true;
+  document.getElementById('moreHintBtn').className='more-hint-btn';
+  document.getElementById('nextBtn').classList.add('show');
+  var swb=document.getElementById('saveWrongNoteBtn');
+  if(swb){ swb.style.background='#FFE5DC'; swb.style.borderColor='var(--accent2)'; swb.style.color='var(--accent2)'; }
 }
 
 function confirmSkip(){
@@ -3893,11 +4406,33 @@ function doSkip(){
 }
 
 function showAd(type){
-  // 광고 비활성화 상태: 즉시 콜백 실행
-  if(adCallback){ adCallback(); adCallback=null; }
+  if(isMaster || isPremium || isBattleGame){ if(adCallback){ adCallback(); adCallback=null; } return; }
+  var overlayId = type==='hint'?'adHint':type==='answer'?'adAnswer':'adRush';
+  var countId   = type==='hint'?'hintAdCount':type==='answer'?'answerAdCount':'rushAdCount';
+  var skipId    = type==='hint'?'hintAdSkip':type==='answer'?'answerAdSkip':'rushAdSkip';
+  var sec       = type==='hint'?2:3;
+  var overlay   = document.getElementById(overlayId);
+  if(!overlay){ if(adCallback){ adCallback(); adCallback=null; } return; }
+  var skipBtn   = document.getElementById(skipId);
+  var countEl   = document.getElementById(countId);
+  if(skipBtn){ skipBtn.disabled=true; skipBtn.style.opacity='0.4'; }
+  if(countEl) countEl.textContent=sec;
+  overlay.className='ad-overlay show';
+  clearInterval(adTimer);
+  adTimer=setInterval(function(){
+    sec--;
+    if(countEl) countEl.textContent=Math.max(0,sec);
+    if(sec<=0){
+      clearInterval(adTimer);
+      if(skipBtn){ skipBtn.disabled=false; skipBtn.style.opacity='1'; }
+    }
+  },1000);
 }
 function finishAd(type){
   clearInterval(adTimer);
+  var overlayId = type==='hint'?'adHint':type==='answer'?'adAnswer':'adRush';
+  var overlay = document.getElementById(overlayId);
+  if(overlay) overlay.className='ad-overlay';
   if(adCallback){adCallback();adCallback=null;}
 }
 
@@ -3932,6 +4467,16 @@ function checkAnswer(){
   if(!input)return;
   var isAltCorrect = currentAltWords.some(function(w){ return normalizeAnswer(input)===normalizeAnswer(w); });
   if(normalizeAnswer(input)===normalizeAnswer(currentWord)||isAltCorrect){
+    // 러쉬모드: 점수만 올리고 다음 단어로
+    if(isRushMode){
+      rushScore++;
+      document.getElementById('rushScoreDisplay').textContent=rushScore;
+      document.getElementById('answerInput').className='answer-input correct';
+      setTimeout(function(){
+        if(isRushMode) rushLoadNextWord();
+      },280);
+      return;
+    }
     gameOver=true; scoreCorrect++; scoreStreak++; scoreTotal++; updateScoreUI();
     stats.totalGames++; stats.totalCorrect++;
     currentStreak++;
@@ -3947,7 +4492,7 @@ function checkAnswer(){
     dailyProgress.dailyStreak=(dailyProgress.dailyStreak||0)+1;
     dailyProgress.noSkipStreak=(dailyProgress.noSkipStreak||0)+1;
     saveDailyProgress(dailyProgress);
-    saveStats(stats); checkMissions(); renderDailyMissions();
+    saveStats(stats); checkMissions(); renderDailyMissions(); checkAndAwardDailyMissions();
     var _d=window._activeDiff||currentDiff;
     addXP((currentMode==='ranked'?XP_랭크전:XP_PRACTICE)[_d]||1);
     if(!isGuest && currentUser){
@@ -4021,7 +4566,7 @@ async function loadDailyChallengeStats(dateStr){
   var rate = total > 0 ? ((correct/total)*100).toFixed(1) : '-';
   var rateStr = total > 0 ? rate+'%' : '-';
   document.getElementById('opLiveRate').textContent = rateStr;
-  document.getElementById('opBarFill').style.width = total>0 ? Math.min(parseFloat(rate)*5,100)+'%' : '0%';
+  document.getElementById('opBarFill').style.width = total>0 ? parseFloat(rate)+'%' : '0%';
   document.getElementById('opTries').textContent = total;
   document.getElementById('opCorrects').textContent = correct;
   document.getElementById('onePctRate').textContent = rateStr;
@@ -4118,6 +4663,7 @@ async function checkOnePct(){
     saveStats(stats); checkMissions();
     updateOnePctStreak();
     addXP(50);
+    earnCoins(5);
     try{ localStorage.setItem('wl_dc_state', JSON.stringify({date:window._dcDate, solved:true})); }catch(e){}
     if(window._dcWrongRecorded){
       await sbFetch('daily_challenge_plays?date=eq.'+window._dcDate+'&anon_id=eq.'+anonId, {method:'PATCH', body:{is_correct:true}});
@@ -4149,7 +4695,23 @@ function showOpCorrectModal(){
   var rate = (document.getElementById('opLiveRate').textContent || '?%');
   document.getElementById('opCorrectSub').textContent = '오늘의 문제를 맞혔어요\n전체 정답률 ' + rate + ' 중 한 명!';
   document.getElementById('opCorrectModal').className = 'op-result-overlay show';
-  spawnSparkleBurst();
+  var rateNum = parseFloat(rate);
+  if (!isNaN(rateNum)) {
+    if (rateNum <= 5) {
+      noonchiBigBang({ banner: '전설 달성!', subBanner: '상위 ' + rate, sparkleTop:'42%' });
+    } else if (rateNum <= 10) {
+      noonchiPunch('mega', { banner: '상위 ' + rate, subBanner: '오늘의 1% 문제' });
+      playSound('pb');
+    } else if (rateNum <= 30) {
+      noonchiPunch('strong', { banner: '잘했어요', subBanner: '상위 ' + rate });
+    } else if (rateNum <= 60) {
+      noonchiPunch('medium', { banner: '정답!', subBanner: '오늘의 문제 클리어' });
+    } else {
+      playSound('pop');
+    }
+  } else {
+    noonchiPunch('medium', { banner: '정답!', subBanner: '오늘의 1% 문제' });
+  }
 }
 
 function showOpWrongModal(){
@@ -4376,36 +4938,23 @@ function shareOnePct(){
   var gameUrl = 'https://kimberry1.github.io/noonchi/';
   var rateText = document.getElementById('opLiveRate').textContent || '?%';
   var solved = !!window._onePctSolved;
-
-  if(typeof Kakao === 'undefined' || !Kakao.isInitialized() || !Kakao.Share){
-    fallbackCopy(gameUrl);
-    showShareToast('✅ 링크가 복사됐어요!');
-    return;
-  }
-
-  if(solved){
-    Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: 'noonchi 오늘의 문제 맞혔어요! 🎉',
-        description: '전체 정답률 ' + rateText + ' 중 한 명!\n6개 힌트 보고 단어 맞히기, 너도 도전해봐',
-        imageUrl: 'https://kimberry1.github.io/noonchi/icon-512.png',
-        link: { mobileWebUrl: gameUrl, webUrl: gameUrl },
-      },
-      buttons: [{ title: '나도 도전하기', link: { mobileWebUrl: gameUrl, webUrl: gameUrl } }],
-    });
-  } else {
-    Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: '오늘의 noonchi 문제, 너는 맞힐 수 있어? 👀',
-        description: '6개 힌트 보고 단어 맞히기 — 오늘 하루 딱 한 번 기회!',
-        imageUrl: 'https://kimberry1.github.io/noonchi/icon-512.png',
-        link: { mobileWebUrl: gameUrl, webUrl: gameUrl },
-      },
-      buttons: [{ title: '도전하기', link: { mobileWebUrl: gameUrl, webUrl: gameUrl } }],
-    });
-  }
+  var kakaoTitle = solved ? 'noonchi 오늘의 문제 맞혔어요! 🎉' : '오늘의 noonchi 문제, 너는 맞힐 수 있어? 👀';
+  var kakaoDesc = solved
+    ? '전체 정답률 ' + rateText + ' 중 한 명!\n6개 힌트 보고 단어 맞히기, 너도 도전해봐'
+    : '6개 힌트 보고 단어 맞히기 — 오늘 하루 딱 한 번 기회!';
+  var nativeText = solved
+    ? 'noonchi 오늘의 문제 맞혔어요!\n정답률 ' + rateText + ' 중 한 명 👀\n' + gameUrl
+    : '오늘의 noonchi 문제 도전해봐!\n' + gameUrl;
+  showShareSheet(
+    function(){
+      if(typeof Kakao === 'undefined' || !Kakao.isInitialized() || !Kakao.Share){ fallbackCopy(gameUrl); showShareToast('✅ 링크가 복사됐어요!'); return; }
+      Kakao.Share.sendDefault({ objectType:'feed', content:{ title:kakaoTitle, description:kakaoDesc, imageUrl:'https://kimberry1.github.io/noonchi/icon-512.png', link:{mobileWebUrl:gameUrl,webUrl:gameUrl} }, buttons:[{title:solved?'나도 도전하기':'도전하기', link:{mobileWebUrl:gameUrl,webUrl:gameUrl}}] });
+    },
+    function(){
+      if(navigator.share){ navigator.share({title:'noonchi 오늘의 문제', text:nativeText}).catch(function(){}); }
+      else { fallbackCopy(nativeText); showShareToast('✅ 복사됐어요!'); }
+    }
+  );
 }
 
 function showFeedbackEl(id, msg, cls){
@@ -4429,32 +4978,128 @@ function showCorrectPopup(){
   spawnSparkleBurst();
 }
 
-// ── 정답 시 스파클 컨페티 ──
-function spawnSparkleBurst(){
-  const COUNT = 14;
-  const COLORS = ['#6B2418', '#FF8866', '#C57B12', '#B8860B', '#2A8C5F'];
-  const container = document.createElement('div');
+// ── 정답 시 스파클 컨페티 (v3 팔레트, 업그레이드) ──
+function spawnSparkleBurst(opts){
+  opts = opts || {};
+  var COUNT = opts.count || 28;
+  var COLORS = opts.colors || ['#FF3D7F', '#C8E843', '#6B2418', '#FFB37A', '#7FA814', '#FF8866'];
+  var topPct = opts.top || '38%';
+  var container = document.createElement('div');
   container.className = 'sparkle-burst';
   container.style.left = '50%';
-  container.style.top = '38%';
-  for (let i = 0; i < COUNT; i++) {
-    const piece = document.createElement('span');
+  container.style.top = topPct;
+  for (var i = 0; i < COUNT; i++) {
+    var piece = document.createElement('span');
     piece.className = 'sparkle-piece';
-    const angle = (Math.PI * 2 * i) / COUNT + (Math.random() - 0.5) * 0.4;
-    const distance = 60 + Math.random() * 90;
-    const sx = Math.cos(angle) * distance;
-    const sy = Math.sin(angle) * distance - 30;
-    const sr = (Math.random() - 0.5) * 540;
-    const size = 10 + Math.random() * 12;
-    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    const dur = 900 + Math.random() * 400;
-    piece.style.cssText = '--sx:'+sx+'px;--sy:'+sy+'px;--sr:'+sr+'deg;left:0;top:0;animation:sparkleFly '+dur+'ms cubic-bezier(.2,.7,.3,1) forwards;';
+    var angle = (Math.PI * 2 * i) / COUNT + (Math.random() - 0.5) * 0.5;
+    var distance = 90 + Math.random() * 180;
+    var sx = Math.cos(angle) * distance;
+    var sy = Math.sin(angle) * distance - 40;
+    var sr = (Math.random() - 0.5) * 900;
+    var size = 14 + Math.random() * 18;
+    var color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    var dur = 900 + Math.random() * 500;
+    piece.style.cssText = '--sx:'+sx+'px;--sy:'+sy+'px;--sr:'+sr+'deg;left:0;top:0;animation:sparkleFly '+dur+'ms cubic-bezier(.15,.8,.25,1) forwards;';
     piece.innerHTML = '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24"><path d="M12 2 L13.2 8.5 C13.5 10.1 14.8 11.4 16.4 11.7 L23 13 L16.4 14.3 C14.8 14.6 13.5 15.9 13.2 17.5 L12 24 L10.8 17.5 C10.5 15.9 9.2 14.6 7.6 14.3 L1 13 L7.6 11.7 C9.2 11.4 10.5 10.1 10.8 8.5 Z" fill="'+color+'"/></svg>';
     container.appendChild(piece);
   }
   document.body.appendChild(container);
-  setTimeout(function(){ container.remove(); }, 1600);
+  setTimeout(function(){ container.remove(); }, 1800);
 }
+
+// ── 큰 모먼트 컨페티 (떨어지는 종이조각 + 스파클 + 배너) ──
+function noonchiPunch(level, opts){
+  opts = opts || {};
+  level = level || 'medium';
+  var COLORS = ['#6B2418', '#C8E843', '#FF3D7F', '#FFB37A', '#7FA814', '#FCE8DC'];
+  var COUNT = level==='mega' ? 180 : level==='strong' ? 90 : level==='medium' ? 50 : 15;
+  var rain = document.createElement('div');
+  rain.className = 'confetti-rain';
+  for (var i=0; i<COUNT; i++){
+    var bit = document.createElement('span');
+    bit.className = 'confetti-bit';
+    var color = COLORS[Math.floor(Math.random()*COLORS.length)];
+    var left = Math.random()*100;
+    var drift = (Math.random()-0.5) * 160;
+    var spin = (Math.random()-0.5) * 1440;
+    var dur = 1800 + Math.random()*1800;
+    var delay = Math.random() * 600;
+    var w = 6 + Math.random()*8;
+    var h = w + Math.random()*8;
+    var round = Math.random() < 0.25 ? '50%' : (Math.random()<0.5 ? '2px' : '0');
+    bit.style.cssText =
+      'left:'+left+'vw;width:'+w+'px;height:'+h+'px;background:'+color+
+      ';border-radius:'+round+';--drift:'+drift+'px;--spin:'+spin+'deg;--dur:'+dur+'ms;--delay:'+delay+'ms';
+    rain.appendChild(bit);
+  }
+  document.body.appendChild(rain);
+  setTimeout(function(){ rain.remove(); }, 4200);
+  // 중앙 스파클
+  spawnSparkleBurst({
+    count: level==='mega' ? 32 : level==='strong' ? 24 : 18,
+    top: opts.sparkleTop || '40%',
+  });
+  // 텍스트 배너 (선택)
+  if (opts.banner) {
+    var b = document.createElement('div');
+    b.className = 'punch-banner ' + level;
+    b.innerHTML = opts.banner + (opts.subBanner ? '<small>'+opts.subBanner+'</small>' : '');
+    document.body.appendChild(b);
+    setTimeout(function(){ b.remove(); }, 2000);
+  }
+}
+function playSound(type){
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if(type === 'pop'){
+      var o=ctx.createOscillator(), g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.setValueAtTime(900, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(500, ctx.currentTime+0.08);
+      g.gain.setValueAtTime(0.28, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.12);
+      o.start(); o.stop(ctx.currentTime+0.12);
+    } else if(type === 'pb'){
+      [700, 950].forEach(function(freq, i){
+        var o=ctx.createOscillator(), g=ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type='sine'; o.frequency.value=freq;
+        var t=ctx.currentTime+i*0.14;
+        g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.25,t+0.04); g.gain.exponentialRampToValueAtTime(0.001,t+0.32);
+        o.start(t); o.stop(t+0.35);
+      });
+    } else if(type === 'fanfare'){
+      [523,659,784,1047,1319].forEach(function(freq, i){
+        var o=ctx.createOscillator(), g=ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type='sine'; o.frequency.value=freq;
+        var t=ctx.currentTime+i*0.11;
+        g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(0.3,t+0.04); g.gain.exponentialRampToValueAtTime(0.001,t+0.45);
+        o.start(t); o.stop(t+0.5);
+        // 화음 한 옥타브 아래
+        var o2=ctx.createOscillator(), g2=ctx.createGain();
+        o2.connect(g2); g2.connect(ctx.destination);
+        o2.type='sine'; o2.frequency.value=freq/2;
+        g2.gain.setValueAtTime(0,t); g2.gain.linearRampToValueAtTime(0.1,t+0.04); g2.gain.exponentialRampToValueAtTime(0.001,t+0.4);
+        o2.start(t); o2.stop(t+0.45);
+      });
+    }
+  } catch(e){}
+}
+
+function noonchiBigBang(opts){
+  opts = opts || {};
+  var flash = document.createElement('div');
+  flash.className = 'bigbang-flash';
+  document.body.appendChild(flash);
+  setTimeout(function(){ flash.remove(); }, 600);
+  playSound('fanfare');
+  noonchiPunch('mega', opts);
+  setTimeout(function(){ spawnSparkleBurst({ count: 36, top: '35%' }); }, 120);
+  setTimeout(function(){ spawnSparkleBurst({ count: 28, top: '55%' }); }, 280);
+  setTimeout(function(){ spawnSparkleBurst({ count: 22, top: '45%' }); }, 460);
+}
+
 function nextRound(){
   if(isBattleGame && battleIsCreator){
     // 파티모드 방장: 다음 문제 동의 요청
@@ -4584,15 +5229,11 @@ function renderBattlePlayers(){
       ? '<span style="color:var(--success);font-size:1.1rem">✅</span>'
       : '<span style="color:#4af;font-size:1rem">🔵</span>';
     var isMe = p.username===currentUser;
-    var delegateBtn = (battleIsCreator && !isMe)
-      ? '<button onclick="delegateHost(\''+p.username+'\')" style="font-size:0.65rem;padding:3px 8px;border-radius:6px;border:1px solid rgba(247,202,111,0.4);background:rgba(247,202,111,0.08);color:var(--warn);cursor:pointer;margin-left:6px">방장 위임</button>'
-      : '';
     return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border-radius:12px;margin-bottom:8px;border:1px solid '+(isMe?'var(--primary)':'var(--border)')+'">'+
       statusDot+
       '<span style="font-family:var(--font-display);font-size:0.9rem;flex:1">'+
         escHtml(p.username)+(isMe?' (나)':'')+(isMe&&battleIsCreator?' 👑':'')+'</span>'+
       '<span style="font-size:0.7rem;color:var(--muted)">'+(p.status==='ready'?'준비':'대기')+'</span>'+
-      delegateBtn+
     '</div>';
   }).join('');
   if(!html) html = '<div style="color:var(--muted);font-size:0.8rem;text-align:center;padding:12px">아직 아무도 없어요...</div>';
@@ -4609,60 +5250,6 @@ function renderBattlePlayers(){
   }
 }
 
-async function delegateHost(newHostUsername){
-  if(!battleIsCreator) return;
-  await sbUpdateBattle(battleId, {host_username: newHostUsername});
-  // 내 쪽은 즉시 참가자로 전환
-  battleIsCreator = false;
-  _applyParticipantUI();
-  showShareToast('👑 '+newHostUsername+'님에게 방장을 위임했어요');
-  renderBattlePlayers();
-}
-
-function _applyHostUI(){
-  battleIsCreator = true;
-  var badge=document.getElementById('myRoleBadge');
-  if(badge){badge.textContent='👑 방장';badge.style.background='var(--primary-soft)';badge.style.color='var(--accent)';}
-  var rb=document.getElementById('battleReadyBtn'); if(rb) rb.style.display='none';
-  var rbc=document.getElementById('battleCancelReadyBtn'); if(rbc) rbc.style.display='none';
-  var sb=document.getElementById('battleStartBtn'); if(sb) sb.style.display='block';
-  // 결과 팝업이 열려있으면 버튼 갱신 (방장으로 바뀐 경우)
-  if(document.getElementById('battleResultOverlay').className.indexOf('show')!==-1){
-    var brNext=document.getElementById('brNextBtn'); if(brNext) brNext.style.display='block';
-    var brGW=document.getElementById('brGuestWait'); if(brGW) brGW.style.display='none';
-  }
-  // 게임 중 역할 전환: 방장 게임 UI 복원
-  if(isBattleGame){
-    var giw=document.getElementById('gameInputWrap'); if(giw) giw.style.display='';
-    var gub=document.getElementById('giveUpBtn'); if(gub){ gub.style.display=''; gub.disabled=false; }
-    var mhb=document.getElementById('moreHintBtn'); if(mhb) mhb.style.display='';
-    // 협동: 스킵 버튼 복원 / 경쟁: 스킵 숨김 유지
-    var skb=document.getElementById('skipRoundBtn');
-    if(skb) skb.style.display = battleBattleMode==='coop' ? '' : 'none';
-    var brNext2=document.getElementById('brNextBtn'); if(brNext2) brNext2.style.display='block';
-    var brGW2=document.getElementById('brGuestWait'); if(brGW2) brGW2.style.display='none';
-  }
-  renderBattlePlayers();
-}
-
-function _applyParticipantUI(){
-  // 참가자 UI 적용
-  battleIsCreator = false;
-  var badge=document.getElementById('myRoleBadge');
-  if(badge){badge.textContent='🙋 참가자';badge.style.background='var(--success-bg)';badge.style.color='var(--success)';}
-  var rb=document.getElementById('battleReadyBtn'); if(rb) rb.style.display='block';
-  var sb=document.getElementById('battleStartBtn'); if(sb) sb.style.display='none';
-  // 게임 중 역할 전환: 협동 파티원 UI로 전환
-  if(isBattleGame && battleBattleMode==='coop'){
-    var giw=document.getElementById('gameInputWrap'); if(giw) giw.style.display='none';
-    var gub=document.getElementById('giveUpBtn'); if(gub) gub.style.display='none';
-    var skb=document.getElementById('skipRoundBtn'); if(skb) skb.style.display='none';
-    var mhb=document.getElementById('moreHintBtn'); if(mhb) mhb.style.display='none';
-    var brNext=document.getElementById('brNextBtn'); if(brNext) brNext.style.display='none';
-    var brGW=document.getElementById('brGuestWait'); if(brGW) brGW.style.display='block';
-  }
-  renderBattlePlayers();
-}
 
 // ── 폴링으로 참가자 실시간 감지 (Realtime 대체) ──
 var battlePollTimer = null;
@@ -4848,14 +5435,7 @@ function onBattleChange(battle){
     // return 제거 - next_request도 함께 처리 가능하도록
   }
 
-  // 2. 방장 위임
-  if(battle.host_username){
-    var shouldBeHost=(battle.host_username===currentUser);
-    if(shouldBeHost && !battleIsCreator){ _applyHostUI(); showShareToast('👑 당신이 방장이 됐어요!'); }
-    else if(!shouldBeHost && battleIsCreator){ _applyParticipantUI(); }
-  }
-
-  // 3. 게임 시작 (비방장)
+  // 2. 게임 시작 (비방장)
   if(battle.status==='playing' && !isBattleGame && !battleIsCreator && battleId){
     startCountdown(function(){ _launchBattleGame(); });
     return;
@@ -5001,36 +5581,15 @@ async function onPlayersChange(battleIdVal){
 
 function renderScoreboard(players){
   var board = document.getElementById('competeboard');
-  var list  = document.getElementById('scoreboardList');
-  if(!board || !list) return;
+  if(!board) return;
   if(!isBattleGame || battleBattleMode!=='compete'){ board.style.display='none'; return; }
-  board.style.display='block';
-  // solved 수 기준 정렬, 동점이면 이름순
-  var sorted = (players||Object.values(battlePlayers)).slice()
-    .sort(function(a,b){
-      var sa=(a.solved?1:0), sb=(b.solved?1:0);
-      if(sb!==sa) return sb-sa;
-      return a.username.localeCompare(b.username);
-    })
-    .slice(0,5); // 최대 5명
-  var maxScore = Math.max(1, sorted.reduce(function(m,p){ return Math.max(m, p.solved?1:0); },0));
-  // 라운드별 누적 점수가 없으므로 battlePlayers의 solved 합산 (다음 라운드 진행될수록 누적)
-  // solved 필드가 boolean이므로, 라운드 클리어 횟수를 window._roundScores에 누적
+  board.style.display='flex';
   if(!window._roundScores) window._roundScores = {};
-  var rankEmoji = ['🥇','🥈','🥉','4️⃣','5️⃣'];
-  var maxRoundScore = Math.max(1, Math.max.apply(null, sorted.map(function(p){ return window._roundScores[p.username]||0; })));
-  list.innerHTML = sorted.map(function(p, i){
-    var score = window._roundScores[p.username] || 0;
-    var pct   = Math.round((score/maxRoundScore)*100);
-    var isMe  = p.username === currentUser;
-    return '<div class="sb-row">'+
-      '<div class="sb-rank">'+rankEmoji[i]+'</div>'+
-      '<div class="sb-name" style="color:'+(isMe?'var(--accent)':'var(--text)')+'">'+
-        p.username+(isMe?' ★':'')+'</div>'+
-      '<div class="sb-bar-wrap"><div class="sb-bar-fill" style="width:'+pct+'%"></div></div>'+
-      '<div class="sb-score">'+score+'</div>'+
-    '</div>';
-  }).join('');
+  var myScore = window._roundScores[currentUser] || 0;
+  var rd = document.getElementById('competeRoundDisplay');
+  var sd = document.getElementById('competeScoreDisplay');
+  if(rd) rd.textContent = round + '/' + battleMaxRounds;
+  if(sd) sd.textContent = myScore + '승';
 }
 
 // 힌트 동기화 - DOM 기준으로만 판단
@@ -5190,16 +5749,26 @@ function sendBattleBroadcast(event, payload){
 function onBroadcastSolved(data){
   if(!isBattleGame || battleBattleMode!=='compete') return;
   if(gameOver) return;
-  if(data.username === currentUser) return; // self는 checkAnswer에서 처리됨
-  // 브로드캐스트에 wins 포함 시 즉시 스코어 반영 (DB 대기 없이)
+  if(data.username === currentUser) return;
+  // Broadcast 데이터로 즉시 처리 — DB 조회 없음
+  gameOver = true;
+  document.getElementById('answerInput').disabled = true;
   if(data.wins > 0){
     if(!window._roundScores) window._roundScores = {};
     window._roundScores[data.username] = data.wins;
     renderScoreboard(Object.values(battlePlayers));
   }
-  showFeedback('⚡ '+data.username+'님이 맞혔어요!', 'wrong-fb');
-  // 브로드캐스트 데이터 전달 → DB 미커밋 시 즉시 폴백 처리
-  _processCompeteResult(round, data);
+  showFeedback('😅 '+data.username+'님이 먼저 맞혔어요!', 'wrong-fb');
+  document.getElementById('answerWord').textContent = currentWord;
+  document.getElementById('answerReveal').className = 'answer-reveal show';
+  setTimeout(function(){ showBattleResult(false, false); }, 200);
+  // 백그라운드: 스코어 정확성 보정만
+  setTimeout(function(){
+    if(!battleId) return;
+    sbGetPlayers(battleId).then(function(pl){
+      if(pl){ pl.forEach(function(p){ if(p.hint_count>0){ if(!window._roundScores) window._roundScores={}; window._roundScores[p.username]=p.hint_count; } }); renderScoreboard(pl); }
+    });
+  }, 500);
 }
 
 function stopBattlePolling(){
@@ -5453,9 +6022,7 @@ function executeConsentAction(type){
       if(battleIsCreator){
         shownHintCount++;
         var _allH = window.currentHintsAll || currentHints;
-        var hintText = shownHintCount-1 < _allH.length
-          ? _allH[shownHintCount-1]
-          : generateFallbackHint(shownHintCount);
+        var hintText = _allH[shownHintCount-1] || _allH[_allH.length-1] || '';
         renderHintCard(shownHintCount, hintText);
         document.getElementById('moreHintBtn').className='more-hint-btn show';
         sbUpdateBattle(battleId,{current_hint_count:shownHintCount});
@@ -5506,9 +6073,8 @@ function executePartyHint(){
     if(battleId) sbUpdateBattle(battleId,{ad_playing:'hint'});
     adCallback = function(){
       shownHintCount++;
-      var hintText = shownHintCount-1 < currentHints.length
-        ? currentHints[shownHintCount-1]
-        : generateFallbackHint(shownHintCount);
+      var _allH2 = window.currentHintsAll || currentHints;
+      var hintText = _allH2[shownHintCount-1] || _allH2[_allH2.length-1] || '';
       renderHintCard(shownHintCount, hintText);
       document.getElementById('moreHintBtn').className='more-hint-btn show';
       // 광고 끝나면 hint_count 저장
@@ -5550,9 +6116,8 @@ function _revealAnswer(){
 
 // ── 파티 퇴장 ──
 async function leaveParty(){
-  // battleReset이 DB 정리 + 상태 초기화 모두 처리
   await battleReset();
-  // 로비(파티 화면)로 복귀
+  switchBattleTab('create');
   showScreen('screenBattle');
 }
 
@@ -5647,6 +6212,362 @@ function applyPendingBattleCode(){
 }
 
 // ── 파티모드 완전 초기화 (모든 진입점에서 이걸 써야 함) ──
+// ══════════════════════════════════════════
+//  러쉬모드 (Rush Mode)
+// ══════════════════════════════════════════
+var isRushMode = false;
+var rushScore = 0;
+var rushTimeLeft = 60;
+var rushTimer = null;
+var rushDifficulty = 'easy';
+var rushSavedAt = null;
+var rushStartPerf = 0;
+var RUSH_MAX_FREE = 3;
+var RUSH_MAX_PREMIUM = 6;
+var RUSH_AD_BONUS_MAX = 2;
+var RUSH_DURATION = 60;
+function getRushMaxBase(){ return isPremium ? RUSH_MAX_PREMIUM : RUSH_MAX_FREE; }
+function getRushAdBonusKey(){ var d=new Date(); return 'rush_ad_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
+function getRushAdBonusToday(){ return parseInt(localStorage.getItem(getRushAdBonusKey())||'0'); }
+function addRushAdBonus(){ var k=getRushAdBonusKey(); localStorage.setItem(k, getRushAdBonusToday()+1); }
+function getRushTotalAvailable(){ return isPremium ? RUSH_MAX_PREMIUM : RUSH_MAX_FREE + getRushAdBonusToday(); }
+
+function getRushDifficultyToday(){
+  var d = new Date();
+  var n = d.getFullYear()*10000 + (d.getMonth()+1)*100 + d.getDate();
+  var h = (((n * 2654435761) >>> 0) ^ (n >>> 16)) >>> 0;
+  return ['easy','normal','hard'][h % 3];
+}
+
+function getRushAttemptsKey(){
+  var d = new Date();
+  return 'rush_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();
+}
+function getRushAttemptsToday(){ return parseInt(localStorage.getItem(getRushAttemptsKey())||'0'); }
+function addRushAttempt(){
+  var k=getRushAttemptsKey();
+  localStorage.setItem(k, getRushAttemptsToday()+1);
+}
+
+function enterRushMode(){
+  if(isGuest){
+    showShareToast('러쉬모드는 로그인이 필요해요');
+    return;
+  }
+  rushDifficulty = getRushDifficultyToday();
+  var attempts = getRushAttemptsToday();
+  var maxAttempts = getRushTotalAvailable();
+  var remaining = maxAttempts - attempts;
+
+  // 난이도 배지
+  var diffLabel = {easy:'EASY',normal:'NORMAL',hard:'HARD'};
+  var diffColor = {easy:'#4CAF50',normal:'var(--accent)',hard:'var(--primary)'};
+  var badge = document.getElementById('rushDiffBadge');
+  if(badge){ badge.textContent=diffLabel[rushDifficulty]||rushDifficulty.toUpperCase(); badge.style.background=diffColor[rushDifficulty]||'var(--accent)'; badge.style.color='#fff'; }
+
+  // 남은 도전
+  var leftEl = document.getElementById('rushAttemptsLeft');
+  if(leftEl) leftEl.textContent = remaining+'/'+maxAttempts;
+
+  // 시작 버튼/메시지
+  var btn = document.getElementById('rushStartBtn');
+  var msg = document.getElementById('rushNoAttemptsMsg');
+  if(remaining <= 0){
+    if(btn) btn.style.display='none';
+    if(msg) msg.style.display='block';
+  } else {
+    if(btn) btn.style.display='';
+    if(msg) msg.style.display='none';
+  }
+
+  loadRushLeaderboard('rushLeaderboard');
+  showScreen('screenRush');
+}
+
+async function loadRushLeaderboard(targetId, cachedRows){
+  var rows;
+  if(cachedRows){
+    rows = cachedRows.slice(0,5);
+  } else {
+    var today = new Date().toISOString().slice(0,10);
+    rows = await sbFetch('rush_scores?play_date=eq.'+today+'&order=score.desc,created_at.asc&limit=5&select=username,score');
+  }
+  var el = document.getElementById(targetId);
+  if(!el) return rows||[];
+  if(!rows||rows.length===0){
+    el.innerHTML='<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:12px 0">아직 도전한 사람이 없어요</div>';
+    return [];
+  }
+  var html='';
+  var prevScore=-1, prevRank=0, count=0;
+  rows.forEach(function(r,i){
+    count++;
+    var rank = (r.score===prevScore) ? prevRank : count;
+    prevRank=rank; prevScore=r.score;
+    var isMine = r.username===currentUser;
+    html+='<div class="rush-lb-row"'+(isMine?' style="background:var(--primary-soft);margin:0 -4px;padding:7px 4px;border-radius:6px"':'')+'>'
+      +'<div class="rush-lb-rank">'+rank+'</div>'
+      +'<div class="rush-lb-name">'+(isMine?'<b>'+r.username+'</b>':r.username)+'</div>'
+      +'<div class="rush-lb-score">'+r.score+'개</div>'
+      +'</div>';
+  });
+  el.innerHTML=html;
+  return rows;
+}
+
+async function launchRushGame(){
+  if(getRushAttemptsToday()>=getRushTotalAvailable()){ showShareToast('오늘 도전 횟수를 모두 사용했어요'); return; }
+  rushDifficulty = getRushDifficultyToday();
+
+  // 버튼 상태 설정
+  document.getElementById('giveUpBtn').style.display='none';
+  document.getElementById('skipRoundBtn').style.display='none';
+  document.getElementById('moreHintBtn').style.display='none';
+  document.getElementById('rushSkipBtn').style.display='none';
+  document.getElementById('nextBtn').classList.remove('show');
+  document.getElementById('scoreBar').style.display='none';
+
+  // modePill
+  var mp=document.getElementById('modePill');
+  if(mp){ mp.textContent='러쉬'; mp.className='mode-pill rush'; }
+
+  rushLoadNextWord();
+  showScreen('screenGame');
+
+  // 러쉬바 미리 활성화 (카운트다운 동안 보임)
+  var rb=document.getElementById('rushBar'); if(rb) rb.className='w400 active';
+  document.getElementById('rushScoreDisplay').textContent='0';
+  var timerEl=document.getElementById('rushTimerDisplay');
+  if(timerEl){ timerEl.textContent='60:00'; timerEl.style.color='var(--primary)'; }
+
+  // 3.2.1 카운트다운
+  await _rushCountdown();
+
+  isRushMode=true; rushScore=0; rushTimeLeft=RUSH_DURATION;
+  gameOver=false; shownHintCount=0;
+  document.getElementById('rushSkipBtn').style.display='';
+  updateRushTimerDisplay(RUSH_DURATION);
+
+  // 센티초 타이머 시작
+  rushStartPerf=performance.now();
+  rushTimer=setInterval(function(){
+    var elapsed=(performance.now()-rushStartPerf)/1000;
+    var remaining=Math.max(0,RUSH_DURATION-elapsed);
+    updateRushTimerDisplay(remaining);
+    if(remaining<=0){ clearInterval(rushTimer); rushTimer=null; endRushGame(); }
+  },50);
+}
+
+function _rushCountdown(){
+  return new Promise(function(resolve){
+    var overlay = document.createElement('div');
+    overlay.style.cssText='position:fixed;inset:0;z-index:800;display:flex;align-items:center;justify-content:center;pointer-events:all;background:rgba(43,26,18,0.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);';
+    var num = document.createElement('div');
+    num.style.cssText='font-family:var(--font-body);font-size:5rem;font-weight:900;color:var(--primary);text-shadow:0 4px 0 var(--wine-hard);letter-spacing:-0.05em;transition:all 0.15s;';
+    overlay.appendChild(num);
+    document.body.appendChild(overlay);
+    var counts = [3,2,1];
+    var i = 0;
+    function tick(){
+      if(i >= counts.length){ overlay.remove(); resolve(); return; }
+      num.textContent = counts[i];
+      num.style.transform='scale(1.3)';
+      num.style.opacity='1';
+      playSound('pop');
+      setTimeout(function(){ num.style.transform='scale(0.8)'; num.style.opacity='0.3'; }, 600);
+      i++;
+      setTimeout(tick, 900);
+    }
+    tick();
+  });
+}
+
+function updateRushTimerDisplay(remaining){
+  var el=document.getElementById('rushTimerDisplay');
+  if(!el) return;
+  var sec=Math.floor(remaining);
+  var cs=Math.floor((remaining-sec)*100);
+  el.textContent=String(sec).padStart(2,'0')+':'+String(cs).padStart(2,'0');
+  el.style.color=remaining<=10?'#C5410B':'var(--primary)';
+}
+
+function rushLoadNextWord(){
+  var pool=wordDB[rushDifficulty]||wordDB.easy;
+  if(!pool||pool.length===0) return;
+  var item=pool[Math.floor(Math.random()*pool.length)];
+  currentWord=item.word;
+  currentAltWords=item.alt_words||[];
+  currentHints=seededPickHints(item,rushDifficulty,Math.floor(Math.random()*99999));
+  gameOver=false;
+  shownHintCount=0;
+  document.getElementById('hintsArea').innerHTML='';
+  document.getElementById('answerInput').value='';
+  document.getElementById('answerInput').className='answer-input';
+  document.getElementById('feedbackMsg').className='feedback';
+  document.getElementById('answerReveal').className='answer-reveal';
+  // 모든 힌트 즉시 표시
+  for(var i=0;i<currentHints.length;i++){
+    renderHintCard(i+1,currentHints[i]);
+  }
+  shownHintCount=currentHints.length;
+  document.getElementById('answerInput').focus();
+}
+
+async function endRushGame(){
+  if(rushTimer){ clearInterval(rushTimer); rushTimer=null; }
+  isRushMode=false;
+  addRushAttempt();
+
+  // 러쉬바 비활성화
+  var rb=document.getElementById('rushBar'); if(rb) rb.className='w400';
+  document.getElementById('scoreBar').style.display='';
+  document.getElementById('rushSkipBtn').style.display='none';
+
+  // 러쉬 완주 코인 지급 (점수/5, 최소 1코인)
+  var rushCoinReward = Math.max(1, Math.floor(rushScore / 5));
+  earnCoinsQuiet(rushCoinReward);
+
+  // 결과 모달 즉시 표시 (점수만 먼저)
+  document.getElementById('rushResultScore').textContent=rushScore;
+  document.getElementById('rushResultRank').textContent='순위 계산 중...';
+  document.getElementById('rushResultLb').innerHTML='<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:8px">로딩 중...</div>';
+  renderRushResultActions();
+  document.getElementById('rushResultModal').className='show';
+
+  // PB 계산
+  var _pb = parseInt(localStorage.getItem('wl_rush_pb')||'0', 10);
+  var _isPB = rushScore > _pb;
+  if (_isPB) { try { localStorage.setItem('wl_rush_pb', String(rushScore)); } catch(e){} }
+
+  // 백그라운드: 저장 + 순위 계산
+  rushSavedAt=new Date();
+  var today=new Date().toISOString().slice(0,10);
+  await sbFetch('rush_scores',{method:'POST',body:{username:currentUser||'게스트',score:rushScore,difficulty:rushDifficulty,play_date:today}});
+  var allRows=await sbFetch('rush_scores?play_date=eq.'+today+'&order=score.desc,created_at.asc&select=username,score,created_at')||[];
+  var myRank=total, prevScore=-1, prevRank=0;
+  for(var i=0;i<allRows.length;i++){
+    var r=(allRows[i].score===prevScore)?prevRank:i+1;
+    prevRank=r; prevScore=allRows[i].score;
+    if(allRows[i].username===currentUser && allRows[i].score===rushScore){ myRank=r; break; }
+  }
+  document.getElementById('rushResultRank').textContent=total+'명 도전 중 '+myRank+'등';
+  loadRushLeaderboard('rushResultLb', allRows);
+
+  // 순위 확인 후 celebration — 순위% 기반 (혼자 플레이면 점수 기반)
+  try {
+    var topPct = total > 1 ? (myRank / total) * 100 : null;
+    if(topPct !== null){
+      if(myRank === 1 && total >= 20){
+        noonchiBigBang({ banner: '오늘의 1등!', subBanner: rushScore+'개 정답', sparkleTop:'45%' });
+      } else if(topPct <= 5){
+        noonchiPunch('mega', { banner: '상위 5%!', subBanner: rushScore+'개 정답' });
+        playSound('pb');
+      } else if(topPct <= 15){
+        noonchiPunch('strong', { banner: '잘했어요', subBanner: rushScore+'개 정답' });
+      } else if(topPct <= 25){
+        noonchiPunch('medium', { banner: '수고했어요', subBanner: rushScore+'개 정답' });
+      } else if(topPct <= 50){
+        noonchiPunch('small', {});
+      }
+      // 하위 50%는 없음
+    } else {
+      // 혼자 플레이 — 점수 기반
+      if(_isPB){
+        noonchiPunch('mega', { banner: '최고기록 경신!', subBanner: rushScore+'개 정답' });
+        playSound('pb');
+      } else if(rushScore >= 10){
+        noonchiPunch('strong', { banner: '잘했어요', subBanner: rushScore+'개 정답' });
+      } else if(rushScore >= 5){
+        noonchiPunch('medium', { banner: '수고했어요', subBanner: rushScore+'개 정답' });
+      }
+    }
+  } catch(e){}
+}
+
+function closeRushResult(){
+  document.getElementById('rushResultModal').className='';
+  showScreen('screenMode');
+}
+
+function closeRushResultToGame(){
+  document.getElementById('rushResultModal').className='';
+  // 게임 화면 그대로 유지 (마지막 단어 볼 수 있음)
+}
+
+function rushSkip(){
+  if(!isRushMode) return;
+  rushLoadNextWord();
+}
+
+function shareRushResult(){
+  var gameUrl = 'https://kimberry1.github.io/noonchi/';
+  var rankText = document.getElementById('rushResultRank').textContent;
+  var nativeText = 'noonchi 러쉬모드\n1분에 '+rushScore+'개 맞혔어요!\n'+rankText+'\n'+gameUrl;
+  showShareSheet(
+    function(){
+      if(typeof Kakao === 'undefined' || !Kakao.isInitialized() || !Kakao.Share){ copyRushFallback(nativeText); return; }
+      Kakao.Share.sendDefault({ objectType:'feed', content:{ title:'noonchi 러쉬모드 — '+rushScore+'개!', description:'1분에 '+rushScore+'개 맞혔어요!\n'+rankText, imageUrl:'https://kimberry1.github.io/noonchi/icon-512.png', link:{mobileWebUrl:gameUrl,webUrl:gameUrl} }, buttons:[{title:'나도 도전하기', link:{mobileWebUrl:gameUrl,webUrl:gameUrl}}] });
+    },
+    function(){
+      if(navigator.share){ navigator.share({title:'noonchi 러쉬모드', text:nativeText}).catch(function(e){ if(e.name!=='AbortError') copyRushFallback(nativeText); }); }
+      else { copyRushFallback(nativeText); }
+    }
+  );
+}
+
+function copyRushFallback(text){
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(function(){ showShareToast('결과가 복사됐어요!'); });
+  } else {
+    var ta=document.createElement('textarea'); ta.value=text;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta); showShareToast('결과가 복사됐어요!');
+  }
+}
+
+function retryRush(){
+  document.getElementById('rushResultModal').className='';
+  enterRushMode();
+}
+
+function renderRushResultActions(){
+  var el = document.getElementById('rushActionArea');
+  if(!el) return;
+  var used = getRushAttemptsToday();
+  var total = getRushTotalAvailable();
+  var remaining = total - used;
+  var canAdBonus = !isPremium && getRushAdBonusToday() < RUSH_AD_BONUS_MAX;
+  var S = 'font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;padding:13px;border-radius:12px;width:100%';
+  var html = '';
+  if(remaining > 0){
+    html += '<button onclick="retryRush()" style="'+S+';border:1px solid var(--border);background:var(--surface);color:var(--text)">다시 도전 ('+remaining+'회 남음)</button>';
+  } else if(canAdBonus){
+    html += '<button onclick="watchAdForRush()" style="'+S+';border:none;background:var(--accent);color:#fff">광고 보고 +1회 추가</button>';
+  }
+  html += '<button onclick="closeRushResult()" style="'+S+';border:none;background:var(--primary);color:#fff">홈으로</button>';
+  el.innerHTML = html;
+}
+
+function watchAdForRush(){
+  adCallback = function(){
+    addRushAdBonus();
+    document.getElementById('rushResultModal').className='';
+    enterRushMode();
+  };
+  showAd('rush');
+}
+function spendCoinsForRush(){
+  if(!spendCoins(COIN_RUSH)){
+    showCoinInsufficient(COIN_RUSH);
+    return;
+  }
+  addRushAdBonus();
+  document.getElementById('rushResultModal').className='';
+  enterRushMode();
+}
+
+// ══════════════════════════════════════════
+
 async function battleReset(){
   // 빈 방 자동 종료 타이머 + 하트비트 취소
   if(window._emptyRoomTimer){ clearTimeout(window._emptyRoomTimer); window._emptyRoomTimer=null; }
@@ -5775,6 +6696,18 @@ async function battleGoBack(){
 
 // 게임화면 뒤로가기/나가기
 async function gameGoBack(){
+  if(isRushMode){
+    if(confirm('러쉬모드를 종료하시겠어요? 도전 횟수 1회가 차감돼요')){
+      if(rushTimer){ clearInterval(rushTimer); rushTimer=null; }
+      isRushMode=false;
+      addRushAttempt();
+      var rb=document.getElementById('rushBar'); if(rb) rb.className='w400';
+      document.getElementById('scoreBar').style.display='';
+      document.getElementById('rushSkipBtn').style.display='none';
+      showScreen('screenMode');
+    }
+    return;
+  }
   if(isBattleGame || battleId){
     // 파티모드: 완전 초기화 후 홈(모드선택)으로
     if(confirm('파티를 나가시겠어요?')){
@@ -5804,6 +6737,7 @@ async function enterBattleScreen(){
     battleShowPanel('lobby');
     setTimeout(showPartyTip, 400);
   }
+  switchBattleTab('create');
   showScreen('screenBattle');
 }
 
@@ -5834,6 +6768,18 @@ function switchBattleTab(tab){
   if(tab==='create'){
     create.style.background='var(--accent)'; create.style.color='#fff'; create.style.border='none';
     join.style.background='var(--surface)'; join.style.color='var(--muted)'; join.style.border='1px solid var(--border)';
+    // 프리미엄 잠금
+    var lock = document.getElementById('battleCreateLock');
+    var step = document.getElementById('bStepMode');
+    if(!isPremium){
+      if(lock) lock.style.display='';
+      if(step) step.style.display='none';
+      var step2 = document.getElementById('bStepDiff');
+      if(step2) step2.style.display='none';
+    } else {
+      if(lock) lock.style.display='none';
+      if(step) step.style.display='';
+    }
   } else {
     join.style.background='var(--accent)'; join.style.color='#fff'; join.style.border='none';
     create.style.background='var(--surface)'; create.style.color='var(--muted)'; create.style.border='1px solid var(--border)';
@@ -6263,7 +7209,11 @@ async function joinBattleWithSB(){
   var bce=document.getElementById('bCodeModeEmoji');
   if(bce) bce.textContent=(battleBattleMode==='coop'?'협동':'경쟁')+' '+battleMaxRounds+'문제';
   document.getElementById('battleCodeDisplay').textContent=code;
-  _applyParticipantUI();
+  battleIsCreator = false;
+  var _badge=document.getElementById('myRoleBadge');
+  if(_badge){_badge.textContent='🙋 참가자';_badge.style.background='var(--success-bg)';_badge.style.color='var(--success)';}
+  var _rb=document.getElementById('battleReadyBtn'); if(_rb) _rb.style.display='block';
+  var _sb=document.getElementById('battleStartBtn'); if(_sb) _sb.style.display='none';
   battleShowPanel('code');
 }
 
@@ -6541,6 +7491,7 @@ document.addEventListener('visibilitychange', function(){
 
 // 랭킹 초기 렌더 + URL 배틀 코드 체크
 document.addEventListener('DOMContentLoaded', function(){
+  initReferral();
   // 카카오 로그인 콜백 감지 (?code=)
   _handleKakaoCallback();
   // 네이버 로그인 리디렉션 콜백 감지
@@ -6606,6 +7557,75 @@ function maybeShowOnboarding(){
   }
 }
 </script>
+
+<!-- ── 코인 부족 모달 ── -->
+<div id="coinInsufficientModal" style="position:fixed;inset:0;z-index:2000;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;padding:28px 24px;width:100%;max-width:440px;box-shadow:0 -4px 24px rgba(0,0,0,0.18)">
+    <div style="font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:6px">코인이 부족해요</div>
+    <div style="font-size:0.85rem;color:var(--text-soft);margin-bottom:20px">필요: <b id="coinNeedAmt">0코인</b> · 보유: <b id="coinHaveAmt">0코인</b></div>
+    <button onclick="openCoinShop()" style="width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">코인 충전하기</button>
+    <button onclick="startPortonePayment();closeCoinInsufficient();" style="width:100%;padding:14px;border-radius:12px;border:1px solid var(--primary);background:transparent;color:var(--primary);font-family:inherit;font-size:0.88rem;font-weight:700;cursor:pointer;margin-bottom:8px">프리미엄으로 무제한 · 월 2,900원</button>
+    <div style="font-size:0.75rem;color:var(--muted);text-align:center;margin-bottom:4px">프리미엄 = 하루 97원 · 정답 3번 값</div>
+    <button onclick="closeCoinInsufficient()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">닫기</button>
+  </div>
+</div>
+
+<!-- ── 코인 샵 모달 ── -->
+<div id="coinShopModal" style="position:fixed;inset:0;z-index:2000;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-width:440px;box-shadow:0 -4px 24px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div style="font-weight:800;font-size:1.1rem;color:var(--text)">🪙 코인 충전</div>
+      <div style="font-size:0.82rem;color:var(--text-soft)">보유 <b class="coin-balance-display">0</b>코인</div>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:16px">힌트 1코인 · 정답 3코인</div>
+
+    <!-- 코인 팩 -->
+    <button onclick="buyCoinPack(1100,10000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
+      <span>1,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+10%</span></span><span style="color:var(--primary)">10,000원</span>
+    </button>
+    <button onclick="buyCoinPack(2400,20000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
+      <span>2,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+20%</span></span><span style="color:var(--primary)">20,000원</span>
+    </button>
+    <button onclick="buyCoinPack(3900,30000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--accent);background:#fff9f5;color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
+      <span>3,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+30% 인기</span></span><span style="color:var(--accent)">30,000원</span>
+    </button>
+    <button onclick="buyCoinPack(7500,50000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+      <span>5,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+50%</span></span><span style="color:var(--primary)">50,000원</span>
+    </button>
+
+    <!-- 프리미엄 구독 -->
+    <div style="border-top:1px solid var(--border);padding-top:14px;margin-bottom:14px">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;text-align:center">코인은 소진되면 끝 — 프리미엄은 무제한</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <button onclick="startPortonePayment(2900);closeCoinShop();" style="flex:1;padding:13px 8px;border-radius:12px;border:1.5px solid var(--primary);background:var(--primary-soft);color:var(--primary);font-family:inherit;font-size:0.85rem;font-weight:700;cursor:pointer">
+          월 2,900원
+        </button>
+        <button onclick="startPortonePayment(29000);closeCoinShop();" style="flex:1;padding:13px 8px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.85rem;font-weight:700;cursor:pointer;position:relative">
+          연 29,000원
+          <div style="position:absolute;top:-8px;right:6px;background:var(--accent);color:#fff;font-size:0.62rem;font-weight:800;padding:2px 6px;border-radius:10px">17% 절약</div>
+        </button>
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);text-align:center">무제한 힌트·정답 · 방 만들기 · 러쉬 6회</div>
+    </div>
+
+    <button onclick="closeCoinShop()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">닫기</button>
+  </div>
+</div>
+
+<!-- 공유 시트 -->
+<div id="shareSheetModal" style="position:fixed;inset:0;z-index:2000;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s">
+  <div style="background:var(--bg);border-radius:22px 22px 0 0;padding:20px 20px 32px;width:100%;max-width:480px;box-shadow:0 -4px 24px rgba(0,0,0,0.12)">
+    <div style="width:36px;height:4px;background:var(--border-strong);border-radius:4px;margin:0 auto 18px"></div>
+    <div style="font-size:0.8rem;font-weight:700;color:var(--muted);text-align:center;margin-bottom:14px">공유하기</div>
+    <button id="shareSheetKakao" style="width:100%;padding:14px;border-radius:14px;border:none;background:#FEE500;color:#3C1E1E;font-family:inherit;font-size:0.95rem;font-weight:800;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C5.58 2 2 4.91 2 8.5c0 2.29 1.42 4.3 3.57 5.49l-.9 3.32a.3.3 0 0 0 .45.33L9.1 15.1c.29.03.59.05.9.05 4.42 0 8-2.91 8-6.5S14.42 2 10 2z" fill="#3C1E1E"/></svg>
+      카카오로 공유
+    </button>
+    <button id="shareSheetNative" style="width:100%;padding:14px;border-radius:14px;border:1.5px solid var(--border-strong);background:var(--card);color:var(--text);font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:10px">공유하기</button>
+    <button onclick="closeShareSheet()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">닫기</button>
+  </div>
+</div>
+
 </body>
 </html>
 
