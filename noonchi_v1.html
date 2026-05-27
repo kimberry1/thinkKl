@@ -1601,27 +1601,27 @@ input,button,textarea,select { font-family:inherit; }
     <div id="spyAdBonusBtn" style="display:none;margin-top:8px"><button onclick="watchAdForSpy()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer">광고 보고 +1회 추가</button></div>
   </div>
   <!-- 게임 영역 -->
-  <div id="spyGame" style="display:none">
-    <div class="w400" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+  <div id="spyGame" class="w400" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <span id="spyRoundLabel" style="font-size:0.82rem;font-weight:700;color:var(--muted)">1 / 10</span>
       <span id="spyScoreDisp" style="font-size:0.88rem;font-weight:800;color:#7B30C0">0점</span>
     </div>
-    <div class="w400" style="height:5px;background:var(--surface);border-radius:10px;margin-bottom:22px;overflow:hidden">
+    <div style="height:5px;background:var(--surface);border-radius:10px;margin-bottom:22px;overflow:hidden">
       <div id="spyProgressBar" style="height:100%;background:#7B30C0;border-radius:10px;transition:width 0.4s;width:0%"></div>
     </div>
-    <div class="w400" style="text-align:center;margin-bottom:22px">
+    <div style="text-align:center;margin-bottom:22px">
       <div style="font-family:var(--font-body);font-size:1.05rem;font-weight:800;color:var(--text)">아웃사이더 힌트를 찾아라</div>
       <div style="font-size:0.78rem;color:var(--muted);margin-top:5px">6개 중 하나만 다른 단어의 힌트예요</div>
     </div>
-    <div class="w400" id="spyHintGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px"></div>
-    <div id="spyResultArea" class="w400" style="display:none;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:16px;padding:16px 18px;margin-bottom:16px">
+    <div id="spyHintGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px"></div>
+    <div id="spyResultArea" style="display:none;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:16px;padding:16px 18px;margin-bottom:16px">
       <div id="spyResultMsg" style="font-family:var(--font-body);font-size:1rem;font-weight:800;margin-bottom:12px;text-align:center"></div>
       <div style="font-size:0.82rem;line-height:2;color:var(--text-soft)">
         <div>나머지 5개 힌트 → <strong id="spyRevealReal" style="color:var(--text)"></strong>의 힌트</div>
         <div>아웃사이더 힌트 → <strong id="spyRevealFake" style="color:#C5410B"></strong>의 힌트</div>
       </div>
     </div>
-    <button id="spyNextBtn" onclick="nextSpyRound()" style="display:none;width:100%;max-width:400px;padding:15px;border-radius:14px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:0.96rem;font-weight:800;cursor:pointer">다음 문제 →</button>
+    <button id="spyNextBtn" onclick="nextSpyRound()" style="display:none;width:100%;padding:15px;border-radius:14px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:0.96rem;font-weight:800;cursor:pointer">다음 문제 →</button>
   </div>
   <!-- 최종 결과 오버레이 -->
   <div id="spyFinalOverlay" style="display:none;position:fixed;inset:0;background:rgba(43,26,18,0.55);z-index:300;justify-content:center;align-items:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">
@@ -6739,22 +6739,32 @@ async function shareRushResult(){
   var fallbackText='noonchi 러쉬모드\n1분에 '+d.score+'개 맞혔어요!\n'+rankText+'\n'+url;
   try {
     var blob=await _generateRushImage(d);
-    var file=new File([blob],'noonchi-rush.png',{type:'image/png'});
-    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-      await navigator.share({files:[file],title:'noonchi 러쉬모드',text:url}); return;
-    }
     var blobUrl=URL.createObjectURL(blob);
     showShareSheet(
       function(){
+        // 카카오
+        if(typeof Kakao==='undefined'||!Kakao.isInitialized()||!Kakao.Share){
+          try{navigator.clipboard.writeText(fallbackText);}catch(e){}
+          showShareToast('링크가 복사됐어요!');
+          URL.revokeObjectURL(blobUrl); return;
+        }
         URL.revokeObjectURL(blobUrl);
-        if(typeof Kakao==='undefined'||!Kakao.isInitialized()||!Kakao.Share){try{navigator.clipboard.writeText(fallbackText);}catch(e){}showShareToast('링크가 복사됐어요!');return;}
         Kakao.Share.sendDefault({objectType:'feed',content:{title:'noonchi 러쉬모드 — '+d.score+'개!',description:'1분에 '+d.score+'개 맞혔어요!\n'+rankText,imageUrl:'https://kimberry1.github.io/noonchi/icon-512.png',link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:'나도 도전하기',link:{mobileWebUrl:url,webUrl:url}}]});
       },
       function(){
-        var a=document.createElement('a');a.href=blobUrl;a.download='noonchi-rush.png';a.click();
-        setTimeout(function(){URL.revokeObjectURL(blobUrl);},1000);
-        try{navigator.clipboard.writeText(fallbackText);}catch(e){}
-        showShareToast('이미지 저장 + 링크 복사됐어요!');
+        // 일반 (네이티브 공유 or 이미지 저장)
+        var file=new File([blob],'noonchi-rush.png',{type:'image/png'});
+        if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+          navigator.share({files:[file],title:'noonchi 러쉬모드',text:url}).catch(function(){
+            var a=document.createElement('a');a.href=blobUrl;a.download='noonchi-rush.png';a.click();
+            setTimeout(function(){URL.revokeObjectURL(blobUrl);},1000);
+          });
+        } else {
+          var a=document.createElement('a');a.href=blobUrl;a.download='noonchi-rush.png';a.click();
+          setTimeout(function(){URL.revokeObjectURL(blobUrl);},1000);
+          try{navigator.clipboard.writeText(fallbackText);}catch(e){}
+          showShareToast('이미지 저장 + 링크 복사됐어요!');
+        }
       }
     );
   } catch(e){
@@ -7073,7 +7083,7 @@ async function loadSpyLeaderboard(targetId, cachedRows){
   var html='';
   rows.forEach(function(r,i){
     var medal=i<3?medals[i]:(i+1)+'';
-    html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0'+(i<rows.length-1?';border-bottom:1px solid var(--border)':'')+'"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:0.88rem;width:22px;text-align:center">'+medal+'</span><span style="font-size:0.88rem;color:var(--text);font-weight:600">'+r.username+'</span></div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:0.78rem;color:var(--muted)">'+r.correct+'/10</span><span style="font-size:0.92rem;font-weight:800;color:#7B30C0">'+r.score+'점</span></div></div>';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0'+(i<rows.length-1?';border-bottom:1px solid var(--border)':'')+'"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:0.88rem;width:22px;text-align:center">'+medal+'</span><span style="font-size:0.88rem;color:var(--text);font-weight:600">'+r.username+'</span></div><span style="font-size:0.92rem;font-weight:800;color:#7B30C0">'+r.score+'점</span></div>';
   });
   el.innerHTML=html;
   return rows;
@@ -7171,22 +7181,32 @@ async function shareSpyResult(){
   var fallbackText='noonchi 스파이 모드\n'+d.score+'점 — '+d.correct+'/10 정답\n'+rankWord+'\n'+url;
   try {
     var blob=await _generateSpyImage(d);
-    var file=new File([blob],'noonchi-spy.png',{type:'image/png'});
-    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-      await navigator.share({files:[file],title:'noonchi 스파이 모드',text:url}); return;
-    }
     var blobUrl=URL.createObjectURL(blob);
     showShareSheet(
       function(){
+        // 카카오
+        if(typeof Kakao==='undefined'||!Kakao.isInitialized()||!Kakao.Share){
+          try{navigator.clipboard.writeText(fallbackText);}catch(e){}
+          showShareToast('링크가 복사됐어요!');
+          URL.revokeObjectURL(blobUrl); return;
+        }
         URL.revokeObjectURL(blobUrl);
-        if(typeof Kakao==='undefined'||!Kakao.isInitialized()||!Kakao.Share){try{navigator.clipboard.writeText(fallbackText);}catch(e){}showShareToast('링크가 복사됐어요!');return;}
         Kakao.Share.sendDefault({objectType:'feed',content:{title:'noonchi 스파이 모드 — '+d.score+'점',description:d.correct+'/10 정답 · '+rankWord,imageUrl:'https://kimberry1.github.io/noonchi/icon-512.png',link:{mobileWebUrl:url,webUrl:url}},buttons:[{title:'나도 도전하기',link:{mobileWebUrl:url,webUrl:url}}]});
       },
       function(){
-        var a=document.createElement('a');a.href=blobUrl;a.download='noonchi-spy.png';a.click();
-        setTimeout(function(){URL.revokeObjectURL(blobUrl);},1000);
-        try{navigator.clipboard.writeText(fallbackText);}catch(e){}
-        showShareToast('이미지 저장 + 링크 복사됐어요!');
+        // 일반 (네이티브 공유 or 이미지 저장)
+        var file=new File([blob],'noonchi-spy.png',{type:'image/png'});
+        if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+          navigator.share({files:[file],title:'noonchi 스파이 모드',text:url}).catch(function(){
+            var a=document.createElement('a');a.href=blobUrl;a.download='noonchi-spy.png';a.click();
+            setTimeout(function(){URL.revokeObjectURL(blobUrl);},1000);
+          });
+        } else {
+          var a=document.createElement('a');a.href=blobUrl;a.download='noonchi-spy.png';a.click();
+          setTimeout(function(){URL.revokeObjectURL(blobUrl);},1000);
+          try{navigator.clipboard.writeText(fallbackText);}catch(e){}
+          showShareToast('이미지 저장 + 링크 복사됐어요!');
+        }
       }
     );
   } catch(e){
