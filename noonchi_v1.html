@@ -1072,6 +1072,11 @@ input,button,textarea,select { font-family:inherit; }
 <div class="screen active" id="screenLogin">
   <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
   <div class="tagline">힌트를 연결하고 눈치껏 단어 맞히기</div>
+  <div class="w400" style="background:linear-gradient(135deg,rgba(255,184,0,0.12),rgba(255,120,0,0.08));border:1.5px solid rgba(255,184,0,0.35);border-radius:14px;padding:12px 18px;margin-bottom:12px;text-align:center">
+    <div style="font-size:0.72rem;color:rgba(255,184,0,0.8);font-weight:700;letter-spacing:0.06em;margin-bottom:3px">신규 가입 혜택</div>
+    <div style="font-weight:800;font-size:1.05rem;color:#FFB830">지금 가입하면 300코인 즉시 증정!</div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:3px">랭크 입장권 · 아이템 구매에 사용 가능</div>
+  </div>
   <div id="referralBanner" class="w400" style="display:none;background:linear-gradient(135deg,#6B2418,#9B3829);border-radius:14px;padding:14px 18px;margin-bottom:12px;text-align:center;color:#fff">
     <div style="font-size:0.75rem;font-weight:700;opacity:0.8;letter-spacing:0.05em;margin-bottom:4px">초대 받으셨어요</div>
     <div id="referralBannerText" style="font-weight:700;font-size:0.95rem">친구가 noonchi에 초대했어요</div>
@@ -1098,6 +1103,10 @@ input,button,textarea,select { font-family:inherit; }
     </div>
     <!-- 회원가입 패널 -->
     <div id="panelSignup" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,184,0,0.08);border-radius:10px;padding:10px 14px;margin-bottom:14px">
+        <span style="font-size:1.5rem;flex-shrink:0">🪙</span>
+        <div><div style="font-size:0.82rem;font-weight:700;color:#FFB830">가입 즉시 300코인 지급!</div><div style="font-size:0.73rem;color:var(--muted)">코인으로 랭크 입장권·아이템 구매 가능</div></div>
+      </div>
       <div class="input-group">
         <label class="input-label">닉네임</label>
         <input type="text" class="text-input" id="signupName" placeholder="닉네임 (2~10자)" maxlength="10"/>
@@ -2374,6 +2383,14 @@ async function loadCoins(email){
     var rows = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=coins&limit=1');
     if(rows && rows[0]) userCoins = parseInt(rows[0].coins || 0);
     updateCoinUI();
+    // 신규 가입 300코인 보너스
+    if(window._isNewSignup){
+      window._isNewSignup = false;
+      setTimeout(function(){
+        earnCoins(300);
+        noonchiPunch('mega', { banner: '환영해요!', subBanner: '300코인이 지급됐어요' });
+      }, 1000);
+    }
   } catch(e){}
 }
 function sbSaveCoins(email){
@@ -3696,6 +3713,7 @@ async function doSignupEmail(){
   // DB에 유저 생성
   sbGetOrCreateUser(name, email).catch(function(){});
   if(sbAuthToken){
+    window._isNewSignup = true; // 300코인 지급 플래그
     _afterAuthLogin(name, email);
   } else {
     // 이메일 인증 필요한 경우
