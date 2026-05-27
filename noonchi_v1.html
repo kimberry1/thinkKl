@@ -1571,36 +1571,57 @@ input,button,textarea,select { font-family:inherit; }
     <button class="nav-back" onclick="showScreen('screenSolo')">← 뒤로</button>
     <span class="nav-title">스파이 모드</span>
   </div>
-  <div class="w400" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span id="spyRoundLabel" style="font-size:0.82rem;font-weight:700;color:var(--muted)">1 / 10</span>
-    <span id="spyScoreDisp" style="font-size:0.88rem;font-weight:800;color:#7B30C0">0점</span>
-  </div>
-  <div class="w400" style="height:5px;background:var(--surface);border-radius:10px;margin-bottom:22px;overflow:hidden">
-    <div id="spyProgressBar" style="height:100%;background:#7B30C0;border-radius:10px;transition:width 0.4s;width:0%"></div>
-  </div>
-  <div class="w400" style="text-align:center;margin-bottom:22px">
-    <div style="font-family:var(--font-body);font-size:1.05rem;font-weight:800;color:var(--text)">아웃사이더 힌트를 찾아라</div>
-    <div style="font-size:0.78rem;color:var(--muted);margin-top:5px">6개 중 하나만 다른 단어의 힌트예요</div>
-  </div>
-  <div class="w400" id="spyHintGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px"></div>
-  <div id="spyResultArea" class="w400" style="display:none;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:16px;padding:16px 18px;margin-bottom:16px">
-    <div id="spyResultMsg" style="font-family:var(--font-body);font-size:1rem;font-weight:800;margin-bottom:12px;text-align:center"></div>
-    <div style="font-size:0.82rem;line-height:2;color:var(--text-soft)">
-      <div>나머지 5개 힌트 → <strong id="spyRevealReal" style="color:var(--text)"></strong>의 힌트</div>
-      <div>아웃사이더 힌트 → <strong id="spyRevealFake" style="color:#C5410B"></strong>의 힌트</div>
+  <!-- 로비 -->
+  <div id="spyLobby">
+    <div class="rush-info-card w400" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:0.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">오늘의 도전</div>
+        <div style="font-weight:800;font-size:1.05rem;color:#7B30C0">아웃사이더를 찾아라</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:0.72rem;color:var(--muted);font-weight:600;margin-bottom:4px">남은 도전</div>
+        <div style="font-size:1.2rem;font-weight:800;color:#7B30C0" id="spyAttemptsLeft">3/3</div>
+      </div>
+    </div>
+    <div class="rush-info-card w400">
+      <div style="font-size:0.85rem;color:var(--text);line-height:1.7">6개의 힌트 중 하나만 다른 단어의 힌트예요.<br><span style="color:var(--muted);font-size:0.8rem">아웃사이더를 찾아 10문제 도전!</span></div>
+    </div>
+    <div class="w400">
+      <button id="spyStartBtn" onclick="launchSpyGame()" style="width:100%;padding:16px;border-radius:14px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:1rem;font-weight:800;cursor:pointer;margin-top:4px">게임 시작</button>
+      <div id="spyNoAttemptsMsg" style="display:none;text-align:center;color:var(--muted);font-size:0.85rem;padding:12px 0">오늘 도전 횟수를 모두 사용했어요<br><span style="font-size:0.78rem">내일 다시 도전하거나 광고를 보고 추가 기회를 받아요</span></div>
+      <div id="spyAdBonusBtn" style="display:none;margin-top:8px"><button onclick="watchAdForSpy()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer">광고 보고 +1회 추가</button></div>
     </div>
   </div>
-  <button id="spyNextBtn" onclick="nextSpyRound()" style="display:none;width:100%;max-width:400px;padding:15px;border-radius:14px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:0.96rem;font-weight:800;cursor:pointer">다음 문제 →</button>
+  <!-- 게임 영역 -->
+  <div id="spyGame" style="display:none">
+    <div class="w400" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span id="spyRoundLabel" style="font-size:0.82rem;font-weight:700;color:var(--muted)">1 / 10</span>
+      <span id="spyScoreDisp" style="font-size:0.88rem;font-weight:800;color:#7B30C0">0점</span>
+    </div>
+    <div class="w400" style="height:5px;background:var(--surface);border-radius:10px;margin-bottom:22px;overflow:hidden">
+      <div id="spyProgressBar" style="height:100%;background:#7B30C0;border-radius:10px;transition:width 0.4s;width:0%"></div>
+    </div>
+    <div class="w400" style="text-align:center;margin-bottom:22px">
+      <div style="font-family:var(--font-body);font-size:1.05rem;font-weight:800;color:var(--text)">아웃사이더 힌트를 찾아라</div>
+      <div style="font-size:0.78rem;color:var(--muted);margin-top:5px">6개 중 하나만 다른 단어의 힌트예요</div>
+    </div>
+    <div class="w400" id="spyHintGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px"></div>
+    <div id="spyResultArea" class="w400" style="display:none;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:16px;padding:16px 18px;margin-bottom:16px">
+      <div id="spyResultMsg" style="font-family:var(--font-body);font-size:1rem;font-weight:800;margin-bottom:12px;text-align:center"></div>
+      <div style="font-size:0.82rem;line-height:2;color:var(--text-soft)">
+        <div>나머지 5개 힌트 → <strong id="spyRevealReal" style="color:var(--text)"></strong>의 힌트</div>
+        <div>아웃사이더 힌트 → <strong id="spyRevealFake" style="color:#C5410B"></strong>의 힌트</div>
+      </div>
+    </div>
+    <button id="spyNextBtn" onclick="nextSpyRound()" style="display:none;width:100%;max-width:400px;padding:15px;border-radius:14px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:0.96rem;font-weight:800;cursor:pointer">다음 문제 →</button>
+  </div>
   <!-- 최종 결과 오버레이 -->
   <div id="spyFinalOverlay" style="display:none;position:fixed;inset:0;background:rgba(43,26,18,0.55);z-index:300;justify-content:center;align-items:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">
     <div style="background:var(--card);border-radius:22px;padding:32px 28px;width:300px;max-width:90%;text-align:center;box-shadow:var(--shadow-lg)">
       <div style="font-size:0.8rem;font-weight:700;color:var(--muted);margin-bottom:6px">스파이 모드 결과</div>
       <div id="spyFinalScore" style="font-size:3rem;font-weight:900;color:#7B30C0;line-height:1;margin:10px 0 4px"></div>
       <div id="spyFinalSub" style="font-size:0.85rem;color:var(--muted);margin-bottom:24px"></div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <button onclick="retrySpyMode()" style="width:100%;padding:13px;border-radius:12px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer">다시 도전</button>
-        <button onclick="document.getElementById('spyFinalOverlay').style.display='none';showScreen('screenSolo')" style="width:100%;padding:13px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:var(--font-body);font-size:0.85rem;cursor:pointer">나가기</button>
-      </div>
+      <div id="spyActionArea" style="display:flex;flex-direction:column;gap:10px"></div>
     </div>
   </div>
 </div>
@@ -6767,6 +6788,17 @@ var spyRound = 0, spyScore = 0, spyCorrect = 0;
 var spyWord = '', spyFakeWord = '';
 var spyHints = [];
 var spyAnswered = false;
+var SPY_MAX_FREE = 3;
+var SPY_MAX_PREMIUM = 6;
+var SPY_AD_BONUS_MAX = 2;
+function getSpyMaxBase(){ return isGuest ? 1 : isPremium ? SPY_MAX_PREMIUM : SPY_MAX_FREE; }
+function getSpyAdBonusKey(){ var d=new Date(); return 'spy_ad_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
+function getSpyAdBonusToday(){ return parseInt(localStorage.getItem(getSpyAdBonusKey())||'0'); }
+function addSpyAdBonus(){ var k=getSpyAdBonusKey(); localStorage.setItem(k, getSpyAdBonusToday()+1); }
+function getSpyTotalAvailable(){ return isGuest ? 1 : isPremium ? SPY_MAX_PREMIUM : SPY_MAX_FREE + getSpyAdBonusToday(); }
+function getSpyAttemptsKey(){ var d=new Date(); return 'spy_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
+function getSpyAttemptsToday(){ return parseInt(localStorage.getItem(getSpyAttemptsKey())||'0'); }
+function addSpyAttempt(){ var k=getSpyAttemptsKey(); localStorage.setItem(k, getSpyAttemptsToday()+1); }
 
 function _spyShuffle(arr){
   var a = arr.slice();
@@ -6780,8 +6812,39 @@ function _spyWordPool(){
 
 function enterSpyMode(){
   if(!wordDB.easy||!wordDB.easy.length){ showShareToast('단어 데이터 로딩 중이에요'); return; }
-  spyRound = 0; spyScore = 0; spyCorrect = 0;
+  _updateSpyLobbyUI();
+  document.getElementById('spyLobby').style.display = '';
+  document.getElementById('spyGame').style.display = 'none';
   showScreen('screenSpy');
+}
+
+function _updateSpyLobbyUI(){
+  var attempts = getSpyAttemptsToday();
+  var maxAttempts = getSpyTotalAvailable();
+  var remaining = maxAttempts - attempts;
+  var leftEl = document.getElementById('spyAttemptsLeft');
+  if(leftEl) leftEl.textContent = remaining + '/' + maxAttempts;
+  var btn = document.getElementById('spyStartBtn');
+  var msg = document.getElementById('spyNoAttemptsMsg');
+  var adBtn = document.getElementById('spyAdBonusBtn');
+  var canAdBonus = !isGuest && !isPremium && getSpyAdBonusToday() < SPY_AD_BONUS_MAX;
+  if(remaining <= 0){
+    if(btn) btn.style.display = 'none';
+    if(msg) msg.style.display = 'block';
+    if(adBtn) adBtn.style.display = canAdBonus ? '' : 'none';
+  } else {
+    if(btn) btn.style.display = '';
+    if(msg) msg.style.display = 'none';
+    if(adBtn) adBtn.style.display = 'none';
+  }
+}
+
+function launchSpyGame(){
+  if(getSpyAttemptsToday() >= getSpyTotalAvailable()){ showShareToast('오늘 도전 횟수를 모두 사용했어요'); return; }
+  addSpyAttempt();
+  spyRound = 0; spyScore = 0; spyCorrect = 0;
+  document.getElementById('spyLobby').style.display = 'none';
+  document.getElementById('spyGame').style.display = '';
   startSpyRound();
 }
 
@@ -6867,20 +6930,39 @@ function _showSpyFinal(){
   var pct = Math.round(spyCorrect / SPY_ROUNDS * 100);
   document.getElementById('spyFinalScore').textContent = spyScore + '점';
   document.getElementById('spyFinalSub').textContent = SPY_ROUNDS + '문제 중 ' + spyCorrect + '개 정답 (' + pct + '%)';
-  var ol = document.getElementById('spyFinalOverlay');
-  // 게스트 로그인 유도 버튼 (중복 방지)
-  var existing = ol.querySelector('.spy-login-btn');
-  if(isGuest && !existing){
-    var S = 'font-family:inherit;font-size:0.88rem;font-weight:700;cursor:pointer;padding:12px;border-radius:12px;width:100%;border:1.5px solid var(--primary);background:transparent;color:var(--primary);margin-top:2px';
-    var btn = document.createElement('button');
-    btn.className = 'spy-login-btn';
-    btn.style.cssText = S;
-    btn.textContent = '기록 저장하고 로그인하기';
-    btn.onclick = function(){ ol.style.display='none'; doLogout(); };
-    ol.querySelector('div > div').appendChild(btn);
-  } else if(!isGuest && existing){ existing.remove(); }
-  ol.style.display = 'flex';
+  renderSpyResultActions();
+  document.getElementById('spyFinalOverlay').style.display = 'flex';
   if(spyCorrect >= 8) spawnSparkleBurst({x: window.innerWidth/2, y: window.innerHeight/2, count:18, level:'mega'});
+}
+
+function renderSpyResultActions(){
+  var el = document.getElementById('spyActionArea');
+  if(!el) return;
+  var used = getSpyAttemptsToday();
+  var total = getSpyTotalAvailable();
+  var remaining = total - used;
+  var canAdBonus = !isGuest && !isPremium && getSpyAdBonusToday() < SPY_AD_BONUS_MAX;
+  var S = 'font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;padding:13px;border-radius:12px;width:100%';
+  var html = '';
+  if(remaining > 0){
+    html += '<button onclick="retrySpyMode()" style="'+S+';border:none;background:#7B30C0;color:#fff">다시 도전 ('+remaining+'회 남음)</button>';
+  } else if(canAdBonus){
+    html += '<button onclick="watchAdForSpy()" style="'+S+';border:none;background:var(--accent);color:#fff">광고 보고 +1회 추가</button>';
+  }
+  html += '<button onclick="document.getElementById(\'spyFinalOverlay\').style.display=\'none\';showScreen(\'screenSolo\')" style="'+S+';border:1px solid var(--border);background:var(--surface);color:var(--muted)">나가기</button>';
+  if(isGuest){
+    html += '<button onclick="document.getElementById(\'spyFinalOverlay\').style.display=\'none\';doLogout();" style="'+S+';border:1.5px solid #7B30C0;background:transparent;color:#7B30C0;margin-top:2px">기록 저장하고 로그인하기</button>';
+  }
+  el.innerHTML = html;
+}
+
+function watchAdForSpy(){
+  adCallback = function(){
+    addSpyAdBonus();
+    document.getElementById('spyFinalOverlay').style.display = 'none';
+    enterSpyMode();
+  };
+  showAd('spy');
 }
 
 function retrySpyMode(){
