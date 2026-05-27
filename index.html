@@ -548,6 +548,20 @@ input,button,textarea,select { font-family:inherit; }
 .streak-banner.onepct-streak.milestone-30 .streak-dot.done { background:#B8860B; border-color:#B8860B; }
 .share-toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:var(--card); border:1px solid var(--success); border-radius:12px; padding:12px 22px; font-size:0.86rem; font-weight:600; color:var(--success); display:none; z-index:300; white-space:nowrap; box-shadow:var(--shadow-lg); }
 .share-toast.show { display:block; animation:fadeUp 0.3s ease; }
+/* ── v36 공유 모먼트 ── */
+.share-moment-overlay { position:fixed; inset:0; z-index:3000; background:rgba(43,26,18,0.6); display:flex; align-items:center; justify-content:center; padding:20px; pointer-events:none; opacity:0; transition:opacity 0.22s; }
+.share-moment-overlay.show { opacity:1; pointer-events:all; }
+.share-moment-card { background:var(--card); border-radius:24px; padding:32px 24px 22px; width:100%; max-width:340px; text-align:center; border:2px solid var(--border-strong); box-shadow:5px 5px 0 var(--wine-hard); transform:scale(0.82); transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+.share-moment-overlay.show .share-moment-card { transform:scale(1); }
+.share-moment-card.type-streak { background:linear-gradient(135deg,#FFF6E8 0%,var(--card) 75%); border-color:#F0DCB2; }
+.share-moment-card.type-rush { background:linear-gradient(135deg,#E8F5F0 0%,var(--card) 75%); border-color:#A8D8C0; }
+.share-moment-card.type-difficulty { background:linear-gradient(135deg,#EEF0FF 0%,var(--card) 75%); border-color:#C4B8F0; }
+.share-moment-icon { font-size:3.6rem; line-height:1; display:block; margin-bottom:12px; animation:smIconPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.18s both; }
+.share-moment-title { font-family:var(--font-body); font-weight:900; font-size:1.45rem; color:var(--text); line-height:1.2; margin-bottom:6px; }
+.share-moment-sub { font-size:0.86rem; color:var(--muted); font-weight:600; margin-bottom:22px; line-height:1.4; }
+.share-moment-share-btn { width:100%; padding:14px; border-radius:14px; border:2px solid var(--text); background:var(--primary); color:#fff; font-family:inherit; font-size:1rem; font-weight:800; cursor:pointer; box-shadow:3px 3px 0 var(--wine-hard); margin-bottom:10px; }
+.share-moment-close-btn { width:100%; padding:11px; border-radius:12px; border:1px solid var(--border); background:var(--surface); color:var(--muted); font-family:inherit; font-size:0.88rem; font-weight:600; cursor:pointer; }
+@keyframes smIconPop { 0%{transform:scale(0)} 60%{transform:scale(1.25)} 100%{transform:scale(1)} }
 
 /* 언어 선택 */
 .lang-cards { width:100%; max-width:400px; display:flex; flex-direction:column; gap:10px; }
@@ -2305,6 +2319,39 @@ function closeShareSheet(){
   var el = document.getElementById('shareSheetModal');
   if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
 }
+function showShareMoment(type, opts){
+  var overlay = document.getElementById('shareMomentModal');
+  var card = document.getElementById('shareMomentCard');
+  if(!overlay) return;
+  document.getElementById('shareMomentIcon').textContent = opts.icon || '🎉';
+  document.getElementById('shareMomentTitle').textContent = opts.title || '';
+  document.getElementById('shareMomentSub').textContent = opts.sub || '';
+  card.className = 'share-moment-card type-' + (type || 'streak');
+  var gameUrl = 'https://kimberry1.github.io/noonchi/';
+  document.getElementById('shareMomentBtn').onclick = function(){
+    var kakaoTitle = opts.kakaoTitle || opts.title;
+    var kakaoDesc = opts.kakaoDesc || opts.sub || '';
+    var nativeText = kakaoTitle + '\n' + kakaoDesc + '\n' + gameUrl;
+    closeShareMoment();
+    setTimeout(function(){
+      showShareSheet(
+        function(){
+          if(typeof Kakao==='undefined'||!Kakao.isInitialized()||!Kakao.Share){ fallbackCopy(gameUrl); showShareToast('링크가 복사됐어요!'); return; }
+          Kakao.Share.sendDefault({ objectType:'feed', content:{ title:'noonchi — '+kakaoTitle, description:kakaoDesc, imageUrl:'https://kimberry1.github.io/noonchi/icon-512.png', link:{mobileWebUrl:gameUrl,webUrl:gameUrl} }, buttons:[{title:'나도 도전하기', link:{mobileWebUrl:gameUrl,webUrl:gameUrl}}] });
+        },
+        function(){
+          if(navigator.share){ navigator.share({title:'noonchi', text:nativeText}).catch(function(){}); }
+          else { fallbackCopy(nativeText); showShareToast('복사됐어요!'); }
+        }
+      );
+    }, 200);
+  };
+  overlay.className = 'share-moment-overlay show';
+}
+function closeShareMoment(){
+  var overlay = document.getElementById('shareMomentModal');
+  if(overlay) overlay.className = 'share-moment-overlay';
+}
 function buyCoinPack(coins, price){
   closeCoinShop();
   if(typeof IMP === 'undefined'){ showShareToast('결제 모듈 로드 중...'); return; }
@@ -2980,6 +3027,22 @@ function showAchievement(m){
             : 'medium';
     noonchiPunch(lvl, { banner: name, subBanner: '업적 달성' });
   } catch(e){}
+  // 난이도 최초 정복 공유 모먼트
+  var _DIFF_SHARE = {
+    first_hard:    {icon:'⚔️', title:'어려움 첫 정복!', sub:'어려움 난이도 첫 정답 달성'},
+    first_extreme: {icon:'🧠', title:'극한 첫 정복!',   sub:'극한 난이도 첫 정답 달성'},
+    first_insane:  {icon:'💀', title:'지옥 첫 정복!',   sub:'지옥 난이도 첫 정답 달성'},
+  };
+  if(m.id && _DIFF_SHARE[m.id]){
+    var _ds = _DIFF_SHARE[m.id];
+    setTimeout(function(){
+      showShareMoment('difficulty',{
+        icon:_ds.icon, title:_ds.title, sub:_ds.sub,
+        kakaoTitle:'noonchi '+_ds.title,
+        kakaoDesc:_ds.sub+' 🎉 noonchi에서 도전해봐요'
+      });
+    }, 3500);
+  }
 }
 
 function goProfile(){
@@ -3233,6 +3296,18 @@ function checkAttendance(){
       earnCoinsQuiet(_sb.coins);
       setTimeout(function(days,coins){
         showAchievement({icon:'🔥',name:days+'일 연속 출석!',title:days+'일 스트릭 달성',_coinReward:coins});
+        if(days===7||days===30||days===100){
+          var _sIcon=days===100?'🌟':days===30?'⚡':'🔥';
+          var _sSub=days===100?'100일 스트릭 전설 달성':'한 달 개근 달성!';
+          if(days===7) _sSub='일주일 연속 출석 달성!';
+          setTimeout(function(){
+            showShareMoment('streak',{
+              icon:_sIcon, title:days+'일 연속 달성!', sub:_sSub,
+              kakaoTitle:'noonchi '+days+'일 연속 출석 달성!',
+              kakaoDesc:_sSub+' noonchi에서 도전해봐요'
+            });
+          },3200);
+        }
       }.bind(null,_sb.day,_sb.coins),1800);
       break;
     }
@@ -6459,6 +6534,17 @@ async function endRushGame(){
       }
     }
   } catch(e){}
+  if(_isPB && rushScore >= 5){
+    setTimeout(function(){
+      showShareMoment('rush',{
+        icon:'⚡',
+        title:'최고기록 경신!',
+        sub:rushScore+'개 정답 — 개인 신기록',
+        kakaoTitle:'noonchi 러쉬 최고기록 '+rushScore+'개!',
+        kakaoDesc:'1분 안에 '+rushScore+'개 정답 — 개인 신기록 경신!'
+      });
+    }, 3000);
+  }
 }
 
 function closeRushResult(){
@@ -7698,6 +7784,17 @@ function maybeShowOnboarding(){
     </div>
 
     <button onclick="closeCoinShop()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">닫기</button>
+  </div>
+</div>
+
+<!-- v36 공유 모먼트 모달 -->
+<div class="share-moment-overlay" id="shareMomentModal" onclick="if(event.target===this)closeShareMoment()">
+  <div class="share-moment-card" id="shareMomentCard">
+    <span class="share-moment-icon" id="shareMomentIcon">🔥</span>
+    <div class="share-moment-title" id="shareMomentTitle"></div>
+    <div class="share-moment-sub" id="shareMomentSub"></div>
+    <button class="share-moment-share-btn" id="shareMomentBtn">공유하기</button>
+    <button class="share-moment-close-btn" onclick="closeShareMoment()">닫기</button>
   </div>
 </div>
 
