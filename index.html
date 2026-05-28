@@ -5338,30 +5338,28 @@ function playSound(type){
         o.start(t); o.stop(t+0.25);
       });
     } else if(type === 'wrong'){
-      // 뿌웅: sawtooth+square 두 겹, LFO로 울림, 저음 급강하
-      var o1=ctx.createOscillator(), o2=ctx.createOscillator(), g=ctx.createGain();
-      var lfo=ctx.createOscillator(), lfoG=ctx.createGain();
-      o1.connect(g); o2.connect(g); g.connect(ctx.destination);
-      o1.type='sawtooth'; o2.type='square';
-      o1.frequency.setValueAtTime(160, ctx.currentTime);
-      o1.frequency.exponentialRampToValueAtTime(55, ctx.currentTime+0.38);
-      o2.frequency.setValueAtTime(80, ctx.currentTime);
-      o2.frequency.exponentialRampToValueAtTime(45, ctx.currentTime+0.38);
-      lfo.frequency.value=28; lfoG.gain.value=14;
-      lfo.connect(lfoG); lfoG.connect(o1.frequency);
-      g.gain.setValueAtTime(0.32, ctx.currentTime);
-      g.gain.setValueAtTime(0.28, ctx.currentTime+0.04);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.42);
-      lfo.start(); lfo.stop(ctx.currentTime+0.45);
-      o1.start(); o1.stop(ctx.currentTime+0.45);
-      o2.start(); o2.stop(ctx.currentTime+0.45);
+      // 게임쇼 버저: 짧은 고음 buzz 두 방 + 급강하
+      var ws=ctx.createWaveShaper();
+      var curve=new Float32Array(256);
+      for(var ci=0;ci<256;ci++){var x=ci/128-1; curve[ci]=x<0?-1:1;} // hard clip
+      ws.curve=curve; ws.connect(ctx.destination);
+      var wg=ctx.createGain(); wg.connect(ws);
+      [0, 0.13].forEach(function(delay){
+        var o=ctx.createOscillator(), og=ctx.createGain();
+        o.type='sawtooth'; o.frequency.value=440;
+        o.connect(og); og.connect(wg);
+        var t=ctx.currentTime+delay;
+        og.gain.setValueAtTime(0.55,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.11);
+        o.start(t); o.stop(t+0.13);
+      });
+      wg.gain.setValueAtTime(1,ctx.currentTime); wg.gain.setValueAtTime(0,ctx.currentTime+0.28);
     } else if(type === 'hint'){
       var o=ctx.createOscillator(), g=ctx.createGain();
       o.connect(g); g.connect(ctx.destination);
       o.type='sine'; o.frequency.value=1100;
-      g.gain.setValueAtTime(0.09, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.1);
-      o.start(); o.stop(ctx.currentTime+0.12);
+      g.gain.setValueAtTime(0.32, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.18);
+      o.start(); o.stop(ctx.currentTime+0.2);
     } else if(type === 'rushEnd'){
       [880,660,440,330].forEach(function(f,i){
         var o=ctx.createOscillator(), g=ctx.createGain();
@@ -5431,16 +5429,18 @@ function _stopBGM(){
   try{ localStorage.setItem('noonchi_bgm','0'); }catch(e){}
 }
 function _initBGM(){
+  // 브라우저 자동재생 정책상 페이지 로드 시 자동시작 불가
+  // 이전에 켜뒀으면 버튼에 "켜짐" 표시만 해두고 클릭 시 실제 시작
   try{
     if(localStorage.getItem('noonchi_bgm')==='1'){
-      // 자동재생 정책 우회: 첫 인터랙션 시 시작
-      function _bgmOnInteract(){
-        document.removeEventListener('touchstart', _bgmOnInteract, true);
-        document.removeEventListener('click', _bgmOnInteract, true);
-        if(!_bgmPlaying) _startBGM();
+      var btn = document.getElementById('bgmToggleBtn');
+      if(btn){ btn.style.opacity='1'; btn.style.color='var(--primary)'; }
+      // 첫 인터랙션 시 자동 재개
+      function _bgmResume(){
+        if(!_bgmPlaying){ _startBGM(); }
       }
-      document.addEventListener('touchstart', _bgmOnInteract, {once:true, capture:true});
-      document.addEventListener('click', _bgmOnInteract, {once:true, capture:true});
+      document.addEventListener('touchstart', _bgmResume, {once:true});
+      document.addEventListener('click', _bgmResume, {once:true});
     }
   }catch(e){}
 }
