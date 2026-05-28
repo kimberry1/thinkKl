@@ -2356,16 +2356,18 @@ async function sbLoadAndMergeXPByUsername(username){
 
 // ── 프리미엄 상태 로드/저장 ──
 async function loadPremiumStatus(email){
-  const rows = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=is_premium,premium_until&limit=1');
+  const rows = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=is_premium,premium_until,is_master&limit=1');
   if(!rows || !rows.length) return;
   const u = rows[0];
+  if(u.is_master){
+    isMaster = true; isPremium = true; updatePremiumUI(); return;
+  }
   if(u.is_premium && u.premium_until && new Date(u.premium_until) > new Date()){
     isPremium = true;
     premiumUntil = u.premium_until;
   } else {
     isPremium = false;
     premiumUntil = null;
-    // 만료됐으면 DB 정리
     if(u.is_premium) sbFetch('users?email=eq.'+encodeURIComponent(email), { method:'PATCH', body:{ is_premium: false, premium_until: null } });
   }
   updatePremiumUI();
