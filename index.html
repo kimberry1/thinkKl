@@ -1302,7 +1302,6 @@ input,button,textarea,select { font-family:inherit; }
           <div style="display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap">
             <span id="profileMemberBadge" class="home-member-badge free">일반</span>
             <button id="profileSubBtn" onclick="startPortonePayment()" style="display:none;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-family:inherit;cursor:pointer">구독하기</button>
-            <div style="display:none">🪙 <span class="coin-balance-display">0</span></div>
           </div>
         </div>
       </div>
@@ -1396,7 +1395,6 @@ input,button,textarea,select { font-family:inherit; }
         <span class="home-user-name" id="homeNameDisplay">게스트</span>
         <span class="home-member-badge free" id="homeMemberBadge">일반</span>
         <button id="homeSubBtn" onclick="startPortonePayment()" style="display:none;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-family:inherit;cursor:pointer;white-space:nowrap">구독하기</button>
-        <div style="display:none">🪙 <span class="coin-balance-display">0</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
         <button id="bgmToggleBtn" onclick="toggleBGM()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;padding:4px;opacity:0.45;transition:opacity 0.2s" aria-label="배경음악" title="배경음악">♪</button>
@@ -2380,79 +2378,6 @@ async function savePremiumStatus(email, until){
   });
 }
 
-// ── 코인 시스템 ──
-async function loadCoins(email){
-  if(!email || isGuest) return;
-  try {
-    var rows = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=coins&limit=1');
-    if(rows && rows[0]) userCoins = parseInt(rows[0].coins || 0);
-    updateCoinUI();
-    // 신규 가입 프리미엄 1달 보너스
-    if(window._isNewSignup){
-      window._isNewSignup = false;
-      setTimeout(function(){
-        var until = new Date(); until.setMonth(until.getMonth() + 1);
-        savePremiumStatus(currentEmail, until.toISOString()).then(function(){
-          isPremium = true; premiumUntil = until.toISOString(); updatePremiumUI();
-        });
-        noonchiPunch('mega', { banner: '환영해요!', subBanner: '프리미엄 1달이 지급됐어요' });
-      }, 1000);
-    }
-  } catch(e){}
-}
-function sbSaveCoins(email){
-  if(isGuest || !email) return;
-  sbFetch('users?email=eq.'+encodeURIComponent(email), { method:'PATCH', body:{ coins: userCoins } }).catch(function(){});
-}
-function earnCoins(amount){
-  userCoins += amount;
-  sbSaveCoins(currentEmail);
-  updateCoinUI();
-  showCoinEarnToast(amount);
-}
-function earnCoinsQuiet(amount){
-  userCoins += amount;
-  sbSaveCoins(currentEmail);
-  updateCoinUI();
-}
-function spendCoins(amount){
-  if(!COINS_ENABLED) return true;
-  if(userCoins < amount) return false;
-  userCoins -= amount;
-  sbSaveCoins(currentEmail);
-  updateCoinUI();
-  return true;
-}
-function updateCoinUI(){
-  document.querySelectorAll('.coin-balance-display').forEach(function(el){
-    el.textContent = userCoins;
-  });
-}
-function showCoinEarnToast(amount){
-  showShareToast('+' + amount + '코인 획득!');
-}
-function showCoinInsufficient(need){
-  if(!COINS_ENABLED) return;
-  var el = document.getElementById('coinInsufficientModal');
-  if(!el) return;
-  document.getElementById('coinNeedAmt').textContent = need + '코인';
-  document.getElementById('coinHaveAmt').textContent = userCoins + '코인';
-  el.style.opacity='1'; el.style.pointerEvents='all';
-}
-function closeCoinInsufficient(){
-  var el = document.getElementById('coinInsufficientModal');
-  if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
-}
-function openCoinShop(){
-  if(!COINS_ENABLED) return;
-  closeCoinInsufficient();
-  var el = document.getElementById('coinShopModal');
-  if(el){ el.style.opacity='1'; el.style.pointerEvents='all'; }
-}
-function closeCoinShop(){
-  var el = document.getElementById('coinShopModal');
-  if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
-}
 function showShareSheet(kakaoFn, nativeFn){
   var el = document.getElementById('shareSheetModal');
   if(!el) return;
@@ -2496,26 +2421,6 @@ function showShareMoment(type, opts){
 function closeShareMoment(){
   var overlay = document.getElementById('shareMomentModal');
   if(overlay) overlay.className = 'share-moment-overlay';
-}
-function buyCoinPack(coins, price){
-  closeCoinShop();
-  if(typeof IMP === 'undefined'){ showShareToast('결제 모듈 로드 중...'); return; }
-  IMP.request_pay({
-    pg: 'kakaopay',
-    pay_method: 'card',
-    merchant_uid: 'coin_' + Date.now(),
-    name: coins + '코인',
-    amount: price,
-    buyer_email: currentEmail,
-    buyer_name: currentUser,
-  }, function(rsp){
-    if(rsp.success){
-      earnCoins(coins);
-      showShareToast('✨ ' + coins + '코인이 충전됐어요!');
-    } else {
-      showShareToast('결제 실패: ' + rsp.error_msg);
-    }
-  });
 }
 
 // ── 리퍼럴 시스템 ──
@@ -2656,10 +2561,10 @@ function updateGameBtns(){
   var giveUpBtn = document.getElementById('giveUpBtn');
   var free = !isPremium && !isMaster;
   if(hintBtn){
-    hintBtn.textContent = '힌트 추가 공개' + (!COINS_ENABLED ? '' : free ? ' · 1코인' : '');
+    hintBtn.textContent = '힌트 추가 공개';
   }
   if(giveUpBtn && !giveUpBtn.disabled){
-    giveUpBtn.textContent = (!COINS_ENABLED || !free) ? '정답 공개' : '정답 공개 · 3코인';
+    giveUpBtn.textContent = '정답 공개';
   }
 }
 
@@ -3074,7 +2979,6 @@ function checkAndAwardDailyMissions(){
     if(awarded.indexOf(m.id) > -1) return;
     if(m.check(stats, dailyProgress)){
       awarded.push(m.id);
-      earnCoinsQuiet(Math.floor(m.xp/10));
       changed = true;
     }
   });
@@ -3123,7 +3027,7 @@ function renderDailyMissions(){
         '</div>'+
         '<div class="dm-prog-bar"><div class="dm-prog-fill" style="width:'+pct+'%"></div></div>'+
       '</div>'+
-      '<div class="dm-xp">'+(done?'<span style="color:var(--success)">완료 ✓</span>':'+'+Math.floor(m.xp/10)+'🪙')+'</div>'+
+      '<div class="dm-xp">'+(done?'<span style="color:var(--success)">완료 ✓</span>':'+'+m.xp+' XP')+'</div>'+
     '</div>';
   }).join('');
 }
@@ -3137,9 +3041,6 @@ function checkMissions(){
       stats.unlockedMissions.push(m.id);
       newly.push(m);
       if(m.xp) addXP(m.xp);
-      var coinReward = Math.max(2, Math.round((m.xp || 5) / 2));
-      earnCoinsQuiet(coinReward);
-      m._coinReward = coinReward;
     }
   }
   if(newly.length>0){saveStats(stats);showAchievement(newly[0]);if(newly.length>1)setTimeout(function(){showAchievement(newly[1]);},2500);}
@@ -3151,9 +3052,7 @@ function showAchievement(m){
   document.getElementById('achTitle').textContent=m.title;
   var xpEl=document.getElementById('achXp');
   if(xpEl){
-    var achLabel = '';
-    if(m.xp) achLabel += '+'+m.xp+' XP';
-    if(m._coinReward) achLabel += (achLabel?' · ':'')+'+'+m._coinReward+'코인';
+    var achLabel = m.xp ? '+'+m.xp+' XP' : '';
     if(achLabel){ xpEl.textContent=achLabel; xpEl.style.display=''; } else { xpEl.style.display='none'; }
   }
   var p=document.getElementById('achievementPopup');
@@ -3239,8 +3138,7 @@ function goProfile(){
     var done=stats.unlockedMissions.indexOf(m.id)>-1;
     var prog='';
     if(!done&&progMap[m.id]){prog='<div class="mission-progress">'+Math.min(stats[valMap[m.id]]||0,progMap[m.id])+'/'+progMap[m.id]+'</div>';}
-    var coinAmt = Math.max(2, Math.round((m.xp||5)/2));
-    return '<div class="mission-item'+(done?' done':'')+'"><div style="font-size:1.6rem;width:36px;text-align:center">'+(done?m.icon:'🔒')+'</div><div style="flex:1"><div class="mission-name">'+(done?m.name:'???')+'</div><div class="mission-desc">'+m.desc+'</div></div>'+(done?'<div class="mission-badge done">달성 ✓</div>':(prog||'<div class="mission-badge locked" style="font-size:0.62rem">+'+coinAmt+'🪙</div>'))+'</div>';
+    return '<div class="mission-item'+(done?' done':'')+'"><div style="font-size:1.6rem;width:36px;text-align:center">'+(done?m.icon:'🔒')+'</div><div style="flex:1"><div class="mission-name">'+(done?m.name:'???')+'</div><div class="mission-desc">'+m.desc+'</div></div>'+(done?'<div class="mission-badge done">달성 ✓</div>':(prog||'<div class="mission-badge locked" style="font-size:0.62rem">+'+(m.xp||5)+' XP</div>'))+'</div>';
   }).join('');
   updatePushToggleUI();
   showScreen('screenProfile');
@@ -3255,12 +3153,6 @@ var premiumUntil = null;      // 구독 만료일 (ISO string)
 var sbAuthToken = null;       // Supabase Auth JWT
 var battleHostPremium = false;// 파티 방장이 프리미엄인지
 var isMaster = false;         // 마스터 계정 여부
-var userCoins = 0;            // 코인 잔액
-var COINS_ENABLED = false;    // 코인 시스템 활성화 여부 (false=블러/비활성)
-var COIN_HINT   = 1;          // 힌트 1회 = 1코인 (10원)
-var COIN_ANSWER = 3;          // 정답 1회 = 3코인 (30원)
-var COIN_RUSH   = 2;          // 러쉬 재도전 = 2코인 (20원)
-var COIN_DAILY  = 1;          // 매일 출석 = 1코인 (스트릭 마일스톤 보너스 별도)
 
 // ── 마스터 계정 이메일 목록 (모든 제한 해제 + 광고 없음) ──
 var MASTER_EMAILS = []; // admin 이메일 추가 시 여기에 넣을 것
@@ -3416,7 +3308,6 @@ function checkAttendance(){
   var streak  =stats.loginStreak;
   var xpAmount=getStreakXP(streak);
   addXP(xpAmount);
-  earnCoinsQuiet(COIN_DAILY);
   saveStats(stats);
 
   // 배너 메시지
@@ -3429,24 +3320,24 @@ function checkAttendance(){
     msg='🔥 '+streak+'일 연속 출석 중!';
   }
   if(title) title.textContent=msg;
-  if(sub)   sub.textContent='+'+COIN_DAILY+'코인 획득'+(broken?'':' ('+streak+'일째)');
+  if(sub)   sub.textContent='+'+xpAmount+' XP 획득'+(broken?'':' ('+streak+'일째)');
   if(banner){ banner.className='attendance-banner show'; setTimeout(function(){ banner.className='attendance-banner'; },3500); }
 
-  // 스트릭 마일스톤 보너스 코인 + 팝업
+  // 스트릭 마일스톤 보너스 XP + 팝업
   var streakBonusTable = [
-    {day:100, coins:50},
-    {day:50,  coins:30},
-    {day:30,  coins:20},
-    {day:14,  coins:10},
-    {day:7,   coins:7},
-    {day:3,   coins:3},
+    {day:100, xp:200},
+    {day:50,  xp:100},
+    {day:30,  xp:60},
+    {day:14,  xp:35},
+    {day:7,   xp:20},
+    {day:3,   xp:10},
   ];
   for(var mi=0;mi<streakBonusTable.length;mi++){
     if(streak===streakBonusTable[mi].day){
       var _sb=streakBonusTable[mi];
-      earnCoinsQuiet(_sb.coins);
-      setTimeout(function(days,coins){
-        showAchievement({icon:'🔥',name:days+'일 연속 출석!',title:days+'일 스트릭 달성',_coinReward:coins});
+      addXP(_sb.xp);
+      setTimeout(function(days,xpBonus){
+        showAchievement({icon:'🔥',name:days+'일 연속 출석!',title:days+'일 스트릭 달성',xp:xpBonus});
         if(days===7||days===30||days===100){
           var _sIcon=days===100?'🌟':days===30?'⚡':'🔥';
           var _sSub=days===100?'100일 스트릭 전설 달성':'한 달 개근 달성!';
@@ -3459,7 +3350,7 @@ function checkAttendance(){
             });
           },3200);
         }
-      }.bind(null,_sb.day,_sb.coins),1800);
+      }.bind(null,_sb.day,_sb.xp),1800);
       break;
     }
   }
@@ -3725,7 +3616,7 @@ async function doSignupEmail(){
   // DB에 유저 생성
   sbGetOrCreateUser(name, email).catch(function(){});
   if(sbAuthToken){
-    window._isNewSignup = true; // 300코인 지급 플래그
+    window._isNewSignup = true; // 신규가입 프리미엄 지급 플래그
     _afterAuthLogin(name, email);
   } else {
     // 이메일 인증 필요한 경우
@@ -3765,9 +3656,19 @@ function _afterAuthLogin(username, email){
     }
     if(email){
       loadPremiumStatus(email);
-      loadCoins(email);
       sbLoadAndMergeXP(email);
-      refreshPushSubscription(email); // DB에서 지워진 subscription 복구
+      refreshPushSubscription(email);
+      // 신규 가입 프리미엄 1달 보너스
+      if(window._isNewSignup){
+        window._isNewSignup = false;
+        setTimeout(function(){
+          var until = new Date(); until.setMonth(until.getMonth() + 1);
+          savePremiumStatus(currentEmail, until.toISOString()).then(function(){
+            isPremium = true; premiumUntil = until.toISOString(); updatePremiumUI();
+          });
+          noonchiPunch('mega', { banner: '환영해요!', subBanner: '프리미엄 1달이 지급됐어요' });
+        }, 1000);
+      }
     }
   }).catch(function(e){ console.warn('SB 유저 등록 실패:', e); });
   showScreen('screenLang');
@@ -4546,7 +4447,7 @@ function startRound() {
       var free2 = !isPremium && !isMaster;
       document.getElementById('moreHintBtn').className='more-hint-btn show';
       document.getElementById('moreHintBtn').disabled=false;
-      document.getElementById('moreHintBtn').textContent='힌트 추가 공개' + (!COINS_ENABLED ? '' : free2 ? ' · 1코인' : '');
+      document.getElementById('moreHintBtn').textContent='힌트 추가 공개';
     }
     document.getElementById('answerInput').focus();
   },initCount*180+200);
@@ -4577,12 +4478,6 @@ function renderHintCard(n,text){
 function requestMoreHint(){
   if(gameOver||currentMode==='ranked')return;
   playSound('hint');
-  if(!isPremium && !isMaster){
-    if(!spendCoins(COIN_HINT)){
-      showCoinInsufficient(COIN_HINT);
-      return;
-    }
-  }
   _doRevealHint();
 }
 function _doRevealHint(){
@@ -4590,10 +4485,9 @@ function _doRevealHint(){
   shownHintCount++;
   var hint = allHints[shownHintCount-1] || allHints[allHints.length-1] || '';
   renderHintCard(shownHintCount, hint);
-  var costLabel = (isPremium || isMaster) ? '' : ' · 1코인';
   var btn = document.getElementById('moreHintBtn');
   btn.className='more-hint-btn show';
-  btn.textContent='힌트 추가 공개' + costLabel;
+  btn.textContent='힌트 추가 공개';
   btn.disabled=false;
 }
 
@@ -4610,12 +4504,6 @@ function saveCurrentWordToWrongNote(){
 }
 
 function requestGiveUp(){
-  if(!isPremium && !isMaster){
-    if(!spendCoins(COIN_ANSWER)){
-      showCoinInsufficient(COIN_ANSWER);
-      return;
-    }
-  }
   _doRevealAnswer();
 }
 function _doRevealAnswer(){
@@ -4910,7 +4798,6 @@ async function checkOnePct(){
     saveStats(stats); checkMissions();
     updateOnePctStreak();
     addXP(50);
-    earnCoins(5);
     try{ localStorage.setItem('wl_dc_state', JSON.stringify({date:window._dcDate, solved:true})); }catch(e){}
     if(window._dcWrongRecorded){
       await sbFetch('daily_challenge_plays?date=eq.'+window._dcDate+'&anon_id=eq.'+anonId, {method:'PATCH', body:{is_correct:true}});
@@ -6794,10 +6681,6 @@ async function endRushGame(){
   document.getElementById('scoreBar').style.display='';
   document.getElementById('rushSkipBtn').style.display='none';
 
-  // 러쉬 완주 코인 지급 (점수/5, 최소 1코인)
-  var rushCoinReward = Math.max(1, Math.floor(rushScore / 5));
-  earnCoinsQuiet(rushCoinReward);
-
   // 결과 모달 즉시 표시 (점수만 먼저)
   document.getElementById('rushResultScore').textContent=rushScore;
   document.getElementById('rushResultRank').textContent='순위 계산 중...';
@@ -7023,11 +6906,7 @@ function watchAdForRush(){
   };
   showAd('rush');
 }
-function spendCoinsForRush(){
-  if(!spendCoins(COIN_RUSH)){
-    showCoinInsufficient(COIN_RUSH);
-    return;
-  }
+function retryRush(){
   addRushAdBonus();
   document.getElementById('rushResultModal').className='';
   enterRushMode();
@@ -8992,59 +8871,6 @@ async function shareCrowdResult() {
   </div>
 </div>
 
-<!-- ── 코인 부족 모달 ── -->
-<div id="coinInsufficientModal" style="position:fixed;inset:0;z-index:2000;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s">
-  <div style="background:var(--card);border-radius:20px 20px 0 0;padding:28px 24px;width:100%;max-width:440px;box-shadow:0 -4px 24px rgba(0,0,0,0.18)">
-    <div style="font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:6px">코인이 부족해요</div>
-    <div style="font-size:0.85rem;color:var(--text-soft);margin-bottom:20px">필요: <b id="coinNeedAmt">0코인</b> · 보유: <b id="coinHaveAmt">0코인</b></div>
-    <button onclick="openCoinShop()" style="width:100%;padding:14px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">코인 충전하기</button>
-    <button onclick="startPortonePayment();closeCoinInsufficient();" style="width:100%;padding:14px;border-radius:12px;border:1px solid var(--primary);background:transparent;color:var(--primary);font-family:inherit;font-size:0.88rem;font-weight:700;cursor:pointer;margin-bottom:8px">프리미엄으로 무제한 · 월 2,900원</button>
-    <div style="font-size:0.75rem;color:var(--muted);text-align:center;margin-bottom:4px">프리미엄 = 하루 97원 · 정답 3번 값</div>
-    <button onclick="closeCoinInsufficient()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">닫기</button>
-  </div>
-</div>
-
-<!-- ── 코인 샵 모달 ── -->
-<div id="coinShopModal" style="position:fixed;inset:0;z-index:2000;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s">
-  <div style="background:var(--card);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-width:440px;box-shadow:0 -4px 24px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-      <div style="font-weight:800;font-size:1.1rem;color:var(--text)">🪙 코인 충전</div>
-      <div style="font-size:0.82rem;color:var(--text-soft)">보유 <b class="coin-balance-display">0</b>코인</div>
-    </div>
-    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:16px">힌트 1코인 · 정답 3코인</div>
-
-    <!-- 코인 팩 -->
-    <button onclick="buyCoinPack(1100,10000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
-      <span>1,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+10%</span></span><span style="color:var(--primary)">10,000원</span>
-    </button>
-    <button onclick="buyCoinPack(2400,20000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
-      <span>2,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+20%</span></span><span style="color:var(--primary)">20,000원</span>
-    </button>
-    <button onclick="buyCoinPack(3900,30000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid var(--accent);background:#fff9f5;color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center">
-      <span>3,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+30% 인기</span></span><span style="color:var(--accent)">30,000원</span>
-    </button>
-    <button onclick="buyCoinPack(7500,50000)" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
-      <span>5,000코인 <span style="font-size:0.7rem;color:var(--success);font-weight:700">+50%</span></span><span style="color:var(--primary)">50,000원</span>
-    </button>
-
-    <!-- 프리미엄 구독 -->
-    <div style="border-top:1px solid var(--border);padding-top:14px;margin-bottom:14px">
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;text-align:center">코인은 소진되면 끝 — 프리미엄은 무제한</div>
-      <div style="display:flex;gap:8px;margin-bottom:8px">
-        <button onclick="startPortonePayment(2900);closeCoinShop();" style="flex:1;padding:13px 8px;border-radius:12px;border:1.5px solid var(--primary);background:var(--primary-soft);color:var(--primary);font-family:inherit;font-size:0.85rem;font-weight:700;cursor:pointer">
-          월 2,900원
-        </button>
-        <button onclick="startPortonePayment(29000);closeCoinShop();" style="flex:1;padding:13px 8px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.85rem;font-weight:700;cursor:pointer;position:relative">
-          연 29,000원
-          <div style="position:absolute;top:-8px;right:6px;background:var(--accent);color:#fff;font-size:0.62rem;font-weight:800;padding:2px 6px;border-radius:10px">17% 절약</div>
-        </button>
-      </div>
-      <div style="font-size:0.72rem;color:var(--muted);text-align:center">무제한 힌트·정답 · 방 만들기 · 러쉬 6회</div>
-    </div>
-
-    <button onclick="closeCoinShop()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">닫기</button>
-  </div>
-</div>
 
 <!-- v36 공유 모먼트 모달 -->
 <div class="share-moment-overlay" id="shareMomentModal" onclick="if(event.target===this)closeShareMoment()">
