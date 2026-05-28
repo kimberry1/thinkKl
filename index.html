@@ -3667,11 +3667,11 @@ async function doLoginEmail(){
   var email = (document.getElementById('loginEmail').value||'').trim();
   var pw = (document.getElementById('loginPw').value||'');
   errEl.style.display='none';
-  // ── 어드민 계정 ──
-  if(email === 'admin' && pw === 'admin91'){
-    currentUser = 'admin'; currentEmail = 'admin'; isGuest = false;
+  // ── 어드민 계정 (admin ~ admin5) ──
+  if(/^admin\d?$/.test(email) && parseInt(email.replace('admin','') || '0') <= 5 && pw === 'admin91'){
+    currentUser = email; currentEmail = email; isGuest = false;
     isMaster = true; isPremium = true;
-    document.getElementById('userNameDisplay').textContent = 'admin';
+    document.getElementById('userNameDisplay').textContent = email;
     var _av = (function(){try{return localStorage.getItem('wl_avatar')||'👑';}catch(e){return '👑';}})();
     var _bar = document.getElementById('userAvatarBar');
     if(_bar) _bar.textContent = _av;
