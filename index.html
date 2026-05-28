@@ -3767,6 +3767,7 @@ function _afterAuthLogin(username, email){
       loadPremiumStatus(email);
       loadCoins(email);
       sbLoadAndMergeXP(email);
+      refreshPushSubscription(email); // DB에서 지워진 subscription 복구
     }
   }).catch(function(e){ console.warn('SB 유저 등록 실패:', e); });
   showScreen('screenLang');
@@ -3832,6 +3833,27 @@ function toggleSettingsPanel(){
   var open=panel.style.display!=='none';
   panel.style.display=open?'none':'block';
   if(!open) updatePushToggleUI();
+}
+
+// 로그인 시 기존 push subscription을 DB에 재저장 (DB에서 삭제됐어도 복구)
+async function refreshPushSubscription(email) {
+  if (!email || !('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  try {
+    var reg = await navigator.serviceWorker.ready;
+    var sub = await reg.pushManager.getSubscription();
+    if (!sub) return;
+    fetch(SB_URL + '/rest/v1/push_subscriptions', {
+      method: 'POST',
+      headers: {
+        'apikey': SB_ANON,
+        'Authorization': 'Bearer ' + SB_ANON,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ user_email: email, subscription: JSON.stringify(sub) })
+    }).catch(function(){});
+  } catch(e) {}
 }
 
 async function updatePushToggleUI() {
