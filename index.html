@@ -1158,13 +1158,13 @@ input,button,textarea,select { font-family:inherit; }
       </div>
       <span class="lang-badge ready">서비스 중</span>
     </div>
-    <div class="lang-card" id="langJa" onclick="selectLang('ja')">
+    <div class="lang-card" id="langJa" style="opacity:0.5;pointer-events:none">
       <div class="lang-flag">🇯🇵</div>
       <div class="lang-info">
         <div class="lang-name">日本語</div>
-        <div class="lang-sub">日本語の単語連想ゲーム</div>
+        <div class="lang-sub">Coming soon</div>
       </div>
-      <span class="lang-badge ready">サービス中</span>
+      <span class="lang-badge soon">準備中</span>
     </div>
     <div class="lang-card" id="langEn" onclick="selectLang('en')">
       <div class="lang-flag">🇺🇸</div>
@@ -6921,11 +6921,6 @@ function watchAdForRush(){
     enterRushMode();
   };
   showAd('rush');
-}
-function retryRush(){
-  addRushAdBonus();
-  document.getElementById('rushResultModal').className='';
-  enterRushMode();
 }
 
 // ══════════════════════════════════════════
