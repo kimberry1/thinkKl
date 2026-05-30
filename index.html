@@ -176,6 +176,7 @@ input,button,textarea,select { font-family:inherit; }
 .mode-card.rush .mode-tag { background:#FFE5DC; color:var(--accent2); }
 .mode-card.spy { background:linear-gradient(135deg,#F4EDFF 0%,var(--card) 80%); border-color:#D4B8F0; }
 .mode-card.spy .mode-title { color:#7B30C0; }
+.mode-card.spy .mode-tag { background:#EDE0FF; color:#7B30C0; }
 .spy-hint-card { background:var(--card); border:1.5px solid var(--border-strong); border-radius:16px; padding:16px 12px; text-align:center; font-family:var(--font-body); font-weight:700; font-size:0.95rem; cursor:pointer; transition:transform 0.15s,box-shadow 0.15s,background 0.2s,border-color 0.2s; box-shadow:var(--shadow-sm); min-height:58px; display:flex; align-items:center; justify-content:center; word-break:keep-all; line-height:1.35; }
 .spy-hint-card:active { transform:scale(0.95); }
 .spy-card-real { background:#E8F5ED; border-color:#2A8C5F !important; color:#1A5F3A; cursor:default; }
@@ -1166,7 +1167,7 @@ input,button,textarea,select { font-family:inherit; }
       </div>
       <span class="lang-badge soon">準備中</span>
     </div>
-    <div class="lang-card" id="langEn" onclick="selectLang('en')">
+    <div class="lang-card" id="langEn" style="opacity:0.5;pointer-events:none">
       <div class="lang-flag">🇺🇸</div>
       <div class="lang-info">
         <div class="lang-name">English</div>
@@ -1320,7 +1321,10 @@ input,button,textarea,select { font-family:inherit; }
           </div>
         </div>
       </div>
-      <button onclick="toggleSettingsPanel()" id="settingsGearBtn" style="background:none;border:none;cursor:pointer;font-size:2rem;color:var(--muted);padding:4px;line-height:1;border-radius:10px;align-self:flex-start" aria-label="설정">⚙️</button>
+      <div style="display:flex;align-items:flex-start;gap:6px">
+        <button onclick="doLogout()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--muted);padding:6px 10px;font-family:inherit;white-space:nowrap;align-self:flex-start">로그아웃</button>
+        <button onclick="toggleSettingsPanel()" id="settingsGearBtn" style="background:none;border:none;cursor:pointer;font-size:2rem;color:var(--muted);padding:4px;line-height:1;border-radius:10px;align-self:flex-start" aria-label="설정">⚙️</button>
+      </div>
     </div>
     <!-- XP 바 (프로필 전용) -->
     <div style="margin-bottom:16px">
@@ -1484,12 +1488,10 @@ input,button,textarea,select { font-family:inherit; }
 
   <div class="w400 mode-cards-top">
     <div class="mode-card-top solo-top" onclick="showScreen('screenSolo')">
-      <div class="top-title">혼자하기</div>
-      <div class="top-sub">연습 · 랭크 · 러쉬 · 스파이</div>
+      <div class="top-title">솔로모드</div>
     </div>
     <div class="mode-card-top party-top" id="partyModeCard" onclick="enterBattleScreen()">
-      <div class="top-title">친구대결</div>
-      <div class="top-sub">실시간 배틀</div>
+      <div class="top-title">멀티모드</div>
     </div>
   </div>
   <div class="w400" style="display:flex;gap:10px;margin-top:12px">
@@ -1517,7 +1519,7 @@ input,button,textarea,select { font-family:inherit; }
     </div>
     <div class="mode-card spy" onclick="enterSpyMode()">
       <div class="mode-title">스파이 모드</div>
-      <div class="mode-desc">6개 힌트 중 숨어든 아웃사이더를 찾아라</div>
+      <div class="mode-tag">HIT</div>
     </div>
   </div>
 </div>
@@ -1588,6 +1590,17 @@ input,button,textarea,select { font-family:inherit; }
 
     <button id="rushStartBtn" onclick="launchRushGame()" style="width:100%;padding:16px;border-radius:14px;border:none;background:var(--accent2);color:#fff;font-family:var(--font-body);font-size:1rem;font-weight:800;cursor:pointer;margin-top:4px">60초 시작</button>
     <div id="rushNoAttemptsMsg" style="display:none;text-align:center;color:var(--muted);font-size:0.85rem;padding:12px 0">오늘 도전 횟수를 모두 사용했어요</div>
+  </div>
+</div>
+
+<!-- 스파이 온보딩 오버레이 -->
+<div id="spyOnboardingOverlay" style="display:none;position:fixed;inset:0;background:rgba(43,26,18,0.6);z-index:400;justify-content:center;align-items:center;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">
+  <div style="background:var(--card);border-radius:22px;padding:32px 24px;width:300px;max-width:90%;text-align:center;box-shadow:var(--shadow-lg)">
+    <div style="font-size:0.72rem;font-weight:700;color:#7B30C0;letter-spacing:0.08em;margin-bottom:10px">스파이 모드</div>
+    <div style="font-family:var(--font-body);font-weight:800;font-size:1.15rem;color:var(--text);margin-bottom:16px">아웃사이더를 찾아라!</div>
+    <div style="font-size:0.84rem;line-height:1.8;color:var(--text-soft);margin-bottom:8px">6개의 힌트 중 하나는<br>다른 단어의 힌트예요.<br>나머지 5개와 다른<br><strong style="color:#7B30C0">아웃사이더 힌트</strong>를 찾아내세요!</div>
+    <div style="font-size:0.76rem;color:var(--muted);margin-bottom:22px">10문제 · 문제당 10점 · 최대 100점</div>
+    <button onclick="confirmSpyOnboarding()" style="width:100%;padding:13px;border-radius:12px;border:none;background:#7B30C0;color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer">시작하기</button>
   </div>
 </div>
 
@@ -5304,39 +5317,44 @@ function toggleBGM(){
 }
 function _startBGM(){
   try{
-    if(!_bgmAC) _bgmAC = new (window.AudioContext||window.webkitAudioContext)();
-    if(_bgmAC.state === 'suspended') _bgmAC.resume();
+    if(!_bgmAC || _bgmAC.state === 'closed'){
+      _bgmAC = new (window.AudioContext||window.webkitAudioContext)();
+    }
     var ac = _bgmAC;
-    var master = ac.createGain();
-    master.gain.setValueAtTime(0, ac.currentTime);
-    master.gain.linearRampToValueAtTime(0.055, ac.currentTime+3);
-    master.connect(ac.destination);
-    // Cmaj7: C4 E4 G4 B4 + C5 (5성부 패드)
-    var freqs = [261.63, 329.63, 392.00, 493.88, 523.25];
-    var gains = [0.22, 0.18, 0.20, 0.16, 0.12];
-    freqs.forEach(function(freq, i){
-      // 메인 오실레이터
-      var o = ac.createOscillator();
-      var g = ac.createGain();
-      o.type = 'sine';
-      o.frequency.value = freq + (i%2===0 ? 0.3 : -0.3);
-      g.gain.value = gains[i];
-      o.connect(g); g.connect(master);
-      o.start();
-      // 매우 느린 LFO (트레몰로)
-      var lfo = ac.createOscillator();
-      var lfoG = ac.createGain();
-      lfo.frequency.value = 0.08 + i*0.015;
-      lfoG.gain.value = 0.012;
-      lfo.connect(lfoG); lfoG.connect(g.gain);
-      lfo.start();
-      _bgmNodes.push(o, g, lfo, lfoG);
-    });
-    _bgmNodes.push(master);
-    _bgmPlaying = true;
-    var btn = document.getElementById('bgmToggleBtn');
-    if(btn){ btn.style.opacity='1'; btn.style.color='var(--primary)'; }
-    try{ localStorage.setItem('noonchi_bgm','1'); }catch(e){}
+    function _doStart(){
+      var master = ac.createGain();
+      master.gain.setValueAtTime(0, ac.currentTime);
+      master.gain.linearRampToValueAtTime(0.055, ac.currentTime+3);
+      master.connect(ac.destination);
+      var freqs = [261.63, 329.63, 392.00, 493.88, 523.25];
+      var gains = [0.22, 0.18, 0.20, 0.16, 0.12];
+      freqs.forEach(function(freq, i){
+        var o = ac.createOscillator();
+        var g = ac.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq + (i%2===0 ? 0.3 : -0.3);
+        g.gain.value = gains[i];
+        o.connect(g); g.connect(master);
+        o.start();
+        var lfo = ac.createOscillator();
+        var lfoG = ac.createGain();
+        lfo.frequency.value = 0.08 + i*0.015;
+        lfoG.gain.value = 0.012;
+        lfo.connect(lfoG); lfoG.connect(g.gain);
+        lfo.start();
+        _bgmNodes.push(o, g, lfo, lfoG);
+      });
+      _bgmNodes.push(master);
+      _bgmPlaying = true;
+      var btn = document.getElementById('bgmToggleBtn');
+      if(btn){ btn.style.opacity='1'; btn.style.color='var(--primary)'; }
+      try{ localStorage.setItem('noonchi_bgm','1'); }catch(e){}
+    }
+    if(ac.state === 'suspended'){
+      ac.resume().then(_doStart).catch(function(){});
+    } else {
+      _doStart();
+    }
   }catch(e){}
 }
 function _stopBGM(){
@@ -6956,10 +6974,26 @@ function _spyWordPool(){
 function enterSpyMode(){
   if(_blockGuest('스파이모드는 로그인 후 이용할 수 있어요')) return;
   if(!wordDB.easy||!wordDB.easy.length){ showShareToast('단어 데이터 로딩 중이에요'); return; }
+  if(!localStorage.getItem('spy_onboarded')){
+    showScreen('screenSpy');
+    document.getElementById('spyLobby').style.display = 'none';
+    document.getElementById('spyGame').style.display = 'none';
+    document.getElementById('spyOnboardingOverlay').style.display = 'flex';
+    return;
+  }
   _updateSpyLobbyUI();
   document.getElementById('spyLobby').style.display = '';
   document.getElementById('spyGame').style.display = 'none';
   showScreen('screenSpy');
+  loadSpyLeaderboard('spyLeaderboard');
+}
+
+function confirmSpyOnboarding(){
+  localStorage.setItem('spy_onboarded','1');
+  document.getElementById('spyOnboardingOverlay').style.display = 'none';
+  _updateSpyLobbyUI();
+  document.getElementById('spyLobby').style.display = '';
+  document.getElementById('spyGame').style.display = 'none';
   loadSpyLeaderboard('spyLeaderboard');
 }
 
