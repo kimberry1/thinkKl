@@ -190,12 +190,20 @@ input,button,textarea,select { font-family:inherit; }
 #rushScoreDisplay { font-family:var(--font-body); font-size:1.4rem; font-weight:800; color:var(--accent2); }
 .rush-timer-label { font-size:0.7rem; color:var(--muted); font-weight:600; }
 
-/* 러쉬 결과 모달 */
-#rushResultModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:900; align-items:center; justify-content:center; }
+/* 러쉬 결과 모달 — Jelly Pop */
+#rushResultModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:900; align-items:center; justify-content:center; padding:16px; }
 #rushResultModal.show { display:flex; }
-.rush-result-box { background:var(--bg); border-radius:22px; padding:32px 28px 24px; max-width:340px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.18); }
-.rush-result-score { font-size:3.2rem; font-weight:800; color:var(--accent2); line-height:1; margin:8px 0 4px; }
-.rush-result-rank { font-size:1rem; font-weight:700; color:var(--muted); margin-bottom:20px; }
+@keyframes jpCardIn { from{opacity:0;transform:scale(0.82) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.rr-card { background:var(--card); border-radius:24px; overflow:hidden; width:100%; max-width:340px; box-shadow:0 12px 40px rgba(0,0,0,0.22); animation:jpCardIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+.rr-header { background:linear-gradient(135deg,#ff8c00,#ffd000); padding:28px 24px 36px; text-align:center; position:relative; }
+.rr-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:22px; background:var(--card); border-radius:100% 100% 0 0; }
+.rr-label { font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.8); letter-spacing:0.12em; margin-bottom:6px; }
+.rr-score { font-size:4.2rem; font-weight:900; color:#fff; line-height:1; font-family:var(--font-mono); }
+.rr-sub { font-size:0.88rem; font-weight:700; color:rgba(255,255,255,0.9); margin-top:4px; }
+.rr-rank-pill { display:inline-block; background:rgba(255,255,255,0.28); color:#fff; font-size:0.78rem; font-weight:700; border-radius:99px; padding:4px 14px; margin-top:10px; }
+.rr-body { padding:18px 20px 20px; }
+.rr-lb-title { font-size:0.7rem; color:var(--muted); font-weight:700; letter-spacing:0.1em; margin-bottom:6px; }
+.rr-share-btn { width:100%; padding:13px; border-radius:12px; border:none; background:linear-gradient(90deg,#ff8c00,#ffd000); color:#fff; font-family:inherit; font-size:0.9rem; font-weight:700; cursor:pointer; margin-top:12px; margin-bottom:8px; }
 .rush-lb-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
 .rush-lb-rank { width:24px; font-weight:800; color:var(--primary); text-align:center; }
 .rush-lb-name { flex:1; font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -440,15 +448,17 @@ input,button,textarea,select { font-family:inherit; }
 .xp-pts { font-size:0.74rem; color:var(--muted); font-weight:500; }
 .xp-track { height:8px; background:var(--surface); border-radius:8px; overflow:hidden; }
 .xp-fill { height:100%; border-radius:8px; background:linear-gradient(90deg,var(--primary),var(--accent2)); transition:width 0.6s ease; }
+/* 레벨업 팝업 — Jelly Pop */
 .levelup-popup { position:fixed; inset:0; background:rgba(43,26,18,0.6); z-index:250; display:none; justify-content:center; align-items:center; backdrop-filter:blur(8px); padding:20px; }
 .levelup-popup.show { display:flex; animation:fadeIn 0.3s ease; }
-.levelup-box { background:var(--card); border:2px solid var(--primary); border-radius:24px; padding:36px 28px; text-align:center; width:300px; max-width:100%; box-shadow:var(--shadow-lg); }
-.levelup-emoji { font-size:3.5rem; margin-bottom:12px; animation:bounce 0.6s ease infinite alternate; }
-@keyframes bounce { from{transform:translateY(0)} to{transform:translateY(-10px)} }
-.levelup-label { font-size:0.72rem; color:var(--primary); font-weight:700; letter-spacing:0.1em; margin-bottom:8px; }
-.levelup-num { font-family:var(--font-body); font-weight:900; font-size:3rem; color:var(--primary); line-height:1; }
-.levelup-title { font-size:0.95rem; color:var(--accent2); margin-top:8px; margin-bottom:22px; font-weight:700; }
-.levelup-close { padding:13px 32px; border-radius:14px; border:none; background:var(--primary); color:#fff; font-family:inherit; font-size:0.96rem; font-weight:700; cursor:pointer; }
+.lu-card { background:var(--card); border-radius:24px; overflow:hidden; width:300px; max-width:100%; box-shadow:var(--shadow-lg); animation:jpCardIn 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+.lu-header { background:linear-gradient(135deg,#7c3aed,#ec4899); padding:32px 24px 40px; text-align:center; position:relative; }
+.lu-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:22px; background:var(--card); border-radius:100% 100% 0 0; }
+.lu-label { font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.8); letter-spacing:0.15em; margin-bottom:8px; }
+.lu-num { font-family:var(--font-body); font-weight:900; font-size:4rem; color:#fff; line-height:1; }
+.lu-body { padding:18px 24px 24px; text-align:center; }
+.lu-title { font-size:1rem; color:var(--text); margin-bottom:20px; font-weight:700; }
+.lu-btn { width:100%; padding:13px; border-radius:12px; border:none; background:linear-gradient(135deg,#7c3aed,#ec4899); color:#fff; font-family:inherit; font-size:0.96rem; font-weight:700; cursor:pointer; }
 
 /* 출석 */
 .attendance-banner { width:100%; max-width:400px; background:var(--success-bg); border:1px solid #BFE5CC; border-radius:14px; padding:14px 16px; margin-bottom:12px; display:none; animation:fadeUp 0.4s ease; }
@@ -543,8 +553,10 @@ input,button,textarea,select { font-family:inherit; }
 .avatar-opt:hover { background:var(--surface); }
 .avatar-opt.selected { border-color:var(--primary); background:var(--primary-soft); }
 
-/* 프리미엄/광고 — 준비 완료, 오픈 전까지 숨김 */
-#premiumCard, #inlineSubBtn, #inlineProBadge { display:none !important; }
+/* 프리미엄/광고 — 사업자등록 전까지 전부 숨김 */
+#premiumCard, #inlineSubBtn, #inlineProBadge,
+#profileSubBtn, #homeSubBtn, #spyAdBonusBtn,
+#loginPremiumBanner, #signupPremiumNotice, #referralBanner { display:none !important; }
 
 /* 제보 */
 .suggest-card { width:100%; max-width:400px; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
@@ -958,7 +970,7 @@ input,button,textarea,select { font-family:inherit; }
   // ── 카카오 SDK 초기화 ── 카카오 개발자 콘솔에서 발급받은 JavaScript 앱키를 입력하세요
   var KAKAO_JS_KEY = '202fdef735b96312e7d6a2eeb1352dd7';
   var KAKAO_REST_KEY = 'ca1a83bd6884408379904e6217d3e9b2';
-  var KAKAO_CLIENT_SECRET = 'ZicEc47AJ2u5Kf8BIujXikupqwQ2UPl0'; // 카카오 개발자 콘솔 > 앱 키 > 클라이언트 시크릿에서 복사
+  var KAKAO_TOKEN_FN = 'https://mcgqmsjtaiqmutekspeq.supabase.co/functions/v1/kakao-token';
   var VAPID_PUBLIC_KEY = 'BJkMOOv898PCJoz7laF7TJFYhF_gCR9qENgzVtc4nqnjAOoVuy3_anvfJ0zDu1d7xIJPet3ZAF-uI78Ou3oxn0Y';
   if(KAKAO_JS_KEY !== 'YOUR_KAKAO_JS_KEY'){
     Kakao.init(KAKAO_JS_KEY);
@@ -1072,7 +1084,7 @@ input,button,textarea,select { font-family:inherit; }
 <div class="screen active" id="screenLogin">
   <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
   <div class="tagline">힌트를 연결하고 눈치껏 단어 맞히기</div>
-  <div class="w400" style="background:linear-gradient(135deg,rgba(255,80,0,0.13),rgba(255,184,0,0.09));border:1.5px solid rgba(255,140,0,0.4);border-radius:14px;padding:13px 18px;margin-bottom:12px;text-align:center">
+  <div id="loginPremiumBanner" class="w400" style="background:linear-gradient(135deg,rgba(255,80,0,0.13),rgba(255,184,0,0.09));border:1.5px solid rgba(255,140,0,0.4);border-radius:14px;padding:13px 18px;margin-bottom:12px;text-align:center">
     <div style="display:inline-block;background:rgba(255,80,0,0.85);color:#fff;font-size:0.68rem;font-weight:800;letter-spacing:0.08em;padding:2px 10px;border-radius:20px;margin-bottom:6px">지금만</div>
     <div style="font-weight:900;font-size:1.08rem;color:#FFB830;line-height:1.3">신규 가입하면 프리미엄 1달 무료</div>
     <div style="font-size:0.75rem;color:var(--muted);margin-top:5px">나중엔 없어질 수도 있어요 :)</div>
@@ -1103,7 +1115,7 @@ input,button,textarea,select { font-family:inherit; }
     </div>
     <!-- 회원가입 패널 -->
     <div id="panelSignup" style="display:none">
-      <div style="display:flex;align-items:center;gap:10px;background:rgba(255,100,0,0.08);border:1px solid rgba(255,140,0,0.25);border-radius:10px;padding:10px 14px;margin-bottom:14px">
+      <div id="signupPremiumNotice" style="display:flex;align-items:center;gap:10px;background:rgba(255,100,0,0.08);border:1px solid rgba(255,140,0,0.25);border-radius:10px;padding:10px 14px;margin-bottom:14px">
         <span style="font-size:1.5rem;flex-shrink:0">✨</span>
         <div><div style="font-size:0.83rem;font-weight:800;color:#FFB830">지금 가입하면 프리미엄 1달 바로 드려요</div><div style="font-size:0.73rem;color:var(--muted);margin-top:2px">내일은 모를 일 :)</div></div>
       </div>
@@ -1277,13 +1289,16 @@ input,button,textarea,select { font-family:inherit; }
 
 <!-- 레벨업 팝업 -->
 <div class="levelup-popup" id="levelupPopup">
-  <div class="levelup-box" style="position:relative">
-    <button class="popup-x" onclick="closeLevelup()">✕</button>
-    <div class="levelup-emoji">🎉</div>
-    <div class="levelup-label">레벨업!</div>
-    <div class="levelup-num" id="levelupNum">2</div>
-    <div class="levelup-title" id="levelupTitle">단어 새싹</div>
-    <button class="levelup-close" onclick="closeLevelup()">계속하기</button>
+  <div class="lu-card">
+    <div class="lu-header">
+      <button class="popup-x" onclick="closeLevelup()" style="color:rgba(255,255,255,0.85)">✕</button>
+      <div class="lu-label">LEVEL UP</div>
+      <div class="lu-num" id="levelupNum">2</div>
+    </div>
+    <div class="lu-body">
+      <div class="lu-title" id="levelupTitle">단어 새싹</div>
+      <button class="lu-btn" onclick="closeLevelup()">계속하기</button>
+    </div>
   </div>
 </div>
 
@@ -1469,10 +1484,12 @@ input,button,textarea,select { font-family:inherit; }
 
   <div class="w400 mode-cards-top">
     <div class="mode-card-top solo-top" onclick="showScreen('screenSolo')">
-      <div class="top-title">솔로 모드</div>
+      <div class="top-title">혼자하기</div>
+      <div class="top-sub">연습 · 랭크 · 러쉬 · 스파이</div>
     </div>
     <div class="mode-card-top party-top" id="partyModeCard" onclick="enterBattleScreen()">
-      <div class="top-title">멀티 모드</div>
+      <div class="top-title">친구대결</div>
+      <div class="top-sub">실시간 배틀</div>
     </div>
   </div>
   <div class="w400" style="display:flex;gap:10px;margin-top:12px">
@@ -1638,16 +1655,20 @@ input,button,textarea,select { font-family:inherit; }
 
 <!-- 러쉬 결과 모달 -->
 <div id="rushResultModal">
-  <div class="rush-result-box" style="position:relative">
-    <button class="popup-x" onclick="closeRushResultToGame()">✕</button>
-    <div style="font-size:0.8rem;font-weight:700;color:var(--muted);margin-bottom:4px">러쉬모드 결과</div>
-    <div class="rush-result-score" id="rushResultScore">0</div>
-    <div style="font-size:0.85rem;color:var(--text);font-weight:600;margin-bottom:2px">개 맞혔어요!</div>
-    <div class="rush-result-rank" id="rushResultRank">순위 계산 중...</div>
-    <div style="font-size:0.72rem;color:var(--muted);font-weight:700;letter-spacing:0.08em;margin:12px 0 6px;text-align:left">오늘의 TOP 5</div>
-    <div id="rushResultLb" style="margin-bottom:16px"></div>
-    <button onclick="shareRushResult()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:8px">결과 공유하기</button>
-    <div id="rushActionArea" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div class="rr-card">
+    <div class="rr-header">
+      <button class="popup-x" onclick="closeRushResultToGame()" style="color:rgba(255,255,255,0.85)">✕</button>
+      <div class="rr-label">러쉬모드 결과</div>
+      <div class="rr-score" id="rushResultScore">0</div>
+      <div class="rr-sub">개 맞혔어요!</div>
+      <div class="rr-rank-pill" id="rushResultRank">순위 계산 중...</div>
+    </div>
+    <div class="rr-body">
+      <div class="rr-lb-title">오늘의 TOP 5</div>
+      <div id="rushResultLb" style="margin-bottom:4px"></div>
+      <button class="rr-share-btn" onclick="shareRushResult()">결과 공유하기</button>
+      <div id="rushActionArea" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
   </div>
 </div>
 
@@ -1949,9 +1970,9 @@ input,button,textarea,select { font-family:inherit; }
       <!-- 프리미엄 잠금 -->
       <div id="battleCreateLock" style="display:none;text-align:center;padding:28px 0">
         <div style="font-size:2.2rem;margin-bottom:10px">🔒</div>
-        <div style="font-weight:800;font-size:1rem;margin-bottom:6px">방 만들기는 프리미엄 전용이에요</div>
-        <div style="font-size:0.83rem;color:var(--muted);margin-bottom:20px">코드 입장은 무료로 가능해요</div>
-        <button onclick="startPortonePayment()" style="width:100%;padding:13px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">프리미엄 구독하기 · 월 2,900원</button>
+        <div style="font-weight:800;font-size:1rem;margin-bottom:6px">방 만들기는 로그인 후 이용할 수 있어요</div>
+        <div style="font-size:0.83rem;color:var(--muted);margin-bottom:20px">코드 입장은 로그인 없이도 가능해요</div>
+        <button onclick="showScreen('screenLogin')" style="width:100%;padding:13px;border-radius:13px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">로그인하기</button>
         <button onclick="switchBattleTab('join')" style="width:100%;padding:11px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-family:inherit;font-size:0.85rem;font-weight:600;cursor:pointer">코드 입장으로 가기</button>
       </div>
       <!-- STEP 1: 모드 선택 -->
@@ -2242,11 +2263,19 @@ async function loadWords(lang) {
 }
 
 function initWordDB(pool) {
-  wordDB.easy    = pool;
-  wordDB.normal  = pool;
-  wordDB.hard    = pool;
-  wordDB.extreme = pool;
-  wordDB.insane  = pool;
+  // difficulty_score 기준으로 풀 분리 (0=easy~4=insane)
+  var byScore = {0:[], 1:[], 2:[], 3:[], 4:[]};
+  pool.forEach(function(w){
+    var s = (w.difficulty_score != null) ? w.difficulty_score : 1;
+    byScore[s].push(w);
+  });
+  // 풀이 비어있으면 전체 pool 폴백
+  wordDB.easy    = byScore[0].length > 10 ? byScore[0] : pool;
+  wordDB.normal  = byScore[1].length > 10 ? byScore[1] : pool;
+  wordDB.hard    = byScore[2].length > 10 ? byScore[2] : pool;
+  wordDB.extreme = byScore[3].length > 10 ? byScore[3] : pool;
+  wordDB.insane  = byScore[4].length > 10 ? byScore[4] : pool;
+  console.log('[WordDB] easy:'+wordDB.easy.length+' normal:'+wordDB.normal.length+' hard:'+wordDB.hard.length+' extreme:'+wordDB.extreme.length+' insane:'+wordDB.insane.length);
 }
 
 function showLoadingOverlay(msg) {
@@ -2796,7 +2825,7 @@ const MISSIONS = [
 ];
 
 function loadStats(){
-  var def={totalGames:0,totalCorrect:0,totalSkips:0,maxStreak:0,correctEasy:0,correctNormal:0,correctHard:0,correctExtreme:0,correctInsane:0,rankCorrect:0,unlockedMissions:[],loginStreak:0,lastLoginDate:'',onePctStreak:0,lastOnePctDate:''};
+  var def={totalGames:0,roundsPlayed:0,answerAttempts:0,totalCorrect:0,totalSkips:0,maxStreak:0,correctEasy:0,correctNormal:0,correctHard:0,correctExtreme:0,correctInsane:0,rankCorrect:0,unlockedMissions:[],loginStreak:0,lastLoginDate:'',onePctStreak:0,lastOnePctDate:''};
   try{return Object.assign(def,JSON.parse(localStorage.getItem('wl_stats')||'{}'));}catch(e){return def;}
 }
 function saveStats(s){try{localStorage.setItem('wl_stats',JSON.stringify(s));}catch(e){}}
@@ -3856,30 +3885,16 @@ function _handleKakaoCallback(){
   if(error){ showShareToast('카카오 로그인 취소됨'); history.replaceState(null,'',window.location.pathname); return; }
   if(!code) return;
   history.replaceState(null,'',window.location.pathname);
-  // 인가 코드 → 토큰 교환
-  fetch('https://kauth.kakao.com/oauth/token', {
+  // 인가 코드 → Edge Function에서 토큰 교환 (CLIENT_SECRET 서버에서만 사용)
+  fetch(KAKAO_TOKEN_FN, {
     method: 'POST',
-    headers: {'Content-Type':'application/x-www-form-urlencoded'},
-    body: new URLSearchParams({
-      grant_type: 'authorization_code',
-      client_id: KAKAO_REST_KEY,
-      redirect_uri: KAKAO_REDIRECT,
-      code: code,
-      client_secret: KAKAO_CLIENT_SECRET
-    })
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ code: code, redirect_uri: KAKAO_REDIRECT })
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
-    if(!data.access_token){ showShareToast('카카오 토큰 발급 실패'); return; }
-    return fetch('https://kapi.kakao.com/v2/user/me', {
-      headers: { Authorization: 'Bearer ' + data.access_token }
-    }).then(function(r){ return r.json(); });
-  })
-  .then(function(info){
-    if(!info) return;
-    var profile = info.kakao_account && info.kakao_account.profile;
-    var nickname = (profile && profile.nickname) || '카카오유저';
-    doLogin(nickname, '카카오');
+    if(!data.nickname){ showShareToast('카카오 로그인 실패'); return; }
+    doLogin(data.nickname, '카카오');
   })
   .catch(function(){ showShareToast('카카오 로그인 실패'); });
 }
@@ -4536,11 +4551,11 @@ function closeConfirm(){document.getElementById('confirmOverlay').className='con
 function doSkip(){
   closeConfirm();
   // 자동 저장 제거 → 다시풀기 버튼 클릭으로만 저장
-  scoreTotal++; scoreStreak=0; currentStreak=0; stats.totalSkips++; stats.totalGames++; saveStats(stats); checkMissions(); updateScoreUI(); nextRound();
+  scoreTotal++; scoreStreak=0; currentStreak=0; stats.totalSkips++; stats.totalGames++; stats.roundsPlayed=(stats.roundsPlayed||0)+1; saveStats(stats); checkMissions(); updateScoreUI(); nextRound();
 }
 
 function showAd(type){
-  if(isMaster || isPremium || isBattleGame){ if(adCallback){ adCallback(); adCallback=null; } return; }
+  if(!isGuest || isBattleGame){ if(adCallback){ adCallback(); adCallback=null; } return; }
   var overlayId = type==='hint'?'adHint':type==='answer'?'adAnswer':'adRush';
   var countId   = type==='hint'?'hintAdCount':type==='answer'?'answerAdCount':'rushAdCount';
   var skipId    = type==='hint'?'hintAdSkip':type==='answer'?'answerAdSkip':'rushAdSkip';
@@ -4612,7 +4627,7 @@ function checkAnswer(){
       return;
     }
     gameOver=true; scoreCorrect++; scoreStreak++; scoreTotal++; updateScoreUI();
-    stats.totalGames++; stats.totalCorrect++;
+    stats.totalGames++; stats.totalCorrect++; stats.roundsPlayed=(stats.roundsPlayed||0)+1; stats.answerAttempts=(stats.answerAttempts||0)+1;
     currentStreak++;
     if(currentStreak>stats.maxStreak) stats.maxStreak=currentStreak;
     const d=window._activeDiff||currentDiff;
@@ -4665,7 +4680,7 @@ function checkAnswer(){
     setTimeout(()=>document.getElementById('answerInput').className='answer-input',500);
     document.getElementById('answerInput').value='';
     scoreStreak=0; currentStreak=0;
-    stats.totalGames++; dailyProgress.dailyGames=(dailyProgress.dailyGames||0)+1;
+    stats.answerAttempts=(stats.answerAttempts||0)+1; dailyProgress.dailyGames=(dailyProgress.dailyGames||0)+1;
     dailyProgress.dailyStreak=0;
     saveDailyProgress(dailyProgress);
     saveStats(stats); checkMissions(); updateScoreUI();
@@ -4794,7 +4809,7 @@ async function checkOnePct(){
     showFeedbackEl('opFeedback','✅ 정답! 오늘의 문제를 맞혔어요 🎉','correct-fb');
     document.getElementById('opShareBtn').style.display = 'block';
     document.getElementById('opNextBtn').style.display = 'block';
-    stats.totalCorrect++; stats.correctExtreme++; stats.totalGames++;
+    stats.totalCorrect++; stats.correctExtreme++; stats.totalGames++; stats.roundsPlayed=(stats.roundsPlayed||0)+1; stats.answerAttempts=(stats.answerAttempts||0)+1;
     saveStats(stats); checkMissions();
     updateOnePctStreak();
     addXP(50);
@@ -5247,18 +5262,18 @@ function playSound(type){
         o.start(t); o.stop(t+0.25);
       });
     } else if(type === 'wrong'){
-      // 게임쇼 버저: 짧은 고음 buzz 두 방 + 급강하
       var ws=ctx.createWaveShaper();
       var curve=new Float32Array(256);
-      for(var ci=0;ci<256;ci++){var x=ci/128-1; curve[ci]=x<0?-1:1;} // hard clip
-      ws.curve=curve; ws.connect(ctx.destination);
+      for(var ci=0;ci<256;ci++){var x=ci/128-1; curve[ci]=x<0?-1:1;}
+      var outG=ctx.createGain(); outG.gain.value=2.2;
+      ws.connect(outG); outG.connect(ctx.destination);
       var wg=ctx.createGain(); wg.connect(ws);
       [0, 0.13].forEach(function(delay){
         var o=ctx.createOscillator(), og=ctx.createGain();
         o.type='sawtooth'; o.frequency.value=440;
         o.connect(og); og.connect(wg);
         var t=ctx.currentTime+delay;
-        og.gain.setValueAtTime(0.55,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.11);
+        og.gain.setValueAtTime(0.85,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.11);
         o.start(t); o.stop(t+0.13);
       });
       wg.gain.setValueAtTime(1,ctx.currentTime); wg.gain.setValueAtTime(0,ctx.currentTime+0.28);
@@ -6491,7 +6506,7 @@ function getRushMaxBase(){ return isPremium ? RUSH_MAX_PREMIUM : RUSH_MAX_FREE; 
 function getRushAdBonusKey(){ var d=new Date(); return 'rush_ad_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
 function getRushAdBonusToday(){ return parseInt(localStorage.getItem(getRushAdBonusKey())||'0'); }
 function addRushAdBonus(){ var k=getRushAdBonusKey(); localStorage.setItem(k, getRushAdBonusToday()+1); }
-function getRushTotalAvailable(){ return isMaster ? 9999 : isPremium ? RUSH_MAX_PREMIUM : RUSH_MAX_FREE + getRushAdBonusToday(); }
+function getRushTotalAvailable(){ return isMaster ? 9999 : isGuest ? 0 : RUSH_MAX_FREE + getRushAdBonusToday(); }
 
 function getRushDifficultyToday(){
   var d = new Date();
@@ -6511,6 +6526,7 @@ function addRushAttempt(){
 }
 
 function enterRushMode(){
+  if(_blockGuest('러쉬모드는 로그인 후 이용할 수 있어요')) return;
   rushDifficulty = getRushDifficultyToday();
   var attempts = getRushAttemptsToday();
   var maxAttempts = getRushTotalAvailable();
@@ -6885,7 +6901,7 @@ function renderRushResultActions(){
   var used = getRushAttemptsToday();
   var total = getRushTotalAvailable();
   var remaining = total - used;
-  var canAdBonus = !isPremium && getRushAdBonusToday() < RUSH_AD_BONUS_MAX;
+  var canAdBonus = !isGuest && getRushAdBonusToday() < RUSH_AD_BONUS_MAX;
   var S = 'font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;padding:13px;border-radius:12px;width:100%';
   var html = '';
   if(remaining > 0){
@@ -6927,7 +6943,7 @@ function getSpyMaxBase(){ return isGuest ? 1 : isPremium ? SPY_MAX_PREMIUM : SPY
 function getSpyAdBonusKey(){ var d=new Date(); return 'spy_ad_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
 function getSpyAdBonusToday(){ return parseInt(localStorage.getItem(getSpyAdBonusKey())||'0'); }
 function addSpyAdBonus(){ var k=getSpyAdBonusKey(); localStorage.setItem(k, getSpyAdBonusToday()+1); }
-function getSpyTotalAvailable(){ return isMaster ? 9999 : isGuest ? 1 : isPremium ? SPY_MAX_PREMIUM : SPY_MAX_FREE + getSpyAdBonusToday(); }
+function getSpyTotalAvailable(){ return isMaster ? 9999 : isGuest ? 0 : SPY_MAX_FREE + getSpyAdBonusToday(); }
 function getSpyAttemptsKey(){ var d=new Date(); return 'spy_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate(); }
 function getSpyAttemptsToday(){ return parseInt(localStorage.getItem(getSpyAttemptsKey())||'0'); }
 function addSpyAttempt(){ var k=getSpyAttemptsKey(); localStorage.setItem(k, getSpyAttemptsToday()+1); }
@@ -6943,6 +6959,7 @@ function _spyWordPool(){
 }
 
 function enterSpyMode(){
+  if(_blockGuest('스파이모드는 로그인 후 이용할 수 있어요')) return;
   if(!wordDB.easy||!wordDB.easy.length){ showShareToast('단어 데이터 로딩 중이에요'); return; }
   _updateSpyLobbyUI();
   document.getElementById('spyLobby').style.display = '';
@@ -6960,7 +6977,7 @@ function _updateSpyLobbyUI(){
   var btn = document.getElementById('spyStartBtn');
   var msg = document.getElementById('spyNoAttemptsMsg');
   var adBtn = document.getElementById('spyAdBonusBtn');
-  var canAdBonus = !isGuest && !isPremium && getSpyAdBonusToday() < SPY_AD_BONUS_MAX;
+  var canAdBonus = !isGuest && getSpyAdBonusToday() < SPY_AD_BONUS_MAX;
   if(remaining <= 0){
     if(btn) btn.style.display = 'none';
     if(msg) msg.style.display = 'block';
@@ -7126,7 +7143,7 @@ function renderSpyResultActions(){
   var used = getSpyAttemptsToday();
   var total = getSpyTotalAvailable();
   var remaining = total - used;
-  var canAdBonus = !isGuest && !isPremium && getSpyAdBonusToday() < SPY_AD_BONUS_MAX;
+  var canAdBonus = !isGuest && getSpyAdBonusToday() < SPY_AD_BONUS_MAX;
   var hasShareData = !!window._spyShareData;
   var S = 'font-family:inherit;font-size:0.9rem;font-weight:700;cursor:pointer;padding:13px;border-radius:12px;width:100%';
   var html = '';
@@ -7454,10 +7471,10 @@ function switchBattleTab(tab){
   if(tab==='create'){
     create.style.background='var(--accent)'; create.style.color='#fff'; create.style.border='none';
     join.style.background='var(--surface)'; join.style.color='var(--muted)'; join.style.border='1px solid var(--border)';
-    // 프리미엄 잠금
+    // 게스트 잠금
     var lock = document.getElementById('battleCreateLock');
     var step = document.getElementById('bStepMode');
-    if(!isPremium){
+    if(isGuest){
       if(lock) lock.style.display='';
       if(step) step.style.display='none';
       var step2 = document.getElementById('bStepDiff');
