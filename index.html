@@ -3581,7 +3581,9 @@ function doLogin(provider, providerId){
       // 다른 계정 로그인 시 로컬 데이터 초기화
       var _prevId = localStorage.getItem('wl_user_id');
       if(_prevId && _prevId !== String(user.id)){
-        ['wl_stats','wl_xp','wl_daily','wl_wrongnote','wl_used_idx','wl_rush_pb','wl_avatar','wl_dc_state'].forEach(function(k){ localStorage.removeItem(k); });
+        var _td = new Date(); var _ds = _td.getFullYear()+'_'+(_td.getMonth()+1)+'_'+_td.getDate();
+        ['wl_stats','wl_xp','wl_daily','wl_wrongnote','wl_used_idx','wl_rush_pb','wl_avatar','wl_dc_state',
+         'rush_'+_ds,'rush_ad_'+_ds,'spy_'+_ds,'spy_ad_'+_ds].forEach(function(k){ localStorage.removeItem(k); });
       }
       try{ localStorage.setItem('wl_user_id', String(user.id)); }catch(e){}
       if(user.avatar){
