@@ -1281,9 +1281,11 @@ input,button,textarea,select { font-family:inherit; }
           </div>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-start;gap:6px">
-        <button onclick="openNicknameChange()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--text);padding:6px 10px;font-family:inherit;white-space:nowrap;align-self:flex-start">닉네임 변경</button>
-        <button onclick="doLogout()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--muted);padding:6px 10px;font-family:inherit;white-space:nowrap;align-self:flex-start">로그아웃</button>
+      <div style="display:flex;align-items:flex-start;gap:4px">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <button onclick="openNicknameChange()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--text);padding:6px 10px;font-family:inherit;white-space:nowrap">닉네임 변경</button>
+          <button onclick="doLogout()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--muted);padding:6px 10px;font-family:inherit;white-space:nowrap">로그아웃</button>
+        </div>
         <button onclick="toggleSettingsPanel()" id="settingsGearBtn" style="background:none;border:none;cursor:pointer;font-size:2rem;color:var(--muted);padding:4px;line-height:1;border-radius:10px;align-self:flex-start" aria-label="설정">⚙️</button>
       </div>
     </div>
@@ -3620,6 +3622,8 @@ async function doNicknameChange(){
   document.getElementById('userNameDisplay').textContent = currentUser;
   var pname = document.getElementById('profileName');
   if(pname) pname.textContent = currentUser;
+  var hname = document.getElementById('homeNameDisplay');
+  if(hname) hname.textContent = currentUser;
   closeNicknameChange();
   showShareToast('닉네임이 변경됐어요.');
 }
