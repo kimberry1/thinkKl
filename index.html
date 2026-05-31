@@ -3916,10 +3916,10 @@ function _handleKakaoCallback(){
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
-    if(!data.nickname){ showShareToast('카카오 로그인 실패'); return; }
+    if(!data.nickname){ console.error('카카오 토큰 오류:', JSON.stringify(data)); showShareToast('카카오 로그인 실패'); return; }
     doLogin(data.nickname, '카카오');
   })
-  .catch(function(){ showShareToast('카카오 로그인 실패'); });
+  .catch(function(e){ console.error('카카오 fetch 오류:', e); showShareToast('카카오 로그인 실패'); });
 }
 // ── 네이버 로그인 ──
 var NAVER_CLIENT_ID = 'LlnKIH9lvE8ftnsL3kL0';
