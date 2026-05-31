@@ -1419,8 +1419,7 @@ input,button,textarea,select { font-family:inherit; }
         <button id="homeSubBtn" onclick="startPortonePayment()" style="display:none;font-size:0.72rem;font-weight:700;padding:4px 10px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-family:inherit;cursor:pointer;white-space:nowrap">구독하기</button>
       </div>
       <div style="display:flex;align-items:center;gap:6px">
-        <button id="bgmToggleBtn" onclick="toggleBGM()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;padding:4px;opacity:0.45;transition:opacity 0.2s" aria-label="배경음악" title="배경음악">♪</button>
-        <div class="home-streak-badge" id="homeStreakBadge" style="display:none">
+<div class="home-streak-badge" id="homeStreakBadge" style="display:none">
           <span id="homeStreakFire">🔥</span><span id="homeStreakNum">0</span>일
         </div>
       </div>
@@ -5332,82 +5331,6 @@ function playSound(type){
   } catch(e){}
 }
 
-// ── BGM 엔진 (Cmaj7 앰비언트 패드) ──
-var _bgmAC = null, _bgmNodes = [], _bgmPlaying = false;
-function toggleBGM(){
-  if(_bgmPlaying){ _stopBGM(); } else { _startBGM(); }
-}
-function _startBGM(){
-  try{
-    if(!_bgmAC || _bgmAC.state === 'closed'){
-      _bgmAC = new (window.AudioContext||window.webkitAudioContext)();
-    }
-    var ac = _bgmAC;
-    function _doStart(){
-      var master = ac.createGain();
-      master.gain.setValueAtTime(0, ac.currentTime);
-      master.gain.linearRampToValueAtTime(0.055, ac.currentTime+3);
-      master.connect(ac.destination);
-      var freqs = [261.63, 329.63, 392.00, 493.88, 523.25];
-      var gains = [0.22, 0.18, 0.20, 0.16, 0.12];
-      freqs.forEach(function(freq, i){
-        var o = ac.createOscillator();
-        var g = ac.createGain();
-        o.type = 'sine';
-        o.frequency.value = freq + (i%2===0 ? 0.3 : -0.3);
-        g.gain.value = gains[i];
-        o.connect(g); g.connect(master);
-        o.start();
-        var lfo = ac.createOscillator();
-        var lfoG = ac.createGain();
-        lfo.frequency.value = 0.08 + i*0.015;
-        lfoG.gain.value = 0.012;
-        lfo.connect(lfoG); lfoG.connect(g.gain);
-        lfo.start();
-        _bgmNodes.push(o, g, lfo, lfoG);
-      });
-      _bgmNodes.push(master);
-      _bgmPlaying = true;
-      var btn = document.getElementById('bgmToggleBtn');
-      if(btn){ btn.style.opacity='1'; btn.style.color='var(--primary)'; }
-      try{ localStorage.setItem('noonchi_bgm','1'); }catch(e){}
-    }
-    if(ac.state === 'suspended'){
-      ac.resume().then(_doStart).catch(function(){});
-    } else {
-      _doStart();
-    }
-  }catch(e){}
-}
-function _stopBGM(){
-  try{
-    if(_bgmAC && _bgmNodes.length){
-      var ac = _bgmAC;
-      _bgmNodes.forEach(function(n){ try{ if(n.gain){ n.gain.linearRampToValueAtTime(0, ac.currentTime+1.2); } }catch(e){} });
-      setTimeout(function(){ _bgmNodes.forEach(function(n){ try{ n.stop?n.stop():n.disconnect(); }catch(e){} }); _bgmNodes=[]; }, 1400);
-    }
-  }catch(e){}
-  _bgmPlaying = false;
-  var btn = document.getElementById('bgmToggleBtn');
-  if(btn){ btn.style.opacity='0.45'; btn.style.color=''; }
-  try{ localStorage.setItem('noonchi_bgm','0'); }catch(e){}
-}
-function _initBGM(){
-  // 브라우저 자동재생 정책상 페이지 로드 시 자동시작 불가
-  // 이전에 켜뒀으면 버튼에 "켜짐" 표시만 해두고 클릭 시 실제 시작
-  try{
-    if(localStorage.getItem('noonchi_bgm')==='1'){
-      var btn = document.getElementById('bgmToggleBtn');
-      if(btn){ btn.style.opacity='1'; btn.style.color='var(--primary)'; }
-      // 첫 인터랙션 시 자동 재개
-      function _bgmResume(){
-        if(!_bgmPlaying){ _startBGM(); }
-      }
-      document.addEventListener('touchstart', _bgmResume, {once:true});
-      document.addEventListener('click', _bgmResume, {once:true});
-    }
-  }catch(e){}
-}
 
 function noonchiBigBang(opts){
   opts = opts || {};
@@ -8268,7 +8191,6 @@ document.addEventListener('DOMContentLoaded', function(){
   renderDailyMissions();
   checkURLBattleCode();
   maybeShowOnboarding();
-  _initBGM();
   // ── 서비스 워커 등록 (PWA 오프라인 지원) ──
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(function(){ /* SW 등록 실패 무시 */ });
