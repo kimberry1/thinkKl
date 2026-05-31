@@ -556,7 +556,7 @@ input,button,textarea,select { font-family:inherit; }
 
 /* 프리미엄/광고 — 사업자등록 전까지 전부 숨김 */
 #premiumCard, #inlineSubBtn, #inlineProBadge,
-#profileSubBtn, #homeSubBtn, #spyAdBonusBtn,
+#profileSubBtn, #homeSubBtn,
 #loginPremiumBanner, #signupPremiumNotice, #referralBanner { display:none !important; }
 
 /* 제보 */
@@ -1589,7 +1589,8 @@ input,button,textarea,select { font-family:inherit; }
     </div>
 
     <button id="rushStartBtn" onclick="launchRushGame()" style="width:100%;padding:16px;border-radius:14px;border:none;background:var(--accent2);color:#fff;font-family:var(--font-body);font-size:1rem;font-weight:800;cursor:pointer;margin-top:4px">60초 시작</button>
-    <div id="rushNoAttemptsMsg" style="display:none;text-align:center;color:var(--muted);font-size:0.85rem;padding:12px 0">오늘 도전 횟수를 모두 사용했어요</div>
+    <div id="rushNoAttemptsMsg" style="display:none;text-align:center;color:var(--muted);font-size:0.85rem;padding:12px 0">오늘 도전 횟수를 모두 사용했어요<br><span style="font-size:0.78rem">내일 다시 도전하거나 광고를 보고 추가 기회를 받아요</span></div>
+    <div id="rushAdBonusBtn" style="display:none;margin-top:8px"><button onclick="watchAdForRush()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--accent2);color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer">광고 보고 +1회 추가</button></div>
   </div>
 </div>
 
@@ -6563,12 +6564,16 @@ function enterRushMode(){
   // 시작 버튼/메시지
   var btn = document.getElementById('rushStartBtn');
   var msg = document.getElementById('rushNoAttemptsMsg');
+  var adBtn = document.getElementById('rushAdBonusBtn');
+  var canAdBonus = !isGuest && getRushAdBonusToday() < RUSH_AD_BONUS_MAX;
   if(remaining <= 0){
     if(btn) btn.style.display='none';
     if(msg) msg.style.display='block';
+    if(adBtn) adBtn.style.display = canAdBonus ? '' : 'none';
   } else {
     if(btn) btn.style.display='';
     if(msg) msg.style.display='none';
+    if(adBtn) adBtn.style.display='none';
   }
 
   loadRushLeaderboard('rushLeaderboard');
@@ -6935,7 +6940,8 @@ function renderRushResultActions(){
 function watchAdForRush(){
   adCallback = function(){
     addRushAdBonus();
-    document.getElementById('rushResultModal').className='';
+    var modal = document.getElementById('rushResultModal');
+    if(modal) modal.className='';
     enterRushMode();
   };
   showAd('rush');
