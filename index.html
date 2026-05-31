@@ -1282,7 +1282,7 @@ input,button,textarea,select { font-family:inherit; }
         </div>
       </div>
       <div style="display:flex;align-items:flex-start;gap:4px">
-        <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <button onclick="openNicknameChange()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--text);padding:6px 10px;font-family:inherit;white-space:nowrap">닉네임 변경</button>
           <button onclick="doLogout()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--muted);padding:6px 10px;font-family:inherit;white-space:nowrap">로그아웃</button>
         </div>
@@ -3581,7 +3581,7 @@ function doLogin(provider, providerId){
       // 다른 계정 로그인 시 로컬 데이터 초기화
       var _prevId = localStorage.getItem('wl_user_id');
       if(_prevId && _prevId !== String(user.id)){
-        ['wl_stats','wl_xp','wl_daily','wl_wrongnote','wl_used_idx','wl_rush_pb','wl_avatar'].forEach(function(k){ localStorage.removeItem(k); });
+        ['wl_stats','wl_xp','wl_daily','wl_wrongnote','wl_used_idx','wl_rush_pb','wl_avatar','wl_dc_state'].forEach(function(k){ localStorage.removeItem(k); });
       }
       try{ localStorage.setItem('wl_user_id', String(user.id)); }catch(e){}
       if(user.avatar){
@@ -3619,6 +3619,7 @@ async function doNicknameChange(){
   var newName = (inp ? inp.value : '').trim();
   err.style.display='none';
   if(!newName || newName.length < 2){ err.textContent='닉네임을 2자 이상 입력해주세요.'; err.style.display='block'; return; }
+  if(newName.length > 5){ err.textContent='닉네임은 5자 이하로 입력해주세요.'; err.style.display='block'; return; }
   if(newName === currentUser){ closeNicknameChange(); return; }
   var existing = await sbFetch('users?username=eq.'+encodeURIComponent(newName)+'&select=id&limit=1');
   if(existing && existing.length > 0){ err.textContent='이미 사용 중인 닉네임이에요.'; err.style.display='block'; return; }
@@ -8829,7 +8830,7 @@ async function shareCrowdResult() {
 <div id="nicknameModal" style="position:fixed;inset:0;z-index:2100;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s" onclick="if(event.target===this)closeNicknameChange()">
   <div style="background:var(--card);border-radius:20px 20px 0 0;padding:32px 24px 28px;width:100%;max-width:440px;box-shadow:0 -4px 24px rgba(0,0,0,0.18)">
     <div style="font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:16px;text-align:center">닉네임 변경</div>
-    <input type="text" id="nicknameInput" maxlength="10" placeholder="새 닉네임 (2~10자)" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.95rem;margin-bottom:8px" onkeydown="if(event.key==='Enter')doNicknameChange()"/>
+    <input type="text" id="nicknameInput" maxlength="5" placeholder="새 닉네임 (2~5자)" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.95rem;margin-bottom:8px" onkeydown="if(event.key==='Enter')doNicknameChange()"/>
     <div id="nicknameChangeError" style="display:none;color:#e53e3e;font-size:0.8rem;margin-bottom:10px;text-align:center"></div>
     <button onclick="doNicknameChange()" style="width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">변경하기</button>
     <button onclick="closeNicknameChange()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">취소</button>
