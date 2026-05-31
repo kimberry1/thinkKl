@@ -1,5 +1,5 @@
-// noonchi Service Worker v2.1
-const CACHE_NAME = 'noonchi-v4';
+// noonchi Service Worker v2.2
+const CACHE_NAME = 'noonchi-v5';
 const BASE = '/noonchi';
 const OFFLINE_ASSETS = [
   BASE + '/',
