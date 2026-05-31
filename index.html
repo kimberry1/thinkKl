@@ -965,8 +965,6 @@ input,button,textarea,select { font-family:inherit; }
 <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
 <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
 <script>
   // ── 카카오 SDK 초기화 ── 카카오 개발자 콘솔에서 발급받은 JavaScript 앱키를 입력하세요
   var KAKAO_JS_KEY = '202fdef735b96312e7d6a2eeb1352dd7';
@@ -978,7 +976,7 @@ input,button,textarea,select { font-family:inherit; }
   }
 
   // ── AdMob 보상형 광고 ID — AdMob 콘솔에서 발급받은 실제 ID로 교체 ──
-  var ADMOB_REWARDED_ID = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
+  var ADMOB_REWARDED_ID = 'ca-app-pub-8938493055899242/4689268202';
 </script>
 </head>
 <body>
@@ -1086,7 +1084,7 @@ input,button,textarea,select { font-family:inherit; }
 
 <!-- 1. 로그인 -->
 <div class="screen active" id="screenLogin">
-  <div class="logo">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
+  <div class="logo" id="loginLogo" onclick="_adminTap()" style="cursor:default">n<span class="logo-eyes" aria-hidden="true"><span class="logo-eye logo-eye-l"></span><span class="logo-eye logo-eye-r"></span></span>nchi<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">oo</span></div>
   <div class="tagline">힌트를 연결하고 눈치껏 단어 맞히기</div>
   <div id="loginPremiumBanner" class="w400" style="background:linear-gradient(135deg,rgba(255,80,0,0.13),rgba(255,184,0,0.09));border:1.5px solid rgba(255,140,0,0.4);border-radius:14px;padding:13px 18px;margin-bottom:12px;text-align:center">
     <div style="display:inline-block;background:rgba(255,80,0,0.85);color:#fff;font-size:0.68rem;font-weight:800;letter-spacing:0.08em;padding:2px 10px;border-radius:20px;margin-bottom:6px">지금만</div>
@@ -1099,50 +1097,9 @@ input,button,textarea,select { font-family:inherit; }
     <div style="font-size:0.78rem;opacity:0.85;margin-top:4px">지금 가입하면 1개월 프리미엄 무료</div>
   </div>
   <div class="w400 login-card">
-    <!-- 로그인 / 회원가입 탭 -->
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin"  onclick="switchAuthTab('login')">로그인</button>
-      <button class="auth-tab"        id="tabSignup" onclick="switchAuthTab('signup')">회원가입</button>
-    </div>
-    <!-- 로그인 패널 -->
-    <div id="panelLogin">
-      <div class="input-group">
-        <label class="input-label">이메일</label>
-        <input type="email" class="text-input" id="loginEmail" placeholder="이메일을 입력하세요" onkeydown="if(event.key==='Enter')doLoginEmail()"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">비밀번호</label>
-        <input type="password" class="text-input" id="loginPw" placeholder="비밀번호를 입력하세요" onkeydown="if(event.key==='Enter')doLoginEmail()"/>
-      </div>
-      <div class="auth-error" id="loginError"></div>
-      <button class="login-btn" id="loginBtn" onclick="doLoginEmail()">로그인</button>
-    </div>
-    <!-- 회원가입 패널 -->
-    <div id="panelSignup" style="display:none">
-      <div id="signupPremiumNotice" style="display:flex;align-items:center;gap:10px;background:rgba(255,100,0,0.08);border:1px solid rgba(255,140,0,0.25);border-radius:10px;padding:10px 14px;margin-bottom:14px">
-        <span style="font-size:1.5rem;flex-shrink:0">✨</span>
-        <div><div style="font-size:0.83rem;font-weight:800;color:#FFB830">지금 가입하면 프리미엄 1달 바로 드려요</div><div style="font-size:0.73rem;color:var(--muted);margin-top:2px">내일은 모를 일 :)</div></div>
-      </div>
-      <div class="input-group">
-        <label class="input-label">닉네임</label>
-        <input type="text" class="text-input" id="signupName" placeholder="닉네임 (2~10자)" maxlength="10"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">이메일</label>
-        <input type="email" class="text-input" id="signupEmail" placeholder="이메일을 입력하세요"/>
-      </div>
-      <div class="input-group">
-        <label class="input-label">비밀번호</label>
-        <input type="password" class="text-input" id="signupPw" placeholder="비밀번호 (6자 이상)" onkeydown="if(event.key==='Enter')doSignupEmail()"/>
-      </div>
-      <div class="auth-error" id="signupError"></div>
-      <button class="login-btn" id="signupBtn" onclick="doSignupEmail()">회원가입</button>
-    </div>
-    <div class="divider"><div class="divider-line"></div><span class="divider-text">소셜 로그인</span><div class="divider-line"></div></div>
     <div class="social-login-row">
       <button class="social-btn kakao" onclick="loginKakao()">카카오</button>
-      <button class="social-btn" disabled style="opacity:0.4;cursor:default;flex:1;padding:11px 4px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:0.75rem;font-weight:600">N 준비중</button>
-      <button class="social-btn" disabled style="opacity:0.4;cursor:default;flex:1;padding:11px 4px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:inherit;font-size:0.75rem;font-weight:600">G 준비중</button>
+      <button class="social-btn google" onclick="loginGoogle()">Google</button>
     </div>
     <div class="divider"><div class="divider-line"></div><span class="divider-text">또는</span><div class="divider-line"></div></div>
     <button class="guest-btn" onclick="doGuest()">게스트로 플레이</button>
@@ -1325,6 +1282,7 @@ input,button,textarea,select { font-family:inherit; }
         </div>
       </div>
       <div style="display:flex;align-items:flex-start;gap:6px">
+        <button onclick="openNicknameChange()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--text);padding:6px 10px;font-family:inherit;white-space:nowrap;align-self:flex-start">닉네임 변경</button>
         <button onclick="doLogout()" style="background:none;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:0.72rem;font-weight:700;color:var(--muted);padding:6px 10px;font-family:inherit;white-space:nowrap;align-self:flex-start">로그아웃</button>
         <button onclick="toggleSettingsPanel()" id="settingsGearBtn" style="background:none;border:none;cursor:pointer;font-size:2rem;color:var(--muted);padding:4px;line-height:1;border-radius:10px;align-self:flex-start" aria-label="설정">⚙️</button>
       </div>
@@ -2328,13 +2286,6 @@ async function sbAuthPost(path, body){
   } catch(e) { return { error: '네트워크 오류' }; }
 }
 
-async function sbSignUp(email, password, username){
-  return await sbAuthPost('signup', { email, password, data: { username } });
-}
-
-async function sbSignIn(email, password){
-  return await sbAuthPost('token?grant_type=password', { email, password });
-}
 
 async function sbAuthSignOut(token){
   try {
@@ -2669,30 +2620,28 @@ function showPremiumManage(){
   showShareToast('✨ ' + d + ' 까지 이용 가능');
 }
 
-// ── 탭 전환 (로그인/회원가입) ──
-function switchAuthTab(tab){
-  document.getElementById('tabLogin').className  = 'auth-tab'+(tab==='login'?' active':'');
-  document.getElementById('tabSignup').className = 'auth-tab'+(tab==='signup'?' active':'');
-  document.getElementById('panelLogin').style.display  = tab==='login'  ? '' : 'none';
-  document.getElementById('panelSignup').style.display = tab==='signup' ? '' : 'none';
-}
 
-async function sbGetOrCreateUser(username, email){
-  // email로 우선 조회 (신규 방식)
+async function sbGetOrCreateUser(username, email, provider, providerId){
+  // 1. provider_user_id로 조회 (소셜 로그인)
+  if(provider && providerId){
+    const byProvider = await sbFetch('users?provider=eq.'+encodeURIComponent(provider)+'&provider_user_id=eq.'+encodeURIComponent(providerId)+'&select=id,username,email,is_premium,premium_until,is_master,xp,avatar&limit=1');
+    if(byProvider && byProvider.length > 0) return byProvider[0];
+    const created = await sbFetch('users', { method:'POST', body:{ username, provider, provider_user_id: providerId, is_premium: false } });
+    return created && created[0] ? created[0] : null;
+  }
+  // 2. email로 조회 (레거시)
   if(email){
     const byEmail = await sbFetch('users?email=eq.'+encodeURIComponent(email)+'&select=id,username,email,is_premium,premium_until,xp,avatar&limit=1');
     if(byEmail && byEmail.length > 0) return byEmail[0];
-    // email 없으면 username으로 fallback 후 email 추가
     const byName = await sbFetch('users?username=eq.'+encodeURIComponent(username)+'&select=id,username,email,xp,avatar&limit=1');
     if(byName && byName.length > 0){
       await sbFetch('users?id=eq.'+byName[0].id, { method:'PATCH', body:{ email } });
       return byName[0];
     }
-    // 아예 없으면 신규 생성
     const created = await sbFetch('users', { method:'POST', body:{ username, email, is_premium: false } });
     return created && created[0] ? created[0] : null;
   }
-  // 레거시: username만으로 조회 (소셜 로그인)
+  // 3. username만으로 조회 (레거시)
   const found = await sbFetch('users?username=eq.'+encodeURIComponent(username)+'&select=id,username&limit=1');
   if(found && found.length > 0) return found[0];
   const created = await sbFetch('users', { method:'POST', body:{ username } });
@@ -3602,151 +3551,77 @@ function selectAvatar(emoji){
   }
 }
 
-// 로그인
-// ── 이메일/비밀번호 로그인 ──
-async function doLoginEmail(){
-  var btn = document.getElementById('loginBtn');
-  var errEl = document.getElementById('loginError');
-  var email = (document.getElementById('loginEmail').value||'').trim();
-  var pw = (document.getElementById('loginPw').value||'');
-  errEl.style.display='none';
-  // ── 어드민 계정 (admin ~ admin5) ──
-  if(/^admin\d?$/.test(email) && parseInt(email.replace('admin','') || '0') <= 5 && pw === 'admin91'){
-    currentUser = email; currentEmail = email; isGuest = false;
-    isMaster = true; isPremium = true;
-    document.getElementById('userNameDisplay').textContent = email;
-    var _av = (function(){try{return localStorage.getItem('wl_avatar')||'👑';}catch(e){return '👑';}})();
-    var _bar = document.getElementById('userAvatarBar');
-    if(_bar) _bar.textContent = _av;
-    updateXP(); updatePremiumUI();
-    selectedLangTemp='';
-    document.getElementById('langConfirmBtn').className='lang-confirm-btn';
-    document.querySelectorAll('.lang-card').forEach(function(c){c.classList.remove('selected');});
-    showScreen('screenLang');
-    return;
-  }
-  if(!email || !pw){ errEl.textContent='이메일과 비밀번호를 입력해주세요.'; errEl.style.display='block'; return; }
-  btn.textContent='로그인 중...'; btn.disabled=true;
-  var result = await sbSignIn(email, pw);
-  btn.textContent='로그인'; btn.disabled=false;
-  if(result.error){
-    var msg = result.error;
-    if(msg.includes('Invalid login')) msg='이메일 또는 비밀번호가 올바르지 않아요.';
-    else if(msg.includes('Email not confirmed')) msg='이메일 인증이 필요해요. 메일함을 확인해 주세요.';
-    errEl.textContent=msg; errEl.style.display='block'; return;
-  }
-  sbAuthToken = result.data.access_token;
-  var meta = result.data.user && result.data.user.user_metadata;
-  var uname = (meta && meta.username) || email.split('@')[0];
-  currentEmail = email;
-  _afterAuthLogin(uname, email);
+// ── 소셜 로그인 완료 처리 ──
+var RANDOM_NAME_WORDS = ['토끼','여우','곰','늑대','사슴','너구리','다람쥐','고양이','펭귄','해달','판다','호랑이','독수리','수달','코알라','미어캣','햄스터','오리','부엉이','도마뱀'];
+function generateRandomName(){
+  var word = RANDOM_NAME_WORDS[Math.floor(Math.random()*RANDOM_NAME_WORDS.length)];
+  var num = String(Math.floor(Math.random()*9000)+1000);
+  return word+'-'+num;
 }
 
-// ── 이메일/비밀번호 회원가입 ──
-async function doSignupEmail(){
-  var btn = document.getElementById('signupBtn');
-  var errEl = document.getElementById('signupError');
-  var name = (document.getElementById('signupName').value||'').trim();
-  var email = (document.getElementById('signupEmail').value||'').trim();
-  var pw = (document.getElementById('signupPw').value||'');
-  errEl.style.display='none';
-  if(!name || name.length < 2){ errEl.textContent='닉네임을 2자 이상 입력해주세요.'; errEl.style.display='block'; return; }
-  if(!email){ errEl.textContent='이메일을 입력해주세요.'; errEl.style.display='block'; return; }
-  if(pw.length < 6){ errEl.textContent='비밀번호는 6자 이상이어야 해요.'; errEl.style.display='block'; return; }
-  btn.textContent='가입 중...'; btn.disabled=true;
-  var result = await sbSignUp(email, pw, name);
-  btn.textContent='회원가입'; btn.disabled=false;
-  if(result.error){
-    var msg = result.error;
-    if(msg.includes('already registered') || msg.includes('already been registered')) msg='이미 사용 중인 이메일이에요.';
-    else if(msg.includes('weak password')) msg='비밀번호가 너무 간단해요.';
-    errEl.textContent=msg; errEl.style.display='block'; return;
-  }
-  // 가입 성공 → 자동 로그인 시도 (이메일 인증 필요 없는 경우)
-  sbAuthToken = result.data.access_token || null;
-  currentEmail = email;
-  // DB에 유저 생성
-  sbGetOrCreateUser(name, email).catch(function(){});
-  if(sbAuthToken){
-    window._isNewSignup = true; // 신규가입 프리미엄 지급 플래그
-    _afterAuthLogin(name, email);
-  } else {
-    // 이메일 인증 필요한 경우
-    showShareToast('📧 가입 완료! 이메일 인증 후 로그인해 주세요.');
-    switchAuthTab('login');
-    document.getElementById('loginEmail').value = email;
-  }
-}
-
-// ── 로그인 공통 완료 처리 ──
-function _afterAuthLogin(username, email){
-  currentUser = username;
-  currentEmail = email;
-  isGuest = false;
-  isPremium = false;
-  document.getElementById('userNameDisplay').textContent = currentUser;
-  var _av = (function(){try{return localStorage.getItem('wl_avatar')||'🎮';}catch(e){return '🎮';}})();
+function doLogin(provider, providerId){
+  isGuest = false; isPremium = false;
+  currentEmail = '';
   var _bar = document.getElementById('userAvatarBar');
+  var _av = (function(){try{return localStorage.getItem('wl_avatar')||'🎮';}catch(e){return '🎮';}})();
   if(_bar) _bar.textContent = _av;
   selectedLangTemp='';
   document.getElementById('langConfirmBtn').className='lang-confirm-btn';
   document.querySelectorAll('.lang-card').forEach(function(c){c.classList.remove('selected');});
-  // 마스터 계정 체크 (동기)
-  checkMaster(email);
-  // Supabase 유저 등록 + 프리미엄 + XP 동기화
-  sbGetOrCreateUser(currentUser, email).then(function(user){
+  var randomName = generateRandomName();
+  currentUser = randomName;
+  document.getElementById('userNameDisplay').textContent = currentUser;
+  sbGetOrCreateUser(randomName, null, provider, providerId).then(function(user){
     if(user){
+      currentUser = user.username || randomName;
       window._sbUserId = user.id;
-      // 아바타 동기화: Supabase 값이 있으면 우선 적용
+      document.getElementById('userNameDisplay').textContent = currentUser;
       if(user.avatar){
         try{ localStorage.setItem('wl_avatar', user.avatar); }catch(e){}
-        var _bar2 = document.getElementById('userAvatarBar');
-        if(_bar2) _bar2.textContent = user.avatar;
+        if(_bar) _bar.textContent = user.avatar;
       }
-      // 마지막 접속 시간 갱신
+      if(user.is_master){ isMaster=true; isPremium=true; }
+      else if(user.is_premium && user.premium_until && new Date(user.premium_until)>new Date()){ isPremium=true; premiumUntil=user.premium_until; }
+      updatePremiumUI();
       sbFetch('users?id=eq.'+user.id, { method:'PATCH', body:{ last_seen: new Date().toISOString() } }).catch(function(){});
-    }
-    if(email){
-      loadPremiumStatus(email);
-      sbLoadAndMergeXP(email);
-      refreshPushSubscription(email);
-      // 신규 가입 프리미엄 1달 보너스
-      if(window._isNewSignup){
-        window._isNewSignup = false;
-        setTimeout(function(){
-          var until = new Date(); until.setMonth(until.getMonth() + 1);
-          savePremiumStatus(currentEmail, until.toISOString()).then(function(){
-            isPremium = true; premiumUntil = until.toISOString(); updatePremiumUI();
-          });
-          noonchiPunch('mega', { banner: '환영해요!', subBanner: '프리미엄 1달이 지급됐어요' });
-        }, 1000);
-      }
+      sbLoadAndMergeXPByUsername(currentUser);
     }
   }).catch(function(e){ console.warn('SB 유저 등록 실패:', e); });
   showScreen('screenLang');
 }
 
-// ── 기존 소셜 로그인에서 호출하는 doLogin (이름, 제공자) ──
-function doLogin(name, provider){
-  currentUser = name || '유저';
-  currentEmail = '';
-  isGuest = false;
-  isPremium = false;
+// ── 닉네임 변경 ──
+function openNicknameChange(){
+  if(isGuest){ showShareToast('로그인 후 이용할 수 있어요'); return; }
+  var el = document.getElementById('nicknameModal');
+  var inp = document.getElementById('nicknameInput');
+  var err = document.getElementById('nicknameChangeError');
+  if(inp) inp.value='';
+  if(err){ err.style.display='none'; err.textContent=''; }
+  if(el){ el.style.opacity='1'; el.style.pointerEvents='all'; }
+  setTimeout(function(){ if(inp) inp.focus(); }, 100);
+}
+function closeNicknameChange(){
+  var el = document.getElementById('nicknameModal');
+  if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
+}
+async function doNicknameChange(){
+  var inp = document.getElementById('nicknameInput');
+  var err = document.getElementById('nicknameChangeError');
+  var newName = (inp ? inp.value : '').trim();
+  err.style.display='none';
+  if(!newName || newName.length < 2){ err.textContent='닉네임을 2자 이상 입력해주세요.'; err.style.display='block'; return; }
+  if(newName === currentUser){ closeNicknameChange(); return; }
+  var existing = await sbFetch('users?username=eq.'+encodeURIComponent(newName)+'&select=id&limit=1');
+  if(existing && existing.length > 0){ err.textContent='이미 사용 중인 닉네임이에요.'; err.style.display='block'; return; }
+  if(!window._sbUserId){ err.textContent='오류가 발생했어요. 다시 시도해주세요.'; err.style.display='block'; return; }
+  await sbFetch('users?id=eq.'+window._sbUserId, { method:'PATCH', body:{ username: newName } });
+  currentUser = newName;
   document.getElementById('userNameDisplay').textContent = currentUser;
-  var _av = (function(){try{return localStorage.getItem('wl_avatar')||'🎮';}catch(e){return '🎮';}})();
-  var _bar = document.getElementById('userAvatarBar');
-  if(_bar) _bar.textContent = _av;
-  selectedLangTemp='';
-  document.getElementById('langConfirmBtn').className='lang-confirm-btn';
-  document.querySelectorAll('.lang-card').forEach(function(c){c.classList.remove('selected');});
-  sbGetOrCreateUser(currentUser).then(function(user){
-    if(user){
-      window._sbUserId = user.id;
-      sbLoadAndMergeXPByUsername(currentUser);
-      sbFetch('users?id=eq.'+user.id, { method:'PATCH', body:{ last_seen: new Date().toISOString() } }).catch(function(){});
-    }
-  }).catch(function(e){ console.warn('SB 유저 등록 실패:', e); });
-  showScreen('screenLang');
+  var pname = document.getElementById('profileName');
+  if(pname) pname.textContent = currentUser;
+  closeNicknameChange();
+  showShareToast('닉네임이 변경됐어요.');
 }
 function _blockGuest(desc) {
   if(!isGuest) return false;
@@ -3760,6 +3635,52 @@ function closeGuestBlock() {
   var el = document.getElementById('guestBlockModal');
   if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
 }
+// ── 어드민 숨김 로그인 (로고 5번 탭) ──
+var _adminTapCount = 0, _adminTapTimer = null;
+function _adminTap(){
+  _adminTapCount++;
+  clearTimeout(_adminTapTimer);
+  if(_adminTapCount >= 5){
+    _adminTapCount = 0;
+    var el = document.getElementById('adminModal');
+    var idInp = document.getElementById('adminIdInput');
+    var err = document.getElementById('adminLoginError');
+    if(err){ err.style.display='none'; err.textContent=''; }
+    if(idInp) idInp.value='';
+    document.getElementById('adminPwInput').value='';
+    if(el){ el.style.opacity='1'; el.style.pointerEvents='all'; }
+    setTimeout(function(){ if(idInp) idInp.focus(); }, 100);
+  } else {
+    _adminTapTimer = setTimeout(function(){ _adminTapCount=0; }, 1500);
+  }
+}
+function closeAdminModal(){
+  var el = document.getElementById('adminModal');
+  if(el){ el.style.opacity='0'; el.style.pointerEvents='none'; }
+}
+function doAdminLogin(){
+  var id = (document.getElementById('adminIdInput').value||'').trim();
+  var pw = document.getElementById('adminPwInput').value;
+  var err = document.getElementById('adminLoginError');
+  if(/^admin\d?$/.test(id) && parseInt(id.replace('admin','')||'0') <= 5 && pw === 'admin91'){
+    closeAdminModal();
+    currentUser = id; currentEmail = id; isGuest = false;
+    isMaster = true; isPremium = true;
+    document.getElementById('userNameDisplay').textContent = currentUser;
+    var _av = (function(){try{return localStorage.getItem('wl_avatar')||'👑';}catch(e){return '👑';}})();
+    var _bar = document.getElementById('userAvatarBar');
+    if(_bar) _bar.textContent = _av;
+    updateXP(); updatePremiumUI();
+    selectedLangTemp='';
+    document.getElementById('langConfirmBtn').className='lang-confirm-btn';
+    document.querySelectorAll('.lang-card').forEach(function(c){c.classList.remove('selected');});
+    showScreen('screenLang');
+  } else {
+    err.textContent='아이디 또는 비밀번호가 올바르지 않아요.';
+    err.style.display='block';
+  }
+}
+
 function doGuest() {
   currentUser='게스트'; currentEmail=''; isGuest=true; isPremium=false;
   document.getElementById('userNameDisplay').textContent='게스트';
@@ -3904,9 +3825,10 @@ function loginKakao(){
 function _handleKakaoCallback(){
   var params = new URLSearchParams(window.location.search);
   var code = params.get('code');
+  var state = params.get('state');
   var error = params.get('error');
   if(error){ showShareToast('카카오 로그인 취소됨'); history.replaceState(null,'',window.location.pathname); return; }
-  if(!code) return;
+  if(!code || state === 'google_login') return;
   history.replaceState(null,'',window.location.pathname);
   // 인가 코드 → Edge Function에서 토큰 교환 (CLIENT_SECRET 서버에서만 사용)
   fetch(KAKAO_TOKEN_FN, {
@@ -3916,69 +3838,45 @@ function _handleKakaoCallback(){
   })
   .then(function(r){ return r.json(); })
   .then(function(data){
-    if(!data.nickname){ console.error('카카오 토큰 오류:', JSON.stringify(data)); showShareToast('카카오 로그인 실패'); return; }
-    doLogin(data.nickname, '카카오');
+    if(!data.kakao_id){ console.error('카카오 토큰 오류:', JSON.stringify(data)); showShareToast('카카오 로그인 실패'); return; }
+    doLogin('카카오', data.kakao_id);
   })
   .catch(function(e){ console.error('카카오 fetch 오류:', e); showShareToast('카카오 로그인 실패'); });
 }
-// ── 네이버 로그인 ──
-var NAVER_CLIENT_ID = 'LlnKIH9lvE8ftnsL3kL0';
-var NAVER_CALLBACK  = 'https://kimberry1.github.io/noonchi/';
-var _naverLogin = null;
-function _initNaver(){
-  if(typeof naver_id_login === 'undefined') return false;
-  if(!_naverLogin) _naverLogin = new naver_id_login(NAVER_CLIENT_ID, NAVER_CALLBACK);
-  return true;
-}
-function loginNaver(){
-  if(!_initNaver()){ showShareToast('N 네이버 SDK 로딩 중이에요'); return; }
-  var state = _naverLogin.getUniqState();
-  var url = 'https://nid.naver.com/oauth2.0/authorize?response_type=token'
-    + '&client_id=' + NAVER_CLIENT_ID
-    + '&redirect_uri=' + encodeURIComponent(NAVER_CALLBACK)
-    + '&state=' + state;
-  window.location.href = url;
-}
-// 네이버 로그인 후 리디렉션 콜백 처리
-function naverProfileCallback(result){
-  if(result === 'success'){
-    var name = _naverLogin.getProfileData('name') || _naverLogin.getProfileData('nickname') || '네이버유저';
-    history.replaceState(null, '', window.location.pathname);
-    doLogin(name, '네이버');
-  } else {
-    showShareToast('N 네이버 로그인 실패');
-  }
+
+// ── 구글 로그인 (리다이렉트 방식) ──
+var GOOGLE_CLIENT_ID = '707481124365-46s74kig7j1k679et87brb1gslle0bj3.apps.googleusercontent.com';
+var GOOGLE_REDIRECT  = 'https://kimberry1.github.io/noonchi/';
+var GOOGLE_TOKEN_FN  = 'https://mcgqmsjtaiqmutekspeq.supabase.co/functions/v1/google-token';
+
+function loginGoogle(){
+  var params = new URLSearchParams({
+    client_id:     GOOGLE_CLIENT_ID,
+    redirect_uri:  GOOGLE_REDIRECT,
+    response_type: 'code',
+    scope:         'openid profile email',
+    state:         'google_login',
+  });
+  window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
 }
 
-// ── 구글 로그인 ──
-var GOOGLE_CLIENT_ID = '707481124365-6ib85flc9h591c6jsm7pbp2dkbq5tpj4.apps.googleusercontent.com';
-var _googleTokenClient = null;
-function _initGoogleClient(){
-  if(typeof google === 'undefined' || !google.accounts) return;
-  _googleTokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GOOGLE_CLIENT_ID,
-    scope: 'profile email',
-    callback: function(resp){
-      if(!resp.access_token){ showShareToast('G 구글 로그인 실패'); return; }
-      fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: { Authorization: 'Bearer ' + resp.access_token }
-      })
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        var name = data.name || data.email || '구글유저';
-        doLogin(name, '구글');
-      })
-      .catch(function(){ showShareToast('G 구글 정보 불러오기 실패'); });
-    }
-  });
-}
-function loginGoogle(){
-  if(typeof google === 'undefined' || !google.accounts){
-    showShareToast('G 구글 SDK 로딩 중이에요');
-    return;
-  }
-  if(!_googleTokenClient) _initGoogleClient();
-  _googleTokenClient.requestAccessToken();
+function _handleGoogleCallback(){
+  var params = new URLSearchParams(window.location.search);
+  var code  = params.get('code');
+  var state = params.get('state');
+  if(!code || state !== 'google_login') return;
+  history.replaceState(null, '', window.location.pathname);
+  fetch(GOOGLE_TOKEN_FN, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+SB_ANON},
+    body: JSON.stringify({ code: code, redirect_uri: GOOGLE_REDIRECT })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(!data.google_id){ console.error('구글 토큰 오류:', JSON.stringify(data)); showShareToast('구글 로그인 실패'); return; }
+    doLogin('구글', data.google_id);
+  })
+  .catch(function(e){ console.error('구글 fetch 오류:', e); showShareToast('구글 로그인 실패'); });
 }
 // (엔터키 핸들링은 각 input의 onkeydown 속성으로 처리)
 
@@ -8227,14 +8125,8 @@ document.addEventListener('visibilitychange', function(){
 // 랭킹 초기 렌더 + URL 배틀 코드 체크
 document.addEventListener('DOMContentLoaded', function(){
   initReferral();
-  // 카카오 로그인 콜백 감지 (?code=)
+  _handleGoogleCallback();
   _handleKakaoCallback();
-  // 네이버 로그인 리디렉션 콜백 감지
-  if(window.location.hash && window.location.hash.indexOf('access_token') !== -1){
-    if(_initNaver()){
-      _naverLogin.get_naver_userprofile('naverProfileCallback');
-    }
-  }
   renderRanking('easy');
   renderDailyMissions();
   checkURLBattleCode();
@@ -8910,6 +8802,29 @@ async function shareCrowdResult() {
   });
 })();
 </script>
+
+<!-- ── 어드민 숨김 로그인 모달 ── -->
+<div id="adminModal" style="position:fixed;inset:0;z-index:2200;background:rgba(43,26,18,0.7);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s" onclick="if(event.target===this)closeAdminModal()">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;padding:32px 24px 28px;width:100%;max-width:440px;box-shadow:0 -4px 24px rgba(0,0,0,0.18)">
+    <div style="font-weight:800;font-size:1rem;color:var(--text);margin-bottom:16px;text-align:center">관리자 로그인</div>
+    <input type="text" id="adminIdInput" placeholder="아이디" autocomplete="off" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.95rem;margin-bottom:8px" onkeydown="if(event.key==='Enter')document.getElementById('adminPwInput').focus()"/>
+    <input type="password" id="adminPwInput" placeholder="비밀번호" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.95rem;margin-bottom:8px" onkeydown="if(event.key==='Enter')doAdminLogin()"/>
+    <div id="adminLoginError" style="display:none;color:#e53e3e;font-size:0.8rem;margin-bottom:10px;text-align:center"></div>
+    <button onclick="doAdminLogin()" style="width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">로그인</button>
+    <button onclick="closeAdminModal()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">취소</button>
+  </div>
+</div>
+
+<!-- ── 닉네임 변경 모달 ── -->
+<div id="nicknameModal" style="position:fixed;inset:0;z-index:2100;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s" onclick="if(event.target===this)closeNicknameChange()">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;padding:32px 24px 28px;width:100%;max-width:440px;box-shadow:0 -4px 24px rgba(0,0,0,0.18)">
+    <div style="font-weight:800;font-size:1.05rem;color:var(--text);margin-bottom:16px;text-align:center">닉네임 변경</div>
+    <input type="text" id="nicknameInput" maxlength="10" placeholder="새 닉네임 (2~10자)" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;font-size:0.95rem;margin-bottom:8px" onkeydown="if(event.key==='Enter')doNicknameChange()"/>
+    <div id="nicknameChangeError" style="display:none;color:#e53e3e;font-size:0.8rem;margin-bottom:10px;text-align:center"></div>
+    <button onclick="doNicknameChange()" style="width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:inherit;font-size:0.95rem;font-weight:700;cursor:pointer;margin-bottom:8px">변경하기</button>
+    <button onclick="closeNicknameChange()" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--text-soft);font-family:inherit;font-size:0.88rem;font-weight:600;cursor:pointer">취소</button>
+  </div>
+</div>
 
 <!-- ── 게스트 차단 모달 ── -->
 <div id="guestBlockModal" style="position:fixed;inset:0;z-index:2100;background:rgba(43,26,18,0.55);display:flex;align-items:flex-end;justify-content:center;pointer-events:none;opacity:0;transition:opacity 0.25s" onclick="if(event.target===this)closeGuestBlock()">
