@@ -976,6 +976,9 @@ input,button,textarea,select { font-family:inherit; }
   if(KAKAO_JS_KEY !== 'YOUR_KAKAO_JS_KEY'){
     Kakao.init(KAKAO_JS_KEY);
   }
+
+  // ── AdMob 보상형 광고 ID — AdMob 콘솔에서 발급받은 실제 ID로 교체 ──
+  var ADMOB_REWARDED_ID = 'ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX';
 </script>
 </head>
 <body>
@@ -1630,7 +1633,7 @@ input,button,textarea,select { font-family:inherit; }
     </div>
     <button id="spyStartBtn" onclick="launchSpyGame()" style="width:100%;padding:16px;border-radius:14px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:1rem;font-weight:800;cursor:pointer;margin-top:4px">게임 시작</button>
     <div id="spyNoAttemptsMsg" style="display:none;text-align:center;color:var(--muted);font-size:0.85rem;padding:12px 0">오늘 도전 횟수를 모두 사용했어요<br><span style="font-size:0.78rem">내일 다시 도전하거나 광고를 보고 추가 기회를 받아요</span></div>
-    <div id="spyAdBonusBtn" style="display:none;margin-top:8px"><button onclick="watchAdForSpy()" style="width:100%;padding:13px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer">광고 보고 +1회 추가</button></div>
+    <div id="spyAdBonusBtn" style="display:none;margin-top:8px"><button onclick="watchAdForSpy()" style="width:100%;padding:13px;border-radius:12px;border:none;background:#7B30C0;color:#fff;font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer">광고 보고 +1회 추가</button></div>
   </div>
   <!-- 게임 영역 -->
   <div id="spyGame" class="w400" style="display:none">
@@ -4568,8 +4571,26 @@ function doSkip(){
   scoreTotal++; scoreStreak=0; currentStreak=0; stats.totalSkips++; stats.totalGames++; stats.roundsPlayed=(stats.roundsPlayed||0)+1; saveStats(stats); checkMissions(); updateScoreUI(); nextRound();
 }
 
-function showAd(type){
+async function showAd(type){
   if((!isGuest && type !== 'rush' && type !== 'spy') || isBattleGame){ if(adCallback){ adCallback(); adCallback=null; } return; }
+
+  // Capacitor 환경: 실제 AdMob 보상형 광고
+  if(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()){
+    try {
+      var { AdMob, RewardAdPluginEvents } = await import('@capacitor-community/admob');
+      await AdMob.prepareRewardVideoAd({ adId: ADMOB_REWARDED_ID });
+      AdMob.addListener(RewardAdPluginEvents.Rewarded, function(){
+        if(adCallback){ adCallback(); adCallback=null; }
+      });
+      await AdMob.showRewardVideoAd();
+    } catch(e){
+      // 광고 로드 실패 시 콜백 그냥 실행
+      if(adCallback){ adCallback(); adCallback=null; }
+    }
+    return;
+  }
+
+  // 웹 환경: 기존 오버레이 (개발/테스트용)
   var overlayId = type==='hint'?'adHint':type==='answer'?'adAnswer':'adRush';
   var countId   = type==='hint'?'hintAdCount':type==='answer'?'answerAdCount':'rushAdCount';
   var skipId    = type==='hint'?'hintAdSkip':type==='answer'?'answerAdSkip':'rushAdSkip';
@@ -6930,7 +6951,7 @@ function renderRushResultActions(){
   if(remaining > 0){
     html += '<button onclick="retryRush()" style="'+S+';border:1px solid var(--border);background:var(--surface);color:var(--text)">다시 도전 ('+remaining+'회 남음)</button>';
   } else if(canAdBonus){
-    html += '<button onclick="watchAdForRush()" style="'+S+';border:none;background:var(--accent);color:#fff">광고 보고 +1회 추가</button>';
+    html += '<button onclick="watchAdForRush()" style="'+S+';border:none;background:var(--accent2);color:#fff">광고 보고 +1회 추가</button>';
   }
   html += '<button onclick="closeRushResult()" style="'+S+';border:none;background:var(--primary);color:#fff">홈으로</button>';
   if(isGuest) html += '<button onclick="closeRushResult();doLogout();" style="'+S+';border:1.5px solid var(--primary);background:transparent;color:var(--primary);margin-top:2px">기록 저장하고 로그인하기</button>';
@@ -7188,7 +7209,7 @@ function renderSpyResultActions(){
   if(remaining > 0){
     html += '<button onclick="retrySpyMode()" style="'+S+';border:1px solid var(--border);background:var(--surface);color:var(--text)">다시 도전 ('+remaining+'회 남음)</button>';
   } else if(canAdBonus){
-    html += '<button onclick="watchAdForSpy()" style="'+S+';border:none;background:var(--accent);color:#fff">광고 보고 +1회 추가</button>';
+    html += '<button onclick="watchAdForSpy()" style="'+S+';border:none;background:#7B30C0;color:#fff">광고 보고 +1회 추가</button>';
   }
   html += '<button onclick="document.getElementById(\'spyFinalOverlay\').style.display=\'none\';showScreen(\'screenSolo\')" style="'+S+';border:1px solid var(--border);background:var(--surface);color:var(--muted)">나가기</button>';
   if(isGuest){
@@ -8957,6 +8978,17 @@ async function shareCrowdResult() {
   </div>
 </div>
 
+
+<script>
+// AdMob 초기화 — Capacitor 환경에서만 실행
+(async function initAdMob(){
+  if(!window.Capacitor || !window.Capacitor.isNativePlatform || !window.Capacitor.isNativePlatform()) return;
+  try {
+    var { AdMob } = await import('@capacitor-community/admob');
+    await AdMob.initialize({ testingDevices: [], initializeForTesting: false });
+  } catch(e){ console.warn('AdMob init failed', e); }
+})();
+</script>
 </body>
 </html>
 
