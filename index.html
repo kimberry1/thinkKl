@@ -3901,7 +3901,7 @@ function _handleKakaoCallback(){
   // 인가 코드 → Edge Function에서 토큰 교환 (CLIENT_SECRET 서버에서만 사용)
   fetch(KAKAO_TOKEN_FN, {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+SB_ANON},
     body: JSON.stringify({ code: code, redirect_uri: KAKAO_REDIRECT })
   })
   .then(function(r){ return r.json(); })
