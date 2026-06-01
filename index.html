@@ -5580,11 +5580,16 @@ function startBattlePolling(battleIdVal){
           } else if(rec.battle_id === battleIdVal){
             // INSERT/UPDATE: WS 페이로드로 로컬 상태 즉시 반영 (DB 재조회 생략)
             if(rec.username){
-              battlePlayers[rec.username] = Object.assign(battlePlayers[rec.username]||{}, rec);
-              // hint_count = 누적 승리 수: _roundScores 즉시 반영
-              if(isBattleGame && battleBattleMode==='compete' && rec.hint_count > 0){
-                if(!window._roundScores) window._roundScores = {};
-                window._roundScores[rec.username] = rec.hint_count;
+              if(rec.status === 'left'){
+                // 퇴장 신호 → 즉시 목록에서 제거
+                delete battlePlayers[rec.username];
+              } else {
+                battlePlayers[rec.username] = Object.assign(battlePlayers[rec.username]||{}, rec);
+                // hint_count = 누적 승리 수: _roundScores 즉시 반영
+                if(isBattleGame && battleBattleMode==='compete' && rec.hint_count > 0){
+                  if(!window._roundScores) window._roundScores = {};
+                  window._roundScores[rec.username] = rec.hint_count;
+                }
               }
               renderBattlePlayers();
               if(isBattleGame && battleBattleMode==='compete') renderScoreboard(Object.values(battlePlayers));
@@ -7292,7 +7297,12 @@ async function battleReset(){
   // 4. DB 정리 (_bid, _pid 사용 — 위에서 battleId/myPlayerId는 이미 null)
   if(_pid){
     try{
-      // 내 플레이어 삭제
+      // 퇴장 신호 UPDATE (battle_id 포함 → 상대방 WS UPDATE 이벤트로 즉시 감지)
+      await fetch(SB_URL+'/rest/v1/battle_players?id=eq.'+_pid, {
+        method:'PATCH', headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body: JSON.stringify({status:'left'})
+      });
+      // 퇴장 후 실제 삭제
       await fetch(SB_URL+'/rest/v1/battle_players?id=eq.'+_pid, {
         method:'DELETE', headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON}
       });
@@ -8175,7 +8185,13 @@ function closeBattleResultAndLeave(){
 // ── 파티방 안전 이탈: 페이지 닫힘/새로고침 ──
 window.addEventListener('beforeunload', function(){
   if(!myPlayerId) return;
-  // keepalive: true → 페이지 언로드 후에도 요청 완료 보장
+  // 퇴장 UPDATE 먼저 (keepalive: true → 언로드 후에도 완료 보장)
+  fetch(SB_URL+'/rest/v1/battle_players?id=eq.'+myPlayerId, {
+    method:'PATCH',
+    headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body: JSON.stringify({status:'left'}),
+    keepalive: true
+  }).catch(function(){});
   fetch(SB_URL+'/rest/v1/battle_players?id=eq.'+myPlayerId, {
     method:'DELETE',
     headers:{'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON},
