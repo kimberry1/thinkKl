@@ -5452,7 +5452,7 @@ function renderBattlePlayers(){
   if(startBtn && battleIsCreator){
     startBtn.disabled = !allReady;
     startBtn.style.opacity = allReady ? '1' : '0.4';
-    startBtn.textContent = allReady ? '🎮 대결 시작!' : '친구 준비를 기다리는 중...';
+    startBtn.textContent = allReady ? '대결 시작!' : '친구 준비를 기다리는 중...';
   }
 }
 
@@ -5468,6 +5468,7 @@ var myVoted = false;
 // ── WebSocket 기반 Realtime ──
 function startBattlePolling(battleIdVal){
   stopBattlePolling();
+  startHeartbeat(); // 대기실부터 하트비트 시작
 
   var wsUrl = SB_URL.replace('https://','wss://')
     + '/realtime/v1/websocket?apikey='+SB_ANON+'&vsn=1.0.0';
@@ -6018,10 +6019,15 @@ var _heartbeatTimer = null;
 function startHeartbeat(){
   stopHeartbeat();
   _heartbeatTimer = setInterval(function(){
-    if(!myPlayerId || !isBattleGame || !battleId) return;
-    // 내 last_seen 갱신
+    if(!myPlayerId || !battleId) return;
+    // 내 last_seen 갱신 (대기실/게임 중 모두)
     sbUpdatePlayer(myPlayerId, {last_seen: new Date().toISOString()});
-    // 상대 좀비 감지 (last_seen이 60초 이상 멈춘 경우)
+    // 대기실: 플레이어 목록 재조회 (WS 이벤트 보완)
+    if(!isBattleGame){
+      onPlayersChange(battleId);
+      return;
+    }
+    // 게임 중: 상대 좀비 감지 (last_seen이 60초 이상 멈춘 경우)
     var now = Date.now();
     var hasZombie = Object.values(battlePlayers).some(function(p){
       if(p.username === currentUser) return false;
@@ -8110,6 +8116,23 @@ function showBattleResult(solved, isWin, noCount){
   }
 
   document.getElementById('battleResultOverlay').className='confirm-overlay show';
+
+  // 팡파레 효과
+  if(isFinal){
+    if(isCoop){
+      var pctFx = Math.round(battleCoopSolved/battleMaxRounds*100);
+      if(pctFx===100) setTimeout(function(){ noonchiBigBang({ banner:'환상의 호흡!', subBanner: battleCoopSolved+'/'+battleMaxRounds+' 완벽', sparkleTop:'45%' }); }, 300);
+      else if(pctFx>=80) setTimeout(function(){ noonchiPunch('mega', { banner:'호흡 척척!', subBanner: battleCoopSolved+'/'+battleMaxRounds+' 성공' }); }, 300);
+      else if(pctFx>=60) setTimeout(function(){ noonchiPunch('strong', { banner:'그래도 해냈어!', subBanner: battleCoopSolved+'/'+battleMaxRounds+' 성공' }); }, 300);
+    } else {
+      var isOvWin = battleCompeteWins > (battleMaxRounds - battleCompeteWins);
+      if(isOvWin) setTimeout(function(){ noonchiBigBang({ banner:'승리!', subBanner: battleCompeteWins+'승 '+(battleMaxRounds-battleCompeteWins)+'패', sparkleTop:'45%' }); }, 300);
+    }
+  } else if(!noCount && solved && isWin && !isCoop){
+    setTimeout(function(){ noonchiPunch('strong', { banner:'이겼어요!', subBanner: battleCompeteWins+'승' }); }, 200);
+  } else if(!noCount && solved && isCoop){
+    setTimeout(function(){ noonchiPunch('medium', { banner:'함께 맞혔어요!', subBanner: battleCoopSolved+'번 성공' }); }, 200);
+  }
 
   // 라운드 종료 시 경쟁 전광판 표시
   if(!isCoop){ renderScoreboard(Object.values(battlePlayers)); }
