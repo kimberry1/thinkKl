@@ -5565,7 +5565,17 @@ function startBattlePolling(battleIdVal){
         else if(table==='battle_players'){
           // DELETE 이벤트는 REPLICA IDENTITY DEFAULT로 인해 battle_id가 없을 수 있음
           if(evType==='DELETE'){
-            onPlayersChange(battleIdVal); // DELETE는 rec에 데이터 없으므로 무조건 재조회
+            // old_record.id로 즉시 로컬 제거 → 전광판 즉시 반영
+            var _deletedId = rec && rec.id;
+            if(_deletedId){
+              var _departed = Object.values(battlePlayers).find(function(p){ return p.id === _deletedId; });
+              if(_departed){
+                delete battlePlayers[_departed.username];
+                renderBattlePlayers();
+                if(isBattleGame && battleBattleMode==='compete') renderScoreboard(Object.values(battlePlayers));
+              }
+            }
+            onPlayersChange(battleIdVal); // DB 재조회로 최종 확인
           } else if(rec.battle_id === battleIdVal){
             // INSERT/UPDATE: WS 페이로드로 로컬 상태 즉시 반영 (DB 재조회 생략)
             if(rec.username){
@@ -5795,7 +5805,7 @@ function renderScoreboard(players){
   board.style.display='flex';
   if(!window._roundScores) window._roundScores = {};
   var rd = document.getElementById('competeRoundDisplay');
-  if(rd) rd.textContent = round + '/' + battleMaxRounds;
+  if(rd) rd.textContent = battleRoundsPlayed + '/' + battleMaxRounds;
   var rows = document.getElementById('competePlayerRows');
   if(!rows) return;
   var sorted = (players||[]).slice().sort(function(a,b){
@@ -6261,8 +6271,13 @@ function executeConsentAction(type){
       var origDiff = window._battleOrigDiff || battleDiff;
       var effDiff = origDiff === 'random' ? pickLevelAwareDiff() : battleDiff;
       battleDiff = effDiff; // 이번 라운드에 적용
-      var pool2=wordDB.easy;
-      var newWordIdx=Math.floor(Math.random()*pool2.length);
+      var pool2 = wordDB[effDiff] || wordDB.easy;
+      if(!window._battleUsedIdx) window._battleUsedIdx = new Set();
+      var _avail = [];
+      for(var _bi=0;_bi<pool2.length;_bi++){ if(!window._battleUsedIdx.has(_bi)) _avail.push(_bi); }
+      if(!_avail.length){ window._battleUsedIdx = new Set(); _avail = pool2.map(function(_,i){return i;}); }
+      var newWordIdx = _avail[Math.floor(Math.random()*_avail.length)];
+      window._battleUsedIdx.add(newWordIdx);
       battleWordIdx=newWordIdx;
       round++;
       sbUpdateBattle(battleId,{
@@ -7937,6 +7952,7 @@ function _launchBattleGame(){
   updateScoreUI();
   window._partyHintRunning=false; window._partyAnswerRunning=false; window._nextRoundRunning=false; window._lastProcessedRound=0; window._resultShowing=false; window._solvedProcessedRound=-1;
   window._roundScores={}; // 전광판 스코어 초기화
+  window._battleUsedIdx = new Set([battleWordIdx]); // 중복 문제 방지
   showScreen('screenGame');
   // 경쟁모드: 스코어바 숨김, 전광판 표시
   var _sbLaunch=document.getElementById('scoreBar');
